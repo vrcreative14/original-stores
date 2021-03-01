@@ -44,52 +44,59 @@
 
 <!-- {% include 'ScrollMenu.html' %} -->
 
-{% include 'Slider.html' %}
-        
+
+        {% include 'ProductCategories.html' %}
     <div class="heading">
-         <label class="headLabel">Categories</label></div>
-    <div class="shopProducts" title="Shop">
-        <div>
-            <div href="SignUp" style="background-image: url('https://i.ibb.co/wMqvdb0/readymade-Garments.jpg');"
-                class="productDesc">
+         <label class="headLabel">Shop by Category</label></div>
+    <div class="displayRow" title="Shop">
+        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=clothing';">
+            <div href="SignUp" style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/Fashion%26Clothing.jpg');"
+                class="categoryImage">
                 <!-- <a style="background-image: url('https://i.ibb.co/wMqvdb0/readymade-Garments.jpg');;"></a> -->
                 <!-- <img src="https://i.ibb.co/wMqvdb0/readymade-Garments.jpg"> <br/> -->
 
             </div>
-            <a href="Products/ReadymadeGarment">Readymade Garments</a>
-        </div>
+            <a class="anchor" href="Products" onclick="">Fashion & Clothing</a>
+        </div>               
 
-
-        <div>
-            <div style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-repeat: no-repeat;"
-                class="productDesc">
+        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=household_essentials';">
+            <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/household_essentials_50.jpg');background-repeat: no-repeat;"
+                class="categoryImage">
                 <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
                 <!-- <img src="https://i.ibb.co/ygRbNws/fabrics.jpg"> <br/> -->
                 <!--  -->
             </div>
-            <a href="Products/Fabrics">Fabrics</a>
+            <a class="anchor" href="Products" onclick="">Household Essentials</a>
         </div>
 
-        <div>
-            <div style="background-image: url('https://i.ibb.co/KsHMtxF/Sadar-Bazaar.jpg');background-repeat: no-repeat;"
-                class="productDesc">
+        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=kitchen_essentials';">
+            <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/kitchen_essentials.jpg');background-repeat: no-repeat;"
+                class="categoryImage">
                 <!-- <img src="https://i.ibb.co/KsHMtxF/Sadar-Bazaar.jpg"> <br/> -->
             </div>
-            <a href="Products/Handicrafts">Handicrafts</a>
+            <a class="anchor" href="Products">Kitchen Essentials</a>
         </div>
 
-        <div>
-            <div style="background-image: url('https://i.ibb.co/3p1h3Kr/bookstobangle.jpg');background-repeat: no-repeat;"
-                class="productDesc">
+        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=handicrafts_home_decor';">
+            <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/handicrafts_home_decor.jpg');background-repeat: no-repeat;"
+                class="categoryImage">
                 <!-- <img src="https://i.ibb.co/3p1h3Kr/bookstobangle.jpg"> <br/> -->
                 <!--  -->
             </div>
-            <a href="Products/HomeDecor">Home Decor & Interiors</a>
+            <a class="anchor" href="Products">Handicrafts & Home Decor</a>
         </div>
         <!--  <div style="background-image: url('https://i.ibb.co/wMqvdb0/readymade-Garments.jpg');;background-repeat: no-repeat;">
                 <img src="https://i.ibb.co/b31g6M7/designer-indian-wear.jpg"> <br/>
                 <label>Tailoring Services</label>
             </div>    -->
+
+             
+          
+        </div>
+
+        
+        
+        
     </div>
 
     <div style="display: flex;justify-content: space-evenly;">
@@ -99,8 +106,10 @@
         </div>
     </div>
 
-    <div class="heading"> <label class="headLabel">Stores Near You</label></div>
-    <div id="storeListDiv" style="display: flex;flex-wrap: wrap;padding: 2%;" class="">
+    <div class="heading"> 
+    <label class="headLabel">Vcnity Volunteer</label>
+    </div>
+   
 
     </div>
 

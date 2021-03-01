@@ -17,7 +17,7 @@
   <link href='https://fonts.googleapis.com/css?family=Belgrano' rel='stylesheet'>
   
 
-  <div class="page-header">
+  <div class="seller-page-header">
 
     <div class="hamburger">
       <a onclick="openNav()">
@@ -26,23 +26,9 @@
         <div class="hb"></div>
       </a>
     </div>
-
-    <!-- <div>
-      <img />
-      <label style="align-self:flex-start">Vcnity...</label> <br />
-      <label>Visit your favourite shops in the city online</label>
-    </div> -->
-    <!-- <div class="searchDiv">
-        <input class="searchbar" type="text" placeholder="What are you searching for ?"></input>
-     
-          <img src='https://i.ibb.co/gPnyS7Z/search-glass.jpg' class="searchImg"></img>
-        
-        </div>  -->
-    <!-- <div id="demo"></div> -->
-    <!-- <div class="ui icon input">
-      <input type="text" placeholder="Search...">
-    <i class="circular search link icon" onclick="() => {console.log('Searching nearby stalls...')};"></i>
-    </div> -->
+  <div style="position:absolute;top:0;margin-left:48px;margin-top:10px;" class="">
+   <label class="headinglabel">Seller Dashboard</label>
+   </div>
     <input type="hidden" id="isLocationEdited" value="0">
     <input type="hidden" id="saveLocation" value="">
     <input type="hidden" id="currentEvent" value="">
@@ -59,7 +45,7 @@
         <i id="detectLocation" class="crosshairs icon link" onclick="FetchCitynPin(event)"></i>       
         <input id="locationCity" class="prompt " type="text" style="width: 200px;" value="Lucknow, Charbagh" placeholder="">    
         <input id="locationPin" class="prompt " type="text" style="width: 130px;" value="208012" placeholder="">     
-        
+        <input id="tkl" type="hidden" />
            
       </div>     
       <!-- <span id="" class="ui black basic label">Pincode</span>     -->
@@ -70,18 +56,18 @@
     </div>
       </div>
 
-      <div class="right item">
+      {% comment %} <div class="right item">
     <div class="ui category search">
       <div class="ui large icon input">
         <input class="prompt searchInput" type="text" placeholder="Search Shops,Stores and Products..." onchange="SearchShopsProducts()">
         <i class="search icon link" onclick="SearchShopsProducts()"></i>
       </div>
       <div class="results"></div>
-    </div>
+    </div> {% endcomment %}
      </div>
   </div>
   <div>
-   {% include 'HeaderMenu.html'%}
+  
 
    </div>
   </div>
@@ -90,25 +76,28 @@
 <body>
   
   <div id="mySidenav" class="sidenav">
+  
+  <label class="headLabel" style="margin-left:20px;">Welcome {{seller_name}}</label>
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="#">Home</a>
-    <a href="#">Your Cart</a>
-    {% if user.is_authenticated%}
+    <a href="#">Products Listed</a>
+    <a href="#">Orders Received</a>
+    <a href="#">Taxation</a>
+    <a href="#">Blogs & Articles</a>
+    {% comment %} {% if user.is_authenticated%}
       <a href="#"> Order History </a>
     {% else %}
-    {% endif %}
-    {% if user.is_seller %}
-    <a href="SellerDashboard">Seller Dashboard</a>
+    {% endif %} {% endcomment %}
+    {% comment %} {% if user.is_seller %}
+    <a>Seller Dashboard</a>
     {% else %}
     <a href="/SellerRegistration">Join as a Seller</a>
-    {% endif %}
+    {% endif %} {% endcomment %}
     {% comment %} <a href="/api/logout">Logout</a> {% endcomment %}
     <a href="#">Help/Contact us</a>
-  </div>
-  
+  </div> 
   
     {% block content %}
-
    
   {% endblock %}
   
@@ -201,5 +190,8 @@
 
   <!-- <script src="semantic/dist/semantic.min.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-</body>    
+</body>
+
+     
+
 </html>

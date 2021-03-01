@@ -64,7 +64,12 @@ class UserManager(BaseUserManager):
             return user
     
     
-
+user_types = [
+    ('seller','Seller'),
+    ('carrier','Carrier'),
+    ('seller','Seller'),
+    ('seller','Seller'),
+]
 
 class User (AbstractBaseUser):    
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,14}$', message="Phone number must be entered in the format: '+99999999")
@@ -77,6 +82,9 @@ class User (AbstractBaseUser):
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
+    is_seller = models.BooleanField(default=False)
+    is_carrier = models.BooleanField(default=False)
+    #designation = models.CharField(max_length=20, choices=neck_design, default='Round')
     timestamp = models.DateTimeField(auto_now_add=True)
     
     USERNAME_FIELD = 'email'
@@ -208,7 +216,6 @@ class CustomerDetails(models.Model):
     city = models.CharField(max_length=50)
     primary_pincode = models.CharField(max_length=6, blank=True)
     #last_login = models.DateTimeField()
-
 
 
 class UserOTP(models.Model):

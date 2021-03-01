@@ -1,136 +1,38 @@
-{% extends 'base.html' %}
+{% extends 'SellerBase.html' %}
+
 {% load static %}
-
 <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Page Title</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='App.css'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
-    <script src="{% static 'js/App.js' %}"></script>
-</head>
-<body>
-    {% block content %}
-    <input type="hidden" id="latitude" value="" />
-    <input type="hidden" id="longitude" value="" />
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+       
+        {% comment %} <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+        <link rel="stylesheet" type="text/css" href="{%static 'css/Signup.css'%}">
+        <link rel="stylesheet" type="text/css" href="{%static 'css/App.css'%}"> {% endcomment %}
     
-    <div class="centeredDiv headingDiv">        
-      <span class="headingSpan" style="font-weight: 500;color: #fff;"> Providing the below details will help us to create your online Store and help customers reach you efficiently !</span>
-   </div>
-    <div class="">
-        <div class="ui ordered two steps tabular menu">
-            <a id="sellerInfoLink" class="item step active" data-id="sellerInfoTab" data-tab="sellerInfo" onclick="openTab('sellerInfo')">
-              <i class="user plus icon"></i>
-              <div class="content">
-                <div class="title">Register as a Seller</div>
-                <div class="description">To create an Online Store we need some details regarding Seller Profile</div>
-              </div>
-            </a>
-
-            <a id="storeInfoLink" class="item disabled step" data-tab="storeInfo" onclick="openTab('storeInfo')">
-              <i class="payment icon"></i>
-              <div class="content">
-                <div class="title">Store/Shop Information</div>
-                <div class="description">Store/Shop Information is required for pickup of items</div>
-              </div>
-            </a>
-
-            <!-- <a class="item step" data-tab="taxInfo">
-              <i class="info icon"></i>
-              <div class="content">
-                <div class="title">Confirm Order</div>
-              </div>
-            </a> -->
-          </div>
-
-          {% include 'Message.html' %}
-
-
-          <div id="sellerInfo" name="sellerInfo" class="ui tab active" data-tab="sellerInfo">            
-            <form class="ui form">
-                <!-- <h4 class="ui dividing header">Shipping Information</h4> -->
-                <div class="ui header centeredDiv formheadingDiv">
-                  <span class="formheadingSpan"> Seller Contact Information </span>
-                 </div>
-                <div class="required inline field">
-                  <label>Enter your Full Name as per the Official Identity Card</label>
-                  <span id="name_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Enter your full name as per legal Identity Card</span>             
-                  <div class="three fields">
-                    <div class="field">
-                      <input id="firstname" type="text" name="firstname" placeholder="First Name">
-                      
-                    </div>
-                    <div class="field">
-                      <input id="middlename" type="text" name="middlename" placeholder="Middle Name (If any)">
-                    </div>
-                    <div class="field">
-                      <input id="lastname" type="text" name="lastname" placeholder="Last Name">
-                    </div>
-                  </div>
-                </div>
-                <div class="field">
-                  <h4>Communication Info</h4>
-                  <div class="fields">
-                    <div class="four wide field">
-                      <div class="required inline field">
-                        <label>Primary Email</label>    
-                        <span id="email_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Enter a valid Email Id</span>                        
-                      </div>
-
-                        <div class="">
-                          <input type="email" name="primaryemail" id="primaryemail" placeholder="Enter Your Email Id"  onchange="validateEmail()" maxlength="55" value="{{email}}">
-                        </div>   
-                    </div>
-                    <div class="six wide field">
-                      <div class="required inline field">
-                        <label> Primary Mobile number </label>  
-                        <span id="primarymobile_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Enter a valid Mobile number</span>                        
-                       <div class="inline field">
-                          <input class="ui mini" style="width: 55px;margin-right: 0px;" placeholder="+91" readonly></input>   
-                          <input type="text" name="mobile" id="primarymobile" placeholder="Enter Your Primary Mobile number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" maxlength="10" style="width: 265px;">
-                          </div>
-                      </div>
-                   
-                  
-                    
-                    </div>                   
-                  </div>
-                </div>
-                <div class="two fields">
-                  <div class="four wide field">
-                    <div class="inline field">
-                      <label> Secondary Email (Optional) </label>  
-                     
-                    </div>
-                    <div class="">
-                    <input type="text" id="secondaryemail" name="secondaryemail" placeholder="Enter Your secondary email">
-                    </div>
-                  </div>
-                  <div class="five wide field">
-                    <div class="inline field">
-                      <label> Secondary Mobile number (Optional)</label>                       
-                  
-                    
-                  <div class="inline field">
-                    <input class="ui mini" style="width: 55px;margin-right: 0px;" placeholder="+91" readonly></input>   
-                    <input type="text" id="secondarymobile" name="secondarymobile" placeholder="Enter Your secondary Mobile number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" maxlength="10" style="width: 265px;">
-                  </div>
-                  </div>
-                  </div>                  
-                </div>                                      
-              </form>    
-
-              <div class="centeredDiv">
-                <button class="ui button successBtn submitBtn formheadingSpan" onclick="SaveSellerInfo()">Save & Next</button>
-                {% comment %} <a onclick="getJSON('http://127.0.0.1:8000/api/check/?phone=7565897280')">Check</a> {% endcomment %}
-              </div>              
-          </div>
-
-
-          <div name="storeInfo" class="ui tab" data-tab="storeInfo">            
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        {% block content %}
+      <div class="">
+       {% include 'Message.html' %}
+       {% include 'Modal.html' %}
+        <div style="padding:10px">
+        <button class="ui button" onclick="GoToPage('http://127.0.0.1:8000/SellerDashboard')">  <i class="arrow alternate circle left outline icon"></i> Go Back     
+        </button>
+        </div>
+          <div name="storeInfo" class="ui segment" >            
             <form class="ui form segment">
                 <div class="ui header centeredDiv formheadingDiv">
                  <span class="formheadingSpan"> Shop & Organization Details </span>
@@ -302,29 +204,25 @@
                       <label>Nearest Landmark</label>
                       <input placeholder="Enter the landmark situated near your shop" id="landmark">                
                   </div>                
-                </div>                                     
+                </div>                                   
               </form>
                     <div class="centeredDiv">
                       <button class="ui button successBtn submitBtn formheadingSpan" onclick="SaveStoreInfo()">Save & Next</button>
                     </div>
           </div>
         
-          <div name="taxInfo" class="ui tab" data-tab="taxInfo">            
-            <form class="ui large form">                               
-                  </form>
-                  tax info
-          </div>
-
-        </div>
-        <script src="{% static 'js/Seller.js' %}"></script>
-        <script src="{% static 'js/Misc.js' %}"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.js"></script>
-        <script>
+          <script src="{% static 'js/Misc.js' %}"></script>
+          <script src="{% static 'js/Seller.js' %}"></script>
+          <script src="{% static 'js/App.js' %}"></script>
+     
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.js"></script>
+           <script>
             $('#storecategory').dropdown()            
-            $('#productcategory').dropdown()        
-        </script>
-    {% endblock %}
-</body>
+            $('#productcategory').dropdown()                     
+          </script>
+        </div>
+        {% endblock %}
+    </body>
+   
 </html>
-<!-- ui bottom attached active tab segment -->

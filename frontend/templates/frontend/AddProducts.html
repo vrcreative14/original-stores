@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'Sellerbase.html' %}
 {% load static %}
 <!DOCTYPE html>
 
@@ -24,7 +24,7 @@
 
         <div class="">
             <div class="ui ordered two steps tabular menu">
-                <div id="product_info" class="active step" data-id="productInfoTab" data-tab="productInfo" onclick="OpenTab('product_info')">
+                <div id="product_info_step" class="active step" data-id="productInfoTab" data-tab="productInfo" onclick="OpenTab('product_info')">
                   <i class="user plus icon"></i>
                   <div class="content">
                     <div class="title">Add Product & Save Basic Information</div>
@@ -48,26 +48,26 @@
                 </a> -->
               </div>
         </div>
-
+         {% include 'Message.html' %}
         <div class="" style="margin: 55px;">
-            <div id="product_infotab" name="productInfo" class="ui tab active" data-tab="productInfo">
+            <div id="product_info_tab" name="productInfo" class="ui tab active" data-tab="productInfo">
                     <div class="ui form" id="product_form">
                         <h4 class="ui dividing header headLabel">Name & Category</h4>
                             <div class="fields">
                             <div class="six wide field">
                                 <div class="required inline field">
                                 <label>Product Name</label>
-                                <span id="nameerrorLabel" class="ui left pointing red basic label promptLabel" >Product Name is required</span>                                            
+                                <span id="product_name_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Name is required</span>                                            
                                 </div>
                                 <input type="text" id="product_name">                               
                             </div>                          
                           <div class="seven wide field">
                                 <div class="required inline field">
                                 <label>Product Type</label>
-                                <span id="typeerrorLabel" class="ui left pointing red basic label promptLabel" >Product Type is required</span>                                            
+                                <span id="select-prodtype_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Type is required</span>                                            
                                 </div>
-                                <select id="select-prodtype" onchange="UpdateForm1()">
-                                    <option value="0">Select Product Category</option>
+                                <select id="select-prodtype" onchange="UpdateProductDetails()">
+                                    <option value="">Select Product Category</option>
                                     {% for category in productcategories %}                                    
                                     <option value="{{category}}">{{category}}</option>
                                     {% endfor %}
@@ -81,11 +81,11 @@
                                 <div class="four wide field">                          
                                     <div class="required field">
                                     <label>Upload Front Image of the product</label>
-                                    <span id="frontimage_errorLabel" class="ui left pointing red basic label promptLabel">This Field is required</span>                                            
+                                    <span id="product_image_front_errorLabel" class="ui left pointing red basic label promptLabel hidden">This Field is required</span>                                            
                                         </div>
                                     <input type="file" id="product_image_front" onchange="process(this.id)">                                   
                                    
-                                    <a class="ui image" onclick="">
+                                    <a class="ui image" onclick=""> 
                                       <img id="output_product_image_front" />
                                       <!-- <button class="ui orange button shortButton" onclick="">Preview</button> -->
                                       <!-- <label class="ui bottom attached label" onclick="">Preview</label> -->
@@ -96,7 +96,7 @@
                                 <div class="four wide field">
                                     <div class="required field">
                                     <label>Upload Rear Image of the product</label>
-                                    <span id="frontimage_errorLabel" class="ui left pointing red basic label promptLabel">This Field is required</span>
+                                    <span id="product_image_rear_errorLabel" class="ui left pointing red basic label promptLabel hidden">This Field is required</span>
                                     </div>
                                     <input type="file" id="product_image_rear" onchange="process(this.id)">
                                     <a class="ui image " onclick="">
@@ -110,11 +110,11 @@
                                 <div class="four wide field">
                                     <div class="required field">
                                     <label>Upload Side Image of the product</label>
-                                    <span id="frontimage_errorLabel" class="ui left pointing red basic label promptLabel">This Field is required</span>
+                                    <span id="product_image_side_errorLabel" class="ui left pointing red basic label promptLabel hidden">This Field is required</span>
                                     </div>
-                                    <input type="file" id="product_image-side" onchange="process(this.id)">                                                                
+                                    <input type="file" id="product_image_side" onchange="process(this.id)">                                                                
                                     <a class="ui image " onclick="">
-                                      <img id="output_product_image-side" />
+                                      <img id="output_product_image_side" />
                                       <!-- <label class="ui bottom attached orange label anchorlabel">Preview</label> -->
                                     </a>
                                     </div>
@@ -141,7 +141,7 @@
                                 <div class="five wide field">
                                     <div class="required inline field">
                                     <label>Product Price</label>
-                                    <span id="typeerrorLabel" class="ui left pointing red basic label promptLabel" >Product Price is required</span>                                            
+                                    <span id="product_price_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Price is required</span>                                            
                                     </div>                                
                                                                                                     
                                     <div class="inline field">
@@ -149,11 +149,18 @@
                                      <input id="product_price" type="text" maxlength="12" type="number" style="width: 255px;" placeholder="0.00" onkeypress="return isNumberKey(this, event);" pattern="^\d*(\.\d{0,2})?$">
                                     </div>
                                 </div>                                
-                                <div class="five wide field">
+                                <div class="four wide field">
                                     <label>Name of Manufacturer</label>
                                     <input type="text" id="manufacturer_name">
+                                </div> 
+                                 <div class="four wide field">
+                                    <div class="required inline field">
+                                    <label>Country Of Origin</label>
+                                     <span id="origin_country_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Required</span>                                            
+                                     </div>
+                                    <input type="text" id="origin_country">
                                 </div>    
-                                <div class="five wide field">
+                                <div class="three wide field">
                                     <label>Name of Brand (If any)</label>
                                     <input type="text" id="brand_name">
                                 </div>                              
@@ -164,7 +171,7 @@
                     <button class="ui blue button submitBtn" onclick="ProceedStep2()">Proceed to next Step</button>
                     </div>                    
             </div>           
-          
+                <input type="hidden" id="image_handler"/>
                 <div id="preview_modal" class="ui modal" style="overflow:scroll;">
                     <i class="close icon"></i>
                   
@@ -179,7 +186,7 @@
                               Yes Its Fine
                               <i class="checkmark icon"></i>
                             </div>
-                            <div class="ui positive right labeled icon button">
+                            <div class="ui positive right labeled icon button" onclick="DiscardImage()">
                               Discard & Select Other                             
                             </div>
                           </div>
@@ -188,14 +195,8 @@
                             <img id="modal_preview">
                           </div>                   
 
-                      </div>
-                   
-                </div>
-                 
-                 
-
-                
-               
+                      </div>                   
+                </div>                         
         </div> 
 
         <div class="" style="margin: 55px;">
@@ -253,7 +254,7 @@
                 </div>   
                     <div class="centeredDiv">
                     
-                        <button class="ui grey button submitBtn" onclick="OpenNextStep()">
+                        <button class="ui grey button submitBtn" onclick="OpenNextStep('product_info')">
                             Step Back & Edit Product Info</button>
                             <div style="width: 200px;"></div>
                         <button class="ui button successBtn submitBtn" onclick="SaveProduct()">

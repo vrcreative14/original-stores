@@ -1,3 +1,6 @@
+{% extends 'Sellerbase.html' %}
+
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,7 +12,72 @@
         <link rel="stylesheet" href="">
     </head>
     <body>     
-        
+      {% block content%}
       
+        <div class="centeredDiv headingDiv">
+         <span class="headingSpan"> Seller Dashboard </span>       
+         </div>
+            <br/>
+           
+            <h4 class="ui dividing header headLabel" style="padding-left:20px;">Seller Profile</h4>
+         
+         
+            <div style="display:flex;" class="ui segment">
+                    <div>
+                    <label class="headingSpan">Name</label> :<span class="headingSpan"> {{seller_name}} </span>
+                    </div>
+                
+            </div>
+       
+          
+          <h4 class="ui dividing header headLabel" style="padding-left:20px;">Your Listed Shops/Businesses</h4>
+          <div class="ui right floated segment">
+             <button class="ui small button" onclick="GoToPage('AddProducts')" style="">Add Product in My Store</button>
+             </div>
+      
+             <div  class="ui segment">
+             {% if stores %}
+             {% for store in stores%}
+                    <div class="ui segment" style="padding:25px;">
+                    <label class="headingSpan">Store Name</label> :<span class="headingSpan"> {{store}} </span>
+                 
+                    </div>
+                   
+             {% endfor %}
+             {% else %}
+             
+             <div>
+                    <label class="headingSpan">You have not listed your Store yet.</label> 
+                    <button onclick="OpenModel()" class="ui primary button">Add Store</button>
+             </div>
+             {% endif %}
+               <div class="centeredDiv">                                   
+             <button class="ui primary button" onclick="GoToPage('http://127.0.0.1:8000/AddStore/')">Add New Store</button>
+            </div>
+            </div>
+            <br/>
+            <div style="display:flex;flex-direction:column;">
+             
+              {% if products%}
+              {% for product in products%}  
+                    <div>
+                    <a class="headingSpan">{{product.name}}</a> 
+                    {% comment %} :<span class="headingSpan"> {{store}} </span> {% endcomment %}
+                    </div>
+                  
+             {% endfor %}
+              {% else %}
+
+                    <div>
+                    <label class="headingSpan">No Products Listed as of now</label> 
+                    <label class="headingSpan">Add Your Store to start listing your products</label> 
+                    {% comment %} <button class="ui primary button">Add Store</button> {% endcomment %}
+             </div>
+
+              {% endif %}
+            </div>
+         </div>    
+          
+      {% endblock %}
     </body>
 </html>

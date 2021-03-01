@@ -1,7 +1,8 @@
 from django.db import models
 from accounts.models import Seller
 from django.utils.translation import gettext_lazy as _
-
+import random
+#from .serializer import StoreSerializer
 # Create your models here.
 
 class CompanyType(models.Model):
@@ -171,15 +172,23 @@ class Store(models.Model):
     #store_category = models.ForeignKey(StoreCategory, on_delete=models.SET_DEFAULT, default=1)
     img_path = models.CharField(max_length=50,blank=True)
     storeimage = models.ImageField(_("Image"), upload_to='images/store', height_field=None, blank=True)
+    store_id = models.CharField(max_length=30, unique=True)
     #store_details = models.ForeignKey(StoreDetails, on_delete=models.CASCADE, blank=True)                    # relation with details and hence further with organization
     def __str__(self):
         return str(self.name)
 
+    def save(self, *args, **kwargs):
+          self.store_id  = str(self.pincode) +str(self.pk)+ str(random.randint(9, 99))
+          super().save(*args, **kwargs)  
+
+    
+        #serializer = StoreSerializer(new_store)
+        #return Response(serializer.data)
 
 class StoreDetails(models.Model):
     store = models.OneToOneField(Store, on_delete=models.CASCADE)
     specifications = models.CharField(max_length=50, blank=True)
-    address_line1 = models.CharField(max_length=100)
+    address_line1 = models.CharField(max_length=100, blank=True)
     address_line2 = models.CharField(max_length=100, blank=True)
     nearest_landmark = models.CharField(max_length=100, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -196,5 +205,5 @@ class StoreDetails(models.Model):
         verbose_name_plural='StoreDetails'
 
     def __str__(self):
-        return str(self.specifications)
+        return str(self.store.name)
 

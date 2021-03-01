@@ -7,7 +7,7 @@ import io
 from django.core.files.base import ContentFile
 import qrcode
 import random
-# import pyqrcode
+
 # Create your models here.
 
 
@@ -20,6 +20,20 @@ class ProductCategory(models.Model):
 
        def __str__(self):
            return self.name
+
+class ProductSubCategory(models.Model):
+    name = models.CharField(max_length=50)
+    type = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
+    def __str__(self):
+            return str(self.name)
+
+class ProductIdentity(models.Model):
+    type = models.ForeignKey(ProductSubCategory, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return str(self.name)
+
 
 quantity_unit = [
     ('Pieces','Pieces'),
@@ -35,17 +49,21 @@ class Product(models.Model):
     name = models.CharField(max_length=70)
     image = models.ImageField(validators=[check_thumbnail],upload_to='static/images', height_field=None, blank=True)
     #image_front = models.ImageField(validators=[check_detailed_image],upload_to='static/images', height_field=None, blank=True)
-    #image_back = models.ImageField(validators=[check_detailed_image],upload_to='static/images', height_field=None, blank=True)
-    #image_side1 = models.ImageField(validators=[check_detailed_image],upload_to='static/images', height_field=None, blank=True)
+    image_back = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
+    image_side1 = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
+    image_thumbnail = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
     #store=models.ManyToManyField(Store)
     #type=models.ForeignKey(ProductType, on_delete=models.CASCADE)        
     img_path = models.CharField(max_length=100, blank=True)    
     brand_name = models.CharField(max_length=100, blank=True)
     price = models.DecimalField(max_digits=19, decimal_places=2)
     qrcode_text = models.CharField(max_length=250, blank=True, null=True)
+    product_id = models.CharField(max_length=50,blank=True, null=True)
     #product_details = models.ForeignKey(ProductDetails, on_delete=models.SET_DEFAULT)
     #product_category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     store = models.ManyToManyField(Store)   
+    product_category = models.ForeignKey(ProductSubCategory, on_delete=models.CASCADE)
+    product_class = models.ForeignKey(ProductIdentity, on_delete=models.CASCADE)
     # def __str__(self):
     #     return str(self.name) + str(self.product_id)
     
@@ -106,7 +124,9 @@ class ProductDetails(models.Model):
         abstract = True       
 
 
-
+class Article(Product):
+    def __str__(self):
+        return self.name
 
 
 class GarmentSubcategory (models.Model):
@@ -128,8 +148,13 @@ StandardGarmentSizes = [
           ('XXXL','XXXL'),
 ]
 
+class GarmentClassification(models.Model):
+    name = models.CharField(max_length=100)
 
-class Garment(Product):
+    def __str__(self):
+        return str(self.name)
+
+class Garment(Product):    
     GARMENT_CATEGORY = (
         ('Men', "Men's Wear"),
         ('Women',"Women's Wear"),
@@ -145,8 +170,8 @@ class Garment(Product):
     #name = models.CharField(max_length=100)
     #product = models.OneToOneField(Product,on_delete=models.CASCADE)
     #fabric = models.CharField(max_length=30)
-    category = MultiSelectField(choices = GARMENT_CATEGORY)
-    product_id = models.CharField(max_length=50,blank=True, null=True)
+    #category = MultiSelectField(choices = GARMENT_CATEGORY)
+    #_classification = models.ForeignKey(GarmentClassification, on_delete=models.CASCADE)    
     
     def save(self, *args, **kwargs):
             if(self.product_id == None):
@@ -156,7 +181,6 @@ class Garment(Product):
     
     def __str__(self):
         return str(self.name) + ' id:'+ str(self.product_id)
-
 
 
 class GarmentDetails(ProductDetails):
@@ -211,11 +235,62 @@ class GarmentDetails(ProductDetails):
         return str(self.garment.name)
 
 
-
 class Inventory(models.Model):
     clothing = models.ManyToManyField(Garment)
     # jewellery = models.ManyToManyField()
 
+
+# class KitchenItem(Product):
+#     def __str__(self):
+#         return self.name + ' id:' + str(self.product_id)
+
+
+class KitchenItemDetails(ProductDetails):
+    kitchen_item = models.OneToOneField(Article, models.CASCADE)
+
+    def __str__(self):
+        return str(self.kitchen_item.name)
+
+# class StationeryItem(Product):
+    # def __str__(self):
+    #     return self.name + ' id:' + str(self.product_id)
+
+class StationeryItemDetails(ProductDetails):
+    stationery_item = models.OneToOneField(Article, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.stationery_item.name)
+
+# class SportsFitnessEquipment(Product):
+#     def __str__(self):
+#         return self.name + ' id:' + str(self.product_id)
+
+class SportsFitnessEquipmentDetails(ProductDetails):
+    sports_fitness_equipment = models.OneToOneField(Article, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.sports_fitness_equipment.name)
+
+# class HomeDecor(Product):
+#     def __str__(self):
+#         return self.name + ' id:' + str(self.product_id)
+
+class HomeDecorDetails(ProductDetails):
+    HomeDecor = models.OneToOneField(Article, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.HomeDecor.name)
+
+# class HomeAppliance(Product):
+#     def __str__(self):
+#         return self.name + ' id:' + str(self.product_id)
+
+class HomeApplianceDetails(ProductDetails):
+    home_appliance = models.OneToOneField(Article, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.home_appliance.name)
+
+
+
+# class ProductType(models.Model):
+#     name = models.CharField(max_length=100, unique=True)
 
 
 # class Cart(models.Model):

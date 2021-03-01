@@ -56,6 +56,12 @@ class StoreCategorySerializer(serializers.ModelSerializer):
         model = StoreCategory
 
 
+class ProductCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = ProductCategory
+
+
 class StoreSubCategorySerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -65,26 +71,33 @@ class StoreSubCategorySerializer(serializers.ModelSerializer):
 
 class StoreSerializer(serializers.ModelSerializer):
     store_category = StoreCategorySerializer(read_only = True, many=True)
-    store_subcategory = StoreSubCategorySerializer(read_only = True, many=True)
+    product_category = ProductCategorySerializer(read_only=True, many=True)
+    #store_subcategory = StoreSubCategorySerializer(read_only = True, many=True)
     #seller = SellerSerializer(read_only = True, many=True)
     print(serializers.ModelSerializer)
     class Meta:
         model = Store
-        fields=('seller','name','state','city','pincode','latitude','longitude','store_category','store_subcategory','storeimage')
+        fields=('seller','name','state','city','pincode','latitude','longitude','store_category','product_category','storeimage')
 
-    # def create(self, validated_data):
-    #     #email = validated_data.pop('seller')
-    #     #user = User.objects.get(email = email)            
-    #     print('*******')
-    #     print(validated_data.pop('seller'))
-    #     store = Store.objects.create(seller = validated_data.get('seller'),
-    #                             name=validated_data.pop('name'),
-    #                             state=validated_data.pop('state'),
-    #                             city=validated_data.pop('city'),
-    #                             pincode=validated_data.pop('pincode')                                
-    #                             )
-    #     print(store)                                
-    #     return store
+
+    def create(self, validated_data, *args, **kwargs):
+        #email = validated_data.pop('seller')
+        #user = User.objects.get(email = email)  
+        #product_categories = validated_data.pop('product_category') 
+        #store_categories = validated_data.pop('store_category')
+        store = Store.objects.create(**validated_data)            
+        return store
+
+        # print('*******')
+        # print(validated_data.pop('seller'))
+        # store = Store.objects.create(seller = validated_data.get('seller'),
+        #                         name=validated_data.pop('name'),
+        #                         state=validated_data.pop('state'),
+        #                         city=validated_data.pop('city'),
+        #                         pincode=validated_data.pop('pincode')                                
+        #                         )
+        # print(store)                                
+        # return store
        
 
 

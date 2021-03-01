@@ -13,10 +13,10 @@ from .renderers import UserRenderer
 #from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from knox.views import LoginView as KnoxLoginView
+from knox.views import LoginView as KnoxLoginView, LogoutView
 from knox.auth import TokenAuthentication
-from django.contrib.auth import login
-from stores.models import Store, StoreCategory, StoreSubcategory
+from django.contrib.auth import login, logout
+from stores.models import Store, StoreCategory, StoreSubcategory,States,StoreDetails
 from django.contrib.auth.decorators import login_required
 from rest_framework import generics, permissions
 from rest_framework.response import Response
@@ -33,7 +33,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from stores.models import States
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import parser_classes
 from products.models import *
@@ -211,6 +210,7 @@ class ValidatePhoneOTP(APIView):
 
 
 @login_required(login_url='http://127.0.0.1:8000/login')
+@permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def RegisterSeller(request):    
     usr = request.data.get('user', False)
@@ -221,8 +221,11 @@ def RegisterSeller(request):
     secondary_phone = request.data.get('secondarymobile', False)
 
     try:
-        user = request.data.get("user")        
-        Temp_data = {'user': usr, 'first_name' : first_name,'middle_name': middle_name,'last_name': last_name, 'secondary_email': secondary_email, 'secondary_phone': secondary_phone}
+        user_phone = request.COOKIES.get('upl','') 
+        user_email = request.COOKIES.get('uel','')
+        user = User.objects.get(phone = user_phone) if user_phone != '' else User.objects.get(email = user_email)
+        
+        Temp_data = {'user': user.pk, 'first_name' : first_name,'middle_name': middle_name,'last_name': last_name, 'secondary_email': secondary_email, 'secondary_phone': secondary_phone}
       
     except:
        return Response({
@@ -266,7 +269,6 @@ def RegisterSeller(request):
                         status=status.HTTP_400_BAD_REQUEST)
 
 
-
 # @login_required(login_url='http://127.0.0.1:8000/login')
 
 class RegisterStore(APIView):
@@ -274,30 +276,77 @@ class RegisterStore(APIView):
         #parser_classes = [MultiPartParser]
 
         def post(self, request, format = None):
-                user_ph = request.data.get('user_ph', '')
-                user = User.objects.get(phone = user_ph)
-                seller = Seller.objects.get(user = user.pk)
+                #user_ph = request.data.get('user_ph', '')
+                #user = User.objects.get(phone = user_ph)
+                input_gstin = ''
+                user_phone = request.session["user_phone"] 
+                user = ''
+                if user_phone is None:
+                    user_email = request.session["user_email"]
+                    user = User.objects.filter(email = user_email)
+                else:
+                    user = User.objects.filter(phone = user_phone)
+
+                seller = Seller.objects.get(user = user[0].pk)
+                is_gst_registered = request.data.get("is_gst_registered", False)
+                if is_gst_registered:
+                            input_gstin = request.data.get("gstin",False)
+                else:
+                            input_gstin = None
+                store_existing = Store.objects.filter(seller = seller.pk)                 
+                if len(store_existing) > 0:
+                            check_existing = StoreDetails.objects.filter(gstin = input_gstin)
+                            if len(check_existing) > 0:
+                                 if(check_existing[0].store.seller.pk != seller.pk):
+                                     return Response({
+                                          'status' : False,
+                                          'detail':'This GSTIN is already regstered with another Seller'
+                                     })                                   
+                
                 name = request.data.get('shopname', False)
                 state = request.data.get('state', False)
                 city = request.data.get('city', False)
                 pincode = request.data.get('pincode', False)
                 latitude = request.data.get('latitude', False)
                 longitude = request.data.get('longitude', False)
-               
-               # storeimage = request.data["storeimage"]
+                product_categories = request.data.get('productcategory','')
+                store_categories = request.data.get('storecategory','')
+                product_categories_list = []
+                store_category_list = []
+                #    # storeimage = request.data["storeimage"]
+                for category in product_categories:
+                    prod_category = ProductCategory.objects.filter(name = category)
+                    product_categories_list.append(prod_category[0].pk)
+                
+                for store_category in store_categories:
+                    category = StoreCategory.objects.filter(name = store_category)
+                    store_category_list.append(category[0].pk)
 
-                temp_data = {"seller": seller.pk, "name": name, "state": state, "city" : city, "pincode": pincode, "latitude": latitude, "longitude": longitude}
+                temp_data = {"seller": seller.pk, "name": name, "state": state, "city" : city, "pincode": pincode, "latitude": latitude, "longitude": longitude,"store_category":store_categories,"product_category":product_categories }
 
                 serializer = StoreSerializer(data= temp_data)
                 if serializer.is_valid():
-                   store = serializer.save()
-                   if store:
-                        address_line1 = request.data.get("address")
-                        landmark = request.data.get("landmark", "")
-                        is_gst_registered = request.data.get("is_gst_registered", False)
-                        gstin = request.data.get("gstin")
+                        store = serializer.save()
+                        # for product_category in product_categories:
+                        #        store.product_category.add(ProductCategory.objects.create(product_category))
+                        
+                        # for store_category in store_categories:
+                        #        StoreCategory.objects.create(**store_category)
+                   #store = self.create(self, request)
+                #    store_id = str(pincode) + str(random.randint(9, 99))
+                #    new_store = Store.objects.create(name = name,seller = seller,state=state,city = city,pincode = pincode,latitude=latitude,longitude=longitude,store_id=store_id)
+                #    #new_store.save()
+                #    for category in product_categories:
+                #        prod_category = ProductCategory.objects.get(name = category)
+                #        new_store.product_category.add(prod_category)
 
-                        details_data = {"store":store.pk, "address_line1": address_line1, "nearest_landmark": landmark,"is_gst_registered":is_gst_registered ,"gstin": gstin}
+                #    for store_category in store_categories:
+                #        category = StoreCategory.objects.get(name = store_category)
+                #        new_store.store_category.add(category) 
+                #if new_store:
+                        address_line1 = request.data.get("address")
+                        landmark = request.data.get("landmark", "")                                          
+                        details_data = {"store":store.pk, "address_line1": address_line1, "nearest_landmark": landmark,"is_gst_registered":is_gst_registered ,"gstin": input_gstin}
                         serializer2 = StoreDetailsSerializer(data = details_data)
                         if serializer2.is_valid():
                             serializer2.save()                           
@@ -306,13 +355,47 @@ class RegisterStore(APIView):
                                 'detail': 'Store Successfully Created. Continue saving further information',
                                 'store' : store.pk
                             })
-                else:
-                    error = serializer.errors
-                    return Response({
-                        'status': False,
-                        'detail': error
-                    })
+                        else:
+                            error = serializer.errors
+                            return Response({
+                               'status': False,
+                               'detail': error
+                            })
         
+        def create(self, request, *args, **kwargs):
+                user_phone = request.session["user_phone"] 
+                user = ''
+                if user_phone is None:
+                            user_email = request.session["user_email"]
+                            user = User.objects.filter(email = user_email)
+                else:
+                            user = User.objects.filter(phone = user_phone)
+
+                seller = Seller.objects.get(user = user[0].pk)
+                name = request.data.get('shopname', False)
+                state = request.data.get('state', False)
+                city = request.data.get('city', False)
+                pincode = request.data.get('pincode', False)
+                latitude = request.data.get('latitude', False)
+                longitude = request.data.get('longitude', False)
+                product_categories = request.data.get('productcategory','')
+                store_categories = request.data.get('storecategory','')
+                store_id  = str(self.pincode) +str(self.pk)+ str(random.randint(9, 99))
+                new_store = Store.objects.create(name = name,seller = seller.pk,state=state,city = city,pincode = pincode,latitude=latitude,longitude=longitude,product_category= product_categories,store_category=store_categories,store_id=store_id)
+                new_store.save()
+                product_categories_list = []
+                store_category_list = []
+                        #    # storeimage = request.data["storeimage"]
+                for category in product_categories:
+                            prod_category = ProductCategory.objects.filter(name = category)
+                            #product_categories_list.append(prod_category[0].pk)
+                            new_store.product_category.add(prod_category[0])
+                        
+                for store_category in store_categories:
+                            category = StoreCategory.objects.filter(name = store_category)
+                            new_store.store_category.add(category[0])
+
+
         def patch(self, request):
             pk = request.data["store"]
             model = get_object_or_404(Store, pk=pk)
@@ -418,8 +501,6 @@ def RegisterUser(temp_data):
 # def GetProducts(request):
 #     category = request.data.get
 
-
-
 class Register(APIView):
     
     '''Takes phone and a password and creates a new user only if otp was verified and phone is new'''
@@ -456,12 +537,14 @@ class Register(APIView):
                         user.save()                       
                         old.delete()
                         request.session['user_name'] = name
-                        request.session['phone'] = phone                        
+                        request.session['phone'] = phone
+                        request.session['email'] = email                        
                         resp = Response({
                             'status' : True, 
                             'detail' : 'User registered successfully'
                         })
-                        resp.set_cookie('user', user.pk)
+                        #resp.set_cookie('user', user.pk)
+                        request.session['user'] = user.pk
                         return resp
                         # return Response({
                         #     'status' : True, 
@@ -488,7 +571,6 @@ class Register(APIView):
 
 
 
-
 class GetSellers(generics.ListAPIView):
         permission_classes = [permissions.IsAuthenticated,] 
         serializer_class=SellerSerializer
@@ -506,7 +588,6 @@ class GetUser(generics.RetrieveAPIView):
              return self.request.user
 
 
-
 @login_required()
 @api_view(['GET'])
 def GetSellerbyId(request,pk):
@@ -522,34 +603,6 @@ def GetSellerbyUserId(request,pk):
     serializer = SellerSerializer(seller, many=False)
     return Response(serializer.data)
 
-
-# class RegisterSeller(APIView):
-#     """
-#     A class based view for creating and fetching student records
-#     """
-#     # def get(self, format=None):
-#     #     """
-#     #     Get all the student records
-#     #     :param format: Format of the student records to return to
-#     #     :return: Returns a list of student records
-#     #     """
-#     #     students = UnivStudent.objects.all()
-#     #     serializer = StudentSerializer(students, many=True)
-#     #     return Response(serializer.data)
-
-#     def post(self, request):
-#         """
-#         Create a student record
-#         :param format: Format of the student records to return to
-#         :param request: Request object for creating student
-#         :return: Returns a student record
-#         """
-#         serializer = SellerSerializer(data=request.data)
-#         if serializer.is_valid(raise_exception=ValueError):
-#             serializer.create(validated_data=request.data)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.error_messages,
-#                         status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterView(generics.GenericAPIView):
@@ -578,14 +631,14 @@ class RegisterView(generics.GenericAPIView):
 
 
 class LoginAPI(KnoxLoginView):
-    permission_classes = (permissions.AllowAny, )
-
+    permission_classes = (permissions.AllowAny,)
     def post(self, request, format=None):
         print('result for request data is:')
         print(request.data)        
+        user_obj = ''
         try:
             print(request.data["phone"])
-            phone = request.data["phone"]                  
+            user_phone = request.data["phone"]                  
             serializer = MobileNoLoginSerializer(data = request.data)       
             serializer.is_valid(raise_exception = True)
             print(serializer.is_valid)
@@ -602,14 +655,13 @@ class LoginAPI(KnoxLoginView):
             # elif user.first_login:
             #     #user.first_login = False
             #     user.save()
-            login(request, user[0], backend='accounts.backends.PhoneBackend')
-            b = super().post(request, format=None)  
-            request.session['user_token'] = b.data
-            return b           
+            login(request, user[0], backend='accounts.backends.PhoneBackend')           
+            user_obj = user[0]
+            # request.session['user_token'] = b.data
 
+            #return response           
        
-        except Exception as e:
-            
+        except Exception as e:            
             if(not str(e.args[0]).find("Mobile number is not registered") == -1):
                     return Response({
                            'status' : False,
@@ -633,8 +685,68 @@ class LoginAPI(KnoxLoginView):
             # elif user.first_login:
             #     #user.first_login = False
             #     user.save()
-            login(request, user[0], backend = 'django.contrib.auth.backends.ModelBackend')
-            return super().post(request, format=None)
+            login(request, user[0], backend = 'django.contrib.auth.backends.ModelBackend')            
+            user_obj = user[0]
+            # v = super().post(request, format=None)
+            # HttpResponse.set_cookie("atl",v.data["token"],expires=v.data["expiry"],httponly=True)
+            # return v
+        #request.session['userid'] = user
+        request.session['user_name'] = user_obj.name
+        request.session['user_phone'] = user_obj.phone 
+        request.session['user_email'] = user_obj.email 
+        response = super().post(request, format=None)
+        auth_token = response.data["token"]
+        # expiry = response.data["expiry"]
+        response.set_cookie('tkl',auth_token,24*60*60*10,httponly=True) 
+        return response       
+                #response.set_cookie('upl', user_phone, 24*60*60*10)                
+       
+                #response.set_cookie('uel', user_email, 24*60*60*10)          
+        # return Response({
+        #     'status':True,
+        #     'Detail':'Logged in Successfully'
+        # })
+
+
+class LogoutAPI(LogoutView):
+    permission_classes = (permissions.AllowAny, )
+    def post(self, request, format=None):
+        print(request)
+        v = logout(request)
+        response =  Response({'status': True,'detail': 'You have been logged out Successfully.'})
+        response.delete_cookie('upe')
+        response.delete_cookie('tkl')
+        return response
+    pass
+
+
+@api_view(['GET'])
+def GetToken(request):    
+        #credential = request.data["phone"]    
+        credential=request.GET.get('phone', '')
+        #user = User.objects.get(phone = credential)
+        #if credential == ''
+        if credential == '':
+            user = User.objects.get(email = credential)
+            if user == '':
+                user = User.objects.get
+                res = Response({'status': False,
+                'detail': 'It seems you have been registered. Please Signup and continue.'})
+            else:
+               res = GetTokenforUser(request,user)
+
+        else:
+           res = GetTokenforUser(request,user)
+        # def post(self, request, *args, **kwargs):
+        #     token = request.COOKIES['atl']
+        #     pass
+        return res
+
+@api_view(['GET'])
+def GetTokenforUser(request):
+    tkl = request.COOKIES["tkl"]   
+    return Response({'status':True, 'tkl':tkl})
+
 
 
 @api_view(['POST'])

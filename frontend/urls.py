@@ -5,9 +5,12 @@ urlpatterns = [
     path('',views.Home,name="Name"),
     path('login', views.Login,name="Login"),
     path('SignUp', views.SignUp,name="SignUp"),
-    path('Home',views.Home,name="Home"),    
-    path('Products/<type>/', views.FetchProducts),
+    path('Home',views.Home,name="Home"),       
     path('Sign', views.index, name="Submit"),
     path('SellerRegistration', views.RegisterSeller, name="SellerRegistration"),
-    path('AddProducts', views.AddProducts, name="AddProducts")
+    path('SellerDashboard', views.SellerDashboard, name="SellerDashboard"),
+    path('AddProducts', views.AddProducts, name="AddProducts"),
+    path('Checkout', views.Checkout, name="AddProducts"),
+    path('Products/', views.SelectedProduct),    
+    path('AddStore/', views.AddStore, name="AddStore"),    
 ]

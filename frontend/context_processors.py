@@ -1,8 +1,12 @@
-import random
 
-def otp_generator():
-    otp = random.randint(999, 9999)
-    return otp
+from products.models import ProductCategory
+
+
+def base(request):
+    #user_name = request.session['user_name']
+    categories = ProductCategory.objects.all()
+    categories_div_class = "ui " + convert_toWords(len(categories)) + " item menu"
+    return {'product_categories': categories,'user_name': 'Daya','categories_div_class':categories_div_class }
 
 
 def convert_toWords(number):
@@ -29,4 +33,4 @@ def convert_toWords(number):
                 20:'twenty'
         }
         
-        return switcher.get(number, "invalid")
+        return switcher.get(number, "Invalid month")
