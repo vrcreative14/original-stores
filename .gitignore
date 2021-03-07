@@ -1,5 +1,7 @@
 env/
 __pycache__/
+*.py[cod]
+/__pycache__/
 api/__pycache__/
 frontend/__pycache__/
 stores/__pycache__/
