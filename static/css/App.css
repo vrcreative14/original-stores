@@ -289,17 +289,20 @@ select {
     line-height: 2;
     margin-bottom: 16px;
     transition: width 0.5s ease-in-out;
-    border: 1px solid black;
+    border: 1px solid rgba(70, 120, 275, 0.9);
     -webkit-transition: 0.5s;
     transition: 0.5s;
     outline: none;
     margin-top: 6px;
+    height: 35px;
+    padding: 10px;
 }
 
 .selectDetails {
-    width: 180px;
+    width: 300px;
     height: 30px;
     margin-bottom: 16px;
+    border: 1px solid rgba(70, 120, 275, 0.9) !important;
 }
 
 .submitBtn {
@@ -313,7 +316,7 @@ select {
     letter-spacing: .12em;
     border-radius: 15px;
     text-align: center;
-    font-style: Belgrano;
+    font-style: barlow;
     border-radius: 2.285714rem!Important;
 }
 
@@ -322,6 +325,13 @@ select {
     border: 2px solid rgb(104, 156, 58)!Important;
     border-radius: 2.285714rem!Important;
     color: #fff!Important;
+}
+
+.generalBtn {
+    border-radius: 2.285714rem!Important;
+    color: #fff!Important;
+    background-color: #0AA09A !Important;
+    margin: 20px;
 }
 
 .continueBtn {
@@ -508,6 +518,14 @@ footer {
     text-align: center;
 }
 
+.blackicon {
+    padding: 10px;
+    background: white !Important;
+    color: black !Important;
+    min-width: 50px;
+    text-align: center;
+}
+
 
 /* Style the input fields */
 
@@ -544,7 +562,14 @@ footer {
 .cardLabel {
     color: black;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 580;
+    font-family: 'barlow';
+}
+
+.inputLabel {
+    color: black;
+    font-size: 15.5px;
+    font-weight: 700;
     font-family: 'barlow';
 }
 
@@ -648,8 +673,15 @@ li input {
 
 .promptLabel {
     font-weight: bold!Important;
-    font-size: 13px !Important;
+    font-size: 14px !Important;
     font-family: 'Barlow'!Important;
+}
+
+.productLabel {
+    font-family: 'barlow';
+    font-size: 18px;
+    color: #022457;
+    font-weight: 500;
 }
 
 
@@ -1199,6 +1231,29 @@ img {
     background: no-repeat left top;
     background-color: white !important;
     border: solid 0.1 px #6C7076;
+}
+
+.horizontalFlex {
+    display: flex;
+}
+
+.verticalFlex {
+    display: flex;
+    flex-direction: column;
+}
+
+.verticalLine {
+    border-left: solid 3px black;
+}
+
+@media only screen and (max-width: 600px) {
+    .verticalFlex {
+        display: flex;
+    }
+    .horizontalFlex {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @-webkit-keyframes fadein {

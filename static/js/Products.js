@@ -38,17 +38,104 @@ function UpdateProductDetails() {
     }
 }
 
-const AddTags = (list, category) => {
-    const div = document.createElement('div');
+function UpdateSubCategory() {
     debugger
-    var elem = document.getElementById('product_details_div');
-    if (elem.childElementCount > 0)
-        elem.parentNode.removeChild(elem);
+    let productType = document.querySelector('#select_category').selectedOptions[0].value
+    let sub_category_list = []
+    switch (productType) {
+        case 'Fashion & Clothing':
+            sub_category_list = ["Men's Wear", "Women's Wear", "Boys Wear", "Girls Wear"]
+            break;
+        case 'Home Appliances':
+            sub_category_list = ['Air Conditioners', 'Washing Machine', 'Refrigerators', 'Mixers & Grinders', 'Vaccum Cleaners', 'Room Heaters', 'Fans', 'Desert Coolers', 'Blenders', 'Others']
+            break;
+        case 'Kitchen Essentials':
+            sub_category_list = ["Utensils", "Heating & Cooking", "Tools", "Crockery", "Cutlery"]
+            break;
+        case 'Home Decor & Handicrafts':
+            sub_category_list = ["Curtains", "Bed Sheets", "Table Cover"]
+            break;
+        case 'Groceries':
+            sub_category_list = ["Pulses", "Spices", "Grains", "Dry Fruits", "Packaged Food"]
+            break;
+        case 'Electronic Devices':
+            sub_category_list = ["Television", "Speakers", "Lighting"]
+            break;
+        case 'Personal Care':
+            sub_category_list = ["Oral Hygiene", "Hair Care", "Bath Essentials"]
+            break;
+        case 'Computers & Laptops':
+            sub_category_list = ["Laptops", "Desktops"]
+            break;
+        case 'Mobile Phones':
+            sub_category_list = ["Feature Phones", "Smart Phones", "Tablets"]
+            break;
+
+    }
+    AppendCategory(sub_category_list, 'select_subcategory')
+}
+
+function AppendCategory(list, dropdown_id) {
+    var options = []
+    options.push(`<option value=''>Select Product SubCategory</option>`)
+    for (item in list) {
+        options.push(`<option value="${list[item]}">${list[item]}</option>`)
+    }
+    document.querySelector(`#${dropdown_id}`).innerHTML = options.join();
+}
+
+function UpdateProductIdentity() {
+    debugger
+    let productSubcategory = document.querySelector('#select_subcategory').selectedOptions[0].value
+    let prod_identity_list = []
+    switch (productSubcategory) {
+        case "Men's Wear":
+        case "Boys Wear":
+            prod_identity_list = ['T-Shirts', 'Formal Shirts', 'Casual Shirts', 'Blazors', 'Jackets', 'Trousers', 'Chinos']
+            break;
+        case "Women's Wear":
+        case "Girls Wear":
+            prod_identity_list = ['T-Shirts', 'Formal Shirts', 'Casual Shirts', 'Blazors', 'Jackets', 'Trousers', 'Chinos']
+            break;
+        case 'Utensils':
+            prod_identity_list = ['Stoves', 'Washing Machine', 'Refrigerators', 'Mixers & Grinders', 'Vaccum Cleaners', 'Room Heaters', 'Fans', 'Desert Coolers', 'Blenders', 'Others']
+            break;
+        case 'Kitchen Essentials':
+            prod_identity_list = ["Utensils", "Heating & Cooking", "Tools", "Crockery", "Cutlery"]
+            break;
+        case 'Oral':
+        case 'Oral Hygiene':
+            prod_identity_list = ["Toothbrush", "Toothpaste", "Mouthwash"]
+            break;
+        case 'Hair Care':
+        case 'Hair':
+            prod_identity_list = ["Shampoo", "Conditioner", "Hair Oil", "Hair Cream"]
+            break;
+        case 'General Hygiene':
+        case 'General':
+            prod_identity_list = ["Hand Sanitizer", "Hand Wash", "Soaps"]
+            break;
+
+
+    }
+    AppendCategory(prod_identity_list, 'select_identity')
+}
+
+
+const AddTags = (list, category) => {
+    let div = document.createElement('div');
+    debugger
+    // var elem = document.getElementById('product_details_div');
+    // if (elem.childElementCount > 0)
+    //     elem.parentNode.removeChild(elem);
 
     div.className = 'fields';
     div.id = 'product_details'
     switch (category) {
         case 'Clothing & Fashion':
+            let category_div = document.createElement('div');
+            category_div.className = 'fields';
+            category_div.id = 'product_details'
             var tag = ` <div><div class="required inline field"> <label class="formLabel">Select the type of Clothing</label>
             </div>
           `
@@ -62,8 +149,8 @@ const AddTags = (list, category) => {
                  `
             });
             tag += `</div>`
-            div.innerHTML = tag
-            document.querySelector('#product_details_div').appendChild(div)
+            category_div.innerHTML = tag
+            document.querySelector('#product_details_div').appendChild(category_div)
             break;
         case 'Home Appliances':
 
@@ -91,19 +178,22 @@ const AddTags = (list, category) => {
             var elem = document.getElementById('product_moredetails');
             if (elem != null)
                 elem.parentNode.removeChild(elem);
-            // const div = document.createElement('div');
-            //div.className = ' fields';
-            div.id = 'product_moredetails'
-            var tag = `<label class="formLabel">Select the type of ${category} </label>`
-            tag += `<div class="fields"><div class="six wide field">
-            <select id="select_garment" class="ui dropdown" onchange="UpdateForm3()">`
+
+            var elem2 = document.getElementById('sizes_available');
+            if (elem2 != null)
+                elem2.parentNode.removeChild(elem2);
+
+            const clothing_type_div = document.createElement('div');
+            div.className = ' fields';
+            clothing_type_div.id = 'product_moredetails'
+            var tag = `<div class="four wide required field"> <label class="formLabel">Select the type of ${category} </label>
+            <span id="article_errorLabel" class="ui left pointing red basic label promptLabel">Mention Product Colors</span>                                            `
+            tag += `
+            <select id="select_garment" class="ui dropdown" onchange="UpdateForm3()" id="article">`
 
             list.forEach(function(items) {
                 let type = Object.keys(items)[0]
                 tag += `<label>${type}</label>`
-                    //  items.forEach(function(item){
-                    //     tag+=`<option value="${item}">${item}</option>`
-                    //  });
                 let i = 0
                 for (var key in items) {
                     for (let j = 0; j < items[key].length; j++) {
@@ -113,7 +203,11 @@ const AddTags = (list, category) => {
                 }
             });
             tag += `</select>
-          </div></div>`
+          </div>
+          </div>`
+                //document.querySelector('#product_details_div').appendChild(tag)
+                //document.querySelector('#product_details_form > div').appendChild(tag)
+
             let specs = ['Fabric Used', 'Number Of Pockets']
             specs.forEach(function(item) {
                 switch (item) {
@@ -146,7 +240,7 @@ const AddTags = (list, category) => {
                     case 'Number Of Pockets':
                         tag += `
                 <div class="one wide field"></div>
-                <div class="twelve wide field">
+                <div class="ten wide field">
                 <div class="inline field">       
                 <label>${item}</label>                                
                 <input type="text" value="1" text="1" id="no_of_pockets" maxlength="2" placeholder="1" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" maxlength="10" style="width: 55px;">                          
@@ -168,8 +262,8 @@ const AddTags = (list, category) => {
                 }
             });
             //tag += `<button class="ui button successBtn">Save Product</button>`
-            div.innerHTML = tag
-            document.querySelector('#product_details_div2').appendChild(div)
+            clothing_type_div.innerHTML = tag
+            document.querySelector('#product_details_div2').appendChild(clothing_type_div)
             const div2 = document.createElement('div');
             div2.className = "four wide field"
             div2.id = "sizes_available"
@@ -396,17 +490,22 @@ function SaveProduct(category) {
             var inputs = document.getElementById('product_details_form').querySelectorAll('input')
             for (let i = 0; i < inputs.length; i++) {
                 let element_id = inputs[i].id
-                let prod = ['name', 'image', 'img_path', 'brand_name', 'price', 'store', 'category', 'garment_details']
+                let prod = ['name', 'image', 'image_rear', '', 'img_path', 'brand_name', 'price', 'store', 'category', 'garment_details']
                 let prod_details = ['specific_name', 'colors', 'material', 'is_discounted', 'discount', 'description', 'subcategory', 'neck_design', 'design_pattern', 'sizes_available']
                 switch (element_id) {
                     case '':
                         break;
+                }
+                for (item in prod) {
+                    dict[prod[item]] = document.getElementById(prod[item]).value
                 }
             }
             break;
         case 'Home Appliances':
             break;
     }
+    let jsonBody = JSON.stringify(dict)
+    getID(postJSONAuth, 'product/add/', jsonBody)
 }
 
 function OpenNextStep(step) {
@@ -436,8 +535,6 @@ function ProceedStep2() {
     if (!ValidateProductInfo()) {
         DisplayMessage('Required Fields Missing', 'Complete the form below to proceed', false)
 
-    } else {
-        OpenNextStep('product_details')
     }
 }
 
@@ -482,9 +579,19 @@ function process(id) {
                     switch (list[item]) {
                         case "thumbnail":
                             MAX_HEIGHT = 300
+                            debugger
                             srcEncoded = ResizeImage(e, MAX_HEIGHT, true)
                             document.querySelector(`#output_${id}`).src = srcEncoded;
                             document.getElementById('image_handler').value = id
+
+                            var blobBin = atob(srcEncoded.split(',')[1]);
+                            var array = [];
+                            for (var i = 0; i < blobBin.length; i++) {
+                                array.push(blobBin.charCodeAt(i));
+                            }
+                            var file = new Blob([new Uint8Array(array)], { type: 'image/png' });
+
+                            document.querySelector('#product_image_front_thumb').setAttribute('value', file)
                             break;
                         case "large":
                             MAX_HEIGHT = 500
@@ -506,7 +613,6 @@ function process(id) {
 }
 
 function ResizeImage(event, MAX_HEIGHT, is_thumbnail = false) {
-
     const canvas = document.createElement("canvas");
     //const MAX_HEIGHT = 200;
     let given_width = event.target.width
@@ -562,13 +668,76 @@ function ValidateImg() {
 }
 
 function ValidateProductInfo() {
-    let requiredFields = ['product_name', 'select-prodtype', 'product_price', 'product_image_front', 'product_image_rear', 'product_image_side', 'origin_country']
+    dict = {}
+    let requiredFields = ['product_name', 'select_category', 'select_subcategory', 'select_identity', 'product_price', 'product_image_front', 'product_image_rear', 'product_image_side', 'select_store']
     let count = 0
+    var formdata = new FormData();
+    let selectedStores = []
+    let errorLabel = ''
+    let productInfo = ''
     for (let field in requiredFields) {
-        let productInfo = document.getElementById(requiredFields[field]).value
-        let errorLabel = requiredFields[field] + '_errorLabel'
+        errorLabel = requiredFields[field] + '_errorLabel'
+        if (requiredFields[field] == 'select_store') {
+            stores = document.getElementsByName('select_store');
+            let store_count = stores.length
+            for (let i = 0; i < store_count; i++) {
+                if (stores[i].checked) {
+                    selectedStores.push(stores[i].value)
+                    store_count--;
+                }
+            }
+            if (store_count == stores.length) {
+                document.getElementById(errorLabel).classList.remove('hidden')
+                    //document.getElementById(errorLabel).innerHTML = 'This Field is Required'
+                count++
+                continue
+            } else {
+                formdata.append("selected_stores", selectedStores)
+                document.getElementById(errorLabel).classList.add('hidden')
+            }
+            continue
+        }
+        productInfo = document.getElementById(requiredFields[field]).value
         if (productInfo != null && productInfo !== "") {
             document.getElementById(errorLabel).classList.add('hidden')
+            dict[requiredFields[field]] = document.getElementById(requiredFields[field]).value
+
+            switch (requiredFields[field]) {
+                case 'product_image_front':
+                    formdata.append("image", document.getElementById('product_image_front').files[0], document.getElementById('product_image_front').files[0].name);
+                    continue;
+                case 'product_image_rear':
+                    formdata.append("image_rear", document.getElementById('product_image_rear').files[0], document.getElementById('product_image_rear').files[0].name);
+                    continue;
+                case 'product_image_side':
+                    formdata.append("image_side1", document.getElementById('product_image_side').files[0], document.getElementById('product_image_side').files[0].name);
+                    continue;
+                case 'select_store':
+                    stores = document.getElementsByName('select_store');
+                    for (store in stores) {
+                        if (stores[store].checked) {
+                            selectedStores.push(stores[store].value)
+                        }
+                    }
+
+                    formdata.append("stores", selectedStores)
+                    continue;
+                default:
+                    formdata.append(requiredFields[field], document.getElementById(requiredFields[field]).value);
+                    continue;
+
+            }
+            // if (requiredFields[field] == 'product_image_front') {
+            //     formdata.append("image", document.getElementById('product_image_front').files[0], document.getElementById('product_image_front').files[0].name);
+            // } else if (requiredFields[field] == 'product_image_rear') {
+            //     formdata.append("image_rear", document.getElementById('product_image_rear').files[0], document.getElementById('product_image_rear').files[0].name);
+            // } else if (requiredFields[field] == 'product_image_side') {
+            //     formdata.append("image_side1", document.getElementById('product_image_side').files[0], document.getElementById('product_image_side').files[0].name);
+            // } else
+            //     formdata.append(requiredFields[field], document.getElementById(requiredFields[field]).value);
+            // formdata.append("brand_name", ".Raymonds\n\n499\n\n\n \"Duke\"");
+            // formdata.append("product_price", "899");
+
             continue
         } else {
             document.getElementById(errorLabel).classList.remove('hidden')
@@ -576,8 +745,45 @@ function ValidateProductInfo() {
             count++
         }
     }
-    if (count == 0)
+    if (count == 0) {
+        let jsonBody = JSON.stringify(dict)
+        formdata.append("product_image_front_thumb", document.querySelector('#product_image_front_thumb').value)
+        getID(AddProduct, 'api/product/add/', formdata)
         return true
-    else
+    } else {
         return false
+    }
+}
+
+function ValidateSaveAddress() {
+    let requiredList = ['addressee_name', 'address_line1', 'address_line2', 'pincode', 'city', 'state']
+    let itemValue = ''
+    let dict = {}
+    for (item in requiredList) {
+        if (document.querySelector(`#${requiredList[item]}`) != null) {
+            itemValue = document.querySelector(`#${requiredList[item]}`).value
+            dict[requiredList[item]] = itemValue
+        }
+        if (itemValue == null || itemValue == '') {
+            DisplayMessage('', 'Required Fields Missing', false)
+            OpenMessageBar('Could not save.Please Enter the required fields')
+            return null
+        }
+    }
+
+    return dict;
+}
+
+function SetAddressInfo(val) {
+    debugger
+    let dict = {}
+    if (val == '') {
+        // getId(postJSONAuth, 'url', jsonBody)
+        document.getElementById('is_self_pickup').value = '1'
+    } else {
+        dict = ValidateSaveAddress()
+        if (dict != null) {
+            getID(postJSONAuth, '/api/address/save', JSON.stringify(dict))
+        }
+    }
 }

@@ -5,9 +5,11 @@ from app_global.validator import check_thumbnail,check_detailed_image
 from PIL import Image
 import io
 from django.core.files.base import ContentFile
+from django.template.defaultfilters import slugify
 import qrcode
 import random
-
+import os
+from io import BytesIO
 # Create your models here.
 
 
@@ -45,6 +47,56 @@ quantity_unit = [
 ]
 
 
+def make_thumbnail(self):    
+        THUMB_SIZE = (300,350)
+        image = Image.open(self.image)
+        image.thumbnail(THUMB_SIZE, Image.ANTIALIAS)
+
+        thumb_name, thumb_extension = os.path.splitext(self.image.name)
+        thumb_extension = thumb_extension.lower()
+        slug_str = "%s" % (thumb_name) 
+        slug_str = slugify(slug_str) + str(random.randint(9, 99)) + thumb_extension
+        thumb_filename = thumb_name + '_thumb' + thumb_extension
+
+        if thumb_extension in ['.jpg', '.jpeg']:
+            FTYPE = 'JPEG'
+        elif thumb_extension == '.gif':
+            FTYPE = 'GIF'
+        elif thumb_extension == '.png':
+            FTYPE = 'PNG'
+        else:
+            return False    # Unrecognized file type
+        
+
+        img_field = self.image   
+        image = Image.open(img_field)
+        w,h = image.size      
+        output_size = (300,350)
+        baseheight = 300
+        hpercent = (baseheight / float(image.size[1]))
+        wsize = int((float(image.size[0]) * float(hpercent)))
+        img = image.resize((wsize, baseheight), Image.ANTIALIAS)
+        #self.image_thumbnail = img
+        #thumb_io = BytesIO()
+        #self.image_thumbnail.save(thumb_io, img.format)
+        
+
+
+        # Save thumbnail to in-memory file as StringIO
+        temp_thumb = BytesIO()
+        # image = image.convert('RGB')
+        # image.save(temp_thumb, FTYPE)
+        # temp_thumb.seek(0)
+
+        # set save=False, otherwise it will run in an infinite loop
+        self.image_thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=True)
+        #self.image_thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=True)
+        temp_thumb.close()
+
+        return True
+
+
+
 class Product(models.Model):
     name = models.CharField(max_length=70)
     image = models.ImageField(validators=[check_thumbnail],upload_to='static/images', height_field=None, blank=True)
@@ -59,6 +111,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=19, decimal_places=2)
     qrcode_text = models.CharField(max_length=250, blank=True, null=True)
     product_id = models.CharField(max_length=50,blank=True, null=True)
+    slug_field = models.SlugField(max_length=100, unique=True)
     #product_details = models.ForeignKey(ProductDetails, on_delete=models.SET_DEFAULT)
     #product_category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     store = models.ManyToManyField(Store)   
@@ -67,17 +120,40 @@ class Product(models.Model):
     # def __str__(self):
     #     return str(self.name) + str(self.product_id)
     
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):     
+       slug_str = "%s %s" % (self.name, self.image.name) 
+       slug_str = slugify(slug_str) + str(random.randint(9, 99))
+       self.image.name = slug_str if len(slug_str) < 99 else str(slug_str[0:95])+'.jpg'
+
+       slug_str = "%s %s" % (self.name, self.image_rear.name) 
+       slug_str = slugify(slug_str) + str(random.randint(9, 99))
+       self.image_rear.name = slug_str if len(slug_str) < 99 else str(slug_str[0:95])+'.jpg' 
+
+       slug_str = "%s %s" % (self.name, self.image_side1.name) 
+       slug_str = slugify(slug_str) + str(random.randint(9, 99))
+       self.image_rear.name = slug_str if len(slug_str) < 99 else str(slug_str[0:95])+'.jpg' 
+
+       
+
        if(self.qrcode_text == None):
             qrcode_img = qrcode.make(self.name)
             self.qrcode_text = qrcode_img
-       
+       self.slug_field = self.image.name
        img_field = self.image   
        image = Image.open(img_field)
-       w,h = image.size
-       if w > 250 or h > 310 :
-             output_size = (300,300)
-             image.thumbnail(output_size)
+       w,h = image.size      
+       output_size = (300,350)
+    #    baseheight = 300
+    #    hpercent = (baseheight / float(image.size[1]))
+    #    wsize = int((float(image.size[0]) * float(hpercent)))
+    #    img = image.resize((wsize, baseheight), Image.ANTIALIAS)
+       #self.image_thumbnail = img
+       #thumb_io = BytesIO()
+       #self.image_thumbnail.save(thumb_io, img.format)
+       #self.image_thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=True)
+       #self.image_thumbnail = image.thumbnail(output_size)
+       #self.image_thumbnail.name = image.name + '_thumnbnail'+'.jpg'
+       make_thumbnail(self)
 
        super().save(*args, **kwargs)       
              #image.save(self.image)
@@ -119,14 +195,16 @@ class ProductDetails(models.Model):
     quantity = models.IntegerField()   
     quantity_unit = models.CharField(max_length=20,choices=quantity_unit,default='Pieces')
     colors_available = models.CharField(max_length=200, blank=True, null=True)
-    
+    origin_country = models.CharField(max_length=50, blank=True, default='INDIA')
+    manufacturer_name = models.CharField(max_length=50, blank=True, null=True)
     class Meta:
         abstract = True       
-
+      
 
 class Article(Product):
     def __str__(self):
         return self.name
+
 
 class ArticleDetails(ProductDetails):
     article = models.OneToOneField(Article, on_delete=models.CASCADE)
@@ -159,33 +237,34 @@ class GarmentClassification(models.Model):
     def __str__(self):
         return str(self.name)
 
-class Garment(Product):    
-    GARMENT_CATEGORY = (
-        ('Men', "Men's Wear"),
-        ('Women',"Women's Wear"),
-        ('Infant', "Baby wear"),
-        ('Boy', "Boys wear"),
-        ('Girl',"Girls Wear"),
-        # ('Ethnic', "Ethnic Wear"),
-        # ('Designer','Designer Wear'),
-        # ('Casual', 'Casual'),
-        # ('Party', 'Party Wear'),
-        # ('Uniform', 'School Uniform')
-    )
-    #name = models.CharField(max_length=100)
-    #product = models.OneToOneField(Product,on_delete=models.CASCADE)
-    #fabric = models.CharField(max_length=30)
-    #category = MultiSelectField(choices = GARMENT_CATEGORY)
-    #_classification = models.ForeignKey(GarmentClassification, on_delete=models.CASCADE)    
+
+# class Garment(Product):    
+#     GARMENT_CATEGORY = (
+#         ('Men', "Men's Wear"),
+#         ('Women',"Women's Wear"),
+#         ('Infant', "Baby wear"),
+#         ('Boy', "Boys wear"),
+#         ('Girl',"Girls Wear"),
+#         # ('Ethnic', "Ethnic Wear"),
+#         # ('Designer','Designer Wear'),
+#         # ('Casual', 'Casual'),
+#         # ('Party', 'Party Wear'),
+#         # ('Uniform', 'School Uniform')
+#     )
+#     #name = models.CharField(max_length=100)
+#     #product = models.OneToOneField(Product,on_delete=models.CASCADE)
+#     #fabric = models.CharField(max_length=30)
+#     #category = MultiSelectField(choices = GARMENT_CATEGORY)
+#     #_classification = models.ForeignKey(GarmentClassification, on_delete=models.CASCADE)    
     
-    def save(self, *args, **kwargs):
-            if(self.product_id == None):
-                self.product_id = '6109' + str(random.randint(9, 99))
-            super().save(*args, **kwargs) 
+#     def save(self, *args, **kwargs):
+#             if(self.product_id == None):
+#                 self.product_id = '6109' + str(random.randint(9, 99))
+#             super().save(*args, **kwargs) 
 
     
-    def __str__(self):
-        return str(self.name) + ' id:'+ str(self.product_id)
+#     def __str__(self):
+#         return str(self.name) + ' id:'+ str(self.product_id)
 
 
 class GarmentDetails(ProductDetails):
@@ -224,7 +303,7 @@ class GarmentDetails(ProductDetails):
     #     ('feet','feet')
     #     ('hands' , 'hands' 
     # )
-    garment = models.OneToOneField(Garment, on_delete=models.CASCADE)
+    garment = models.OneToOneField(Article, on_delete=models.CASCADE)
     pockets_qty = models.IntegerField(default=1, blank=True)
     #zip_qty = models.IntegerField(default=0, blank=True)
     description = models.TextField(blank=True)
@@ -241,7 +320,7 @@ class GarmentDetails(ProductDetails):
 
 
 class Inventory(models.Model):
-    clothing = models.ManyToManyField(Garment)
+    clothing = models.ManyToManyField(Article)
     # jewellery = models.ManyToManyField()
 
 
@@ -291,8 +370,6 @@ class HomeApplianceDetails(ProductDetails):
     home_appliance = models.OneToOneField(Article, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.home_appliance.name)
-
-
 
 # class ProductType(models.Model):
 #     name = models.CharField(max_length=100, unique=True)

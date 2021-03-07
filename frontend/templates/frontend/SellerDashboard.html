@@ -1,4 +1,4 @@
-{% extends 'SellerBase.html' %}
+{% extends 'Sellerbase.html' %}
 
 {% load static %}
 <!DOCTYPE html>
@@ -27,15 +27,12 @@
                     <label class="headingSpan">Name</label> :<span class="headingSpan"> {{seller_name}} </span>
                     </div>
                 
-            </div>
-       
-          
-          <h4 class="ui dividing header headLabel" style="padding-left:20px;">Your Listed Shops/Businesses</h4>
-          <div class="ui right floated segment">
-             <button class="ui small button" onclick="GoToPage('AddProducts')" style="">Add Product in My Store</button>
-             </div>
-      
-             <div  class="ui segment">
+            </div>       
+          <div class="" style="display:flex;">                 
+             {% comment %} <button class="ui small button" onclick="GoToPage('AddProducts')" style="">Add Product in My Store</button> {% endcomment %}            
+             <div  class="ui segment" style="width:40%;">
+               <h4 class="ui dividing header headLabel" style="padding-left:20px;">Your Listed Shops/Businesses</h4>
+                   <button class="ui primary button" onclick="GoToPage('/AddStore/')">Add New Store</button>
              {% if stores %}
              {% for store in stores%}
                     <div class="ui segment" style="padding:25px;">
@@ -44,39 +41,41 @@
                     </div>
                    
              {% endfor %}
-             {% else %}
-             
-             <div>
+             {% else %}             
+             <div class="ui segment">
                     <label class="headingSpan">You have not listed your Store yet.</label> 
                     <button onclick="OpenModel()" class="ui primary button">Add Store</button>
              </div>
              {% endif %}
-               <div class="centeredDiv">                                   
-             <button class="ui primary button" onclick="GoToPage('http://127.0.0.1:8000/AddStore/')">Add New Store</button>
+               <div class="centeredDiv">                                  
+         
             </div>
-            </div>
-            <br/>
-            <div style="display:flex;flex-direction:column;">
-             
-              {% if products%}
-              {% for product in products%}  
+            </div>                
+       <div class="ui two wide segment">
+          
+       </div>
+         
+          <div class="ui segment">
+                 <h4 class="ui dividing header headLabel" style="padding-left:20px;">Your Listed Products</h4>
+                    <button class="ui green button" onclick="GoToPage('/AddProducts')">Add Product</button>
+                {% if products%}
+                {% for product in products%}  
                     <div>
                     <a class="headingSpan">{{product.name}}</a> 
                     {% comment %} :<span class="headingSpan"> {{store}} </span> {% endcomment %}
-                    </div>
-                  
-             {% endfor %}
-              {% else %}
-
-                    <div>
+                    </div>                  
+                {% endfor %}
+                {% else %}
+                    <div class="ui segment">
                     <label class="headingSpan">No Products Listed as of now</label> 
-                    <label class="headingSpan">Add Your Store to start listing your products</label> 
+                    <label class="headingSpan">Add Products to your Store</label> 
                     {% comment %} <button class="ui primary button">Add Store</button> {% endcomment %}
-             </div>
+                </div>
 
               {% endif %}
+
             </div>
-         </div>    
+             </div>   
           
       {% endblock %}
     </body>

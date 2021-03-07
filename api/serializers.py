@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate
 from stores.models import Store,StoreDetails, StoreCategory, StoreSubcategory
 from django.contrib.auth import login
 from products.models import  *
+import random
+from orders.models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -71,33 +73,20 @@ class StoreSubCategorySerializer(serializers.ModelSerializer):
 
 class StoreSerializer(serializers.ModelSerializer):
     store_category = StoreCategorySerializer(read_only = True, many=True)
-    product_category = ProductCategorySerializer(read_only=True, many=True)
-    #store_subcategory = StoreSubCategorySerializer(read_only = True, many=True)
-    #seller = SellerSerializer(read_only = True, many=True)
-    print(serializers.ModelSerializer)
+    product_category = ProductCategorySerializer(read_only=True, many=True)   
+    
+    
     class Meta:
         model = Store
         fields=('seller','name','state','city','pincode','latitude','longitude','store_category','product_category','storeimage')
 
 
     def create(self, validated_data, *args, **kwargs):
-        #email = validated_data.pop('seller')
-        #user = User.objects.get(email = email)  
-        #product_categories = validated_data.pop('product_category') 
-        #store_categories = validated_data.pop('store_category')
+        
         store = Store.objects.create(**validated_data)            
         return store
 
-        # print('*******')
-        # print(validated_data.pop('seller'))
-        # store = Store.objects.create(seller = validated_data.get('seller'),
-        #                         name=validated_data.pop('name'),
-        #                         state=validated_data.pop('state'),
-        #                         city=validated_data.pop('city'),
-        #                         pincode=validated_data.pop('pincode')                                
-        #                         )
-        # print(store)                                
-        # return store
+        
        
 
 
@@ -124,27 +113,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         #Token.objects.create(user=user)
         return user
-# class StudentSerializer(serializers.ModelSerializer):
-#     """
-#     A student serializer to return the student details
-#     """
-#     user = UserSerializer(required=True)
 
-#     class Meta:
-#         model = UnivStudent
-#         fields = ('user', 'subject_major',)
-
-#     def create(self, validated_data):
-#         """
-#         Overriding the default create method of the Model serializer.
-#         :param validated_data: data containing all the details of student
-#         :return: returns a successfully created student record
-#         """
-#         user_data = validated_data.pop('user')
-#         user = UserSerializer.create(UserSerializer(), validated_data=user_data)
-#         student, created = UnivStudent.objects.update_or_create(user=user,
-#                             subject_major=validated_data.pop('subject_major'))
-#         return student
 
 
 class LoginSerializer(serializers.Serializer):
@@ -162,7 +131,12 @@ class LoginSerializer(serializers.Serializer):
             if User.objects.filter(email = email).exists():
                 #print(email, password)
                 #user = authenticate (request = self.context.get('request'),email = email, password = password)
-                user = User.objects.filter(email = email)
+                user = User.objects.get(email = email)
+                if user.check_password(pft):
+                    user = User.objects.get(email = email)
+                else:
+                    msg = {'detail' : 'Password Incorrect'}
+                    raise serializers.ValidationError(msg, code='authorization')
             else:
                 msg = {'detail' : 'Email is not registered', 'register' : False }
                 raise serializers.ValidationError(msg, code='authorization')
@@ -178,7 +152,7 @@ class LoginSerializer(serializers.Serializer):
 
 class MobileNoLoginSerializer(serializers.Serializer):
     
-    #email = serializers.CharField()
+    
     phone = serializers.CharField()
     pft = serializers.CharField(
         style={'input_type':'password'}, trim_whitespace = False
@@ -193,10 +167,14 @@ class MobileNoLoginSerializer(serializers.Serializer):
 
         if phone and password:
             if User.objects.filter(phone = phone).exists():
-                print(phone, password)
-                #user = authenticate(request = self.context.get('request'),phone = phone, password = password,backend='accounts.backends.PhoneBackend')
-                #login(self.context.get('request'),user, backend='django.contrib.auth.backends.ModelBackend')
-                user = User.objects.filter(phone = phone)
+                               
+                
+                user = User.objects.get(phone = phone)
+                if user.check_password(password):
+                    user = User.objects.get(phone = phone)
+                else:
+                    msg = {'detail' : 'Password Incorrect'}
+                    raise serializers.ValidationError(msg, code='authorization')
             else:
                 msg = {'detail' : 'Mobile number is not registered', 'register' : False }
                 raise serializers.ValidationError(msg, code='authorization')
@@ -224,35 +202,22 @@ class StoreDetailsSerializer(serializers.ModelSerializer):
 class Prod_Details_Serializer(serializers.ModelSerializer):
     sizes_available = serializers.ListField()
     class Meta:
-        model = Garment
-        fields = '__all__'
+        model = ArticleDetails
+        fields = ('primary_color','material','description','quantity')
 
 class Product_Serializer(serializers.ModelSerializer):    
     #details = Prod_Details_Serializer(required=True)
+    #store = StoreSerializer(required=True)
     class Meta:
         model = Article
-        fields = ('name','img_path','brand_name','price','store','category','garment_details')
-    # def create(self, validated_data):
-    #     details_data = validated_data.pop('details')
-    #     details = Prod_Details_Serializer.create(Prod_Details_Serializer(), validated_data=details_data)
-    #     product, created = UnivStudent.objects.update_or_create(user=user,
-    #                         subject_major=validated_data.pop('subject_major'))
-    #     return student
-# # Login Serializer
-# class LoginSerializer(serializers.Serializer):
-#   username = serializers.CharField()
-#   password = serializers.CharField()
-
-#   def validate(self, data):
-#     user = authenticate(**data)
-#     if user and user.is_active:
-#       return user
-#     raise serializers.ValidationError("Incorrect Credentials")
+        fields = ('name','price','brand_name','image','image_rear','image_side1')
+        
+   
 
 class Garment_Serializer(serializers.ModelSerializer):    
     store = StoreSerializer(read_only=True ,many = True)
     class Meta:
-        model = Garment
+        model = Article
         fields = ['name','image','img_path','brand_name','price','category','store']
 
 class GarmentDetailsSerializer(serializers.ModelSerializer):    
@@ -260,4 +225,23 @@ class GarmentDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = GarmentDetails
         fields = ['garment','pockets_qty','description','neck_design','design_pattern','sizes_available']
+
+
+class ShippingAddressSerializer(serializers.ModelSerializer):
+    
+    
+    def create(self, validated_data, *args, **kwargs):
+             
+        shipping_address = ShippingAddress.objects.create(**validated_data)            
+        return shipping_address
+
+    class Meta:
+        model = ShippingAddress
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Order
+        fields = ['ref_code', 'user', 'payment_status', 'items', 'destination']
 

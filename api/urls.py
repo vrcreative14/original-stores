@@ -29,7 +29,8 @@ urlpatterns = [
     re_path("^validate_mobile_otp/$", views.ValidatePhoneOTP.as_view()),
     re_path("^register/$", views.Register.as_view()),
     path("api/auth", include('knox.urls')),
-    path("get/id/", views.GetTokenforUser)    
+    path("get/id/", views.GetTokenforUser),
+    path('address/save', views.SaveShipppingAddress.as_view())        
    #path('products/list/',views.GarmentViewSet, name='get-products')
    # path("api/auth/register",RegisterAPI.as_views()),
 ]

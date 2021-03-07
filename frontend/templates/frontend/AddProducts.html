@@ -50,29 +50,79 @@
         </div>
          {% include 'Message.html' %}
         <div class="" style="margin: 55px;">
+
+
+              {% if stores|length > 1 %}
+                  <span class="ui blue label"  style="line-height:1.7;font-size:15px;font-family:'lato';">Select stores in which you want to add this Product</span>
+                    <div>
+                     <span id="select_store_errorLabel" class="ui bottom pointing red basic label hidden" style="font-size:15.5px;margin-top:10px;">Select at least one store to save the product</span>                                            
+                     <div class="card-container">                      
+                        {% for store in stores %}
+                      <div class="card">
+                            <input name="select_store" class="ui checkbox" type="checkbox" value={{store.pk}} />
+                            <span class="headLabel">{{store.name}}</span><br/>
+                            <span class="cardLabel">Pincode : {{store.pincode}}</span><br/>
+                            <span class="cardLabel">City : {{store.city}}</span><br/>
+                            <span class="cardLabel">Store-ID : {{store.store_id}}</span>
+                       </div>
+                        {% endfor %}
+                
+                    </div>  
+                    {% comment %} {% else %}  
+                        <div>
+                        Adding the product to your store named as<span class="cardLabel"> {{stores.0.name}}</span>
+                        </div> {% endcomment %}
+                {% else %}               
+                    <div>
+                          <span class="ui blue ribbon label" style="line-height:1.7;font-size:15px;font-family:'lato';">Adding Product in store named as {{stores.0.name}}</span>
+                          <input name="select_store" type="hidden" value={{store.0.pk}}>
+                    </div>
+                {% endif %}
+
             <div id="product_info_tab" name="productInfo" class="ui tab active" data-tab="productInfo">
                     <div class="ui form" id="product_form">
                         <h4 class="ui dividing header headLabel">Name & Category</h4>
                             <div class="fields">
-                            <div class="six wide field">
+                            <div class="four wide field">
                                 <div class="required inline field">
                                 <label>Product Name</label>
                                 <span id="product_name_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Name is required</span>                                            
                                 </div>
                                 <input type="text" id="product_name">                               
                             </div>                          
-                          <div class="seven wide field">
+                          <div class="four wide field">
                                 <div class="required inline field">
-                                <label>Product Type</label>
-                                <span id="select-prodtype_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Type is required</span>                                            
+                                <label>Product Category</label>
+                                <span id="select_category_errorLabel" class="ui left pointing red basic label promptLabel hidden">Product Type is required</span>                                            
                                 </div>
-                                <select id="select-prodtype" onchange="UpdateProductDetails()">
+                                <select id="select_category" onchange="UpdateSubCategory()">
                                     <option value="">Select Product Category</option>
                                     {% for category in productcategories %}                                    
                                     <option value="{{category}}">{{category}}</option>
                                     {% endfor %}
                                 </select>
-                            </div>                          
+                            </div>            
+
+                              <div class="four wide field">
+                                <div class="required inline field">
+                                <label>Product SubCategory</label>
+                                <span id="select_subcategory_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Type is required</span>                                            
+                                </div>
+                                <select id="select_subcategory" onchange="UpdateProductIdentity()">
+                                    <option value="">Select Product SubCategory</option>                                   
+                                </select>
+                            </div> 
+
+                               <div class="four wide field">
+                                <div class="required inline field">
+                                <label>Product Identity</label>
+                                <span id="select_identity_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Type is required</span>                                            
+                                </div>
+                                <select id="select_identity" onchange="">
+                                    <option value="">Select Product SubCategory</option>                                   
+                                </select>
+                            </div> 
+
                         </div>
                         <!-- <div class="">  -->
                         <h4 class="ui dividing header headLabel">Product Images</h4>
@@ -83,7 +133,7 @@
                                     <label>Upload Front Image of the product</label>
                                     <span id="product_image_front_errorLabel" class="ui left pointing red basic label promptLabel hidden">This Field is required</span>                                            
                                         </div>
-                                    <input type="file" id="product_image_front" onchange="process(this.id)">                                   
+                                    <input type="file" id="product_image_front" onchange="process(this.id)" accept=".jpg, .jpeg, .png">                                   
                                    
                                     <a class="ui image" onclick=""> 
                                       <img id="output_product_image_front" />
@@ -92,6 +142,7 @@
                                       <!-- <div class="ui top attached label">HTML</div> -->
                                       <!-- <label class="ui bottom attached orange label anchorlabel">Preview</label> -->
                                     </a>
+                                    <input type="hidden" id="product_image_front_thumb"/>
                                 </div>                           
                                 <div class="four wide field">
                                     <div class="required field">
@@ -167,14 +218,17 @@
                             </div>          
                                                               
                     </div>
-                    <div class="centeredDiv">                                    
-                    <button class="ui blue button submitBtn" onclick="ProceedStep2()">Proceed to next Step</button>
-                    </div>                    
+                    <div class="centeredDiv">   
+                  
+                  
+                    </div> 
+
+                    <div class="centeredDiv">      
+                      <button class="ui teal button submitBtn" onclick="ProceedStep2()">Proceed to next Step</button>             
             </div>           
                 <input type="hidden" id="image_handler"/>
                 <div id="preview_modal" class="ui modal" style="overflow:scroll;">
                     <i class="close icon"></i>
-                  
                         <!-- <div class="description">
                             <div class="ui header">Here is the image you selected which has resolution of <span id="resolution"></span> </div>
                          
@@ -217,23 +271,20 @@
                     
                         <div class="" id="product_details_div2">
                             
-                        </div>
-                        
-                            
-                                                                                            
+                        </div>                                                                                                                            
             
                 <div class="fields" id="appearance_details">
                     <div class="three wide field">
                         <div class="inline required field">
                             <label>Colors </label>
-                            <span id="colorserrorLabel" class="ui left pointing red basic label promptLabel">Mention Product Colors</span>                                            
+                            <span id="colors_errorLabel" class="ui left pointing red basic label promptLabel">Mention Product Colors</span>                                            
                     </div>
                     <input type="text">
                     </div>                                           
                     <div class="four wide field">
                         <label> Quantity Available </label>                   
                         <div class="inline field">
-                            <input type="text">
+                            <input type="text" id="quantity">
                         <button class="small ui blue compact icon button" onclick="plusminusValue('no_of_pockets','+')">
                             <i class="plus icon"></i>
                             </button>

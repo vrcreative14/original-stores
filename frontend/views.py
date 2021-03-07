@@ -13,6 +13,7 @@ from stores.models import States, StoreCategory, Store
 from products.models import *
 from api.utils import convert_toWords
 from django.shortcuts import redirect
+from orders.models import Order, ShippingAddress
 
 #from .forms import SellerForm
 #from api.models import Product
@@ -55,8 +56,13 @@ def SignUp(request):
 
 @login_required(login_url='/login')
 def Checkout(request):      
-        # print('no')
-      return render(request,'frontend/Checkout.html')
+        user_id = request.session['userid']
+        saved_addresses = ShippingAddress.objects.filter(user = user_id)
+        context = {'addresses': saved_addresses,'states': States.STATE_UT}
+        save_address = ''
+        # if orders:
+        #         saved_address = orders.destination
+        return render(request,'frontend/Checkout.html', context)
 
 @login_required(login_url='/login')
 def categories(request):
@@ -166,7 +172,13 @@ def index(request):
 @login_required(login_url='/login')
 def AddProducts(request):
     categories = ProductCategory.objects.all()    
-    context = {'productcategories': categories}
+    seller_id = request.session['seller']
+    
+    if seller_id :
+        store = Store.objects.filter(seller = seller_id)
+
+    
+    context = {'productcategories': categories, 'stores':store}
     return render(request,'frontend/AddProducts.html', context)
 
 
@@ -174,32 +186,48 @@ def SelectedProduct(request):
     category = request.GET.get('category','')
     default_items = []
     context = {}
+    sub_categories = []
+    articles = []
     # if category == 'clothing':
-            #default_items = ['T-Shirts','Formal Shirts','Casual Shirts','Formal Trousers','Lowers','Jeans & Casual Tousers']
+    default_items = ['T-Shirts','Formal Shirts','Casual Shirts','Formal Trousers','Lowers','Jeans & Casual Tousers']
     default_items_menu_class = 'ui bottom attached inverted ' + convert_toWords(len(default_items)) + ' item menu'
     #selected_product_categories = ProductSubCategory.objects.filter(type = 1012)
-    selected_product_category = ProductCategory.objects.get(name = category)
-    sub_categories = ProductSubCategory.objects.filter(type = selected_product_category.pk)
-    for item in sub_categories:
-        articles = Article.objects.filter(product_category = item.pk)
+    selected_product_category = ProductCategory.objects.filter(name = category)
+    if len(selected_product_category) > 0:
+        sub_category = get_default_subcategory(category)
+        sub_category_obj = ProductSubCategory.objects.filter(type = selected_product_category[0].pk, name = sub_category)
     
-    
-    item_in_words = convert_toWords(len(selected_product_categories))
-    div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu'
+    if len(sub_category_obj) > 0:                   
+            articles = Article.objects.filter(product_category = sub_category_obj[0].pk).order_by('-id')[:10]
 
     
+    item_in_words = convert_toWords(len(sub_categories))
+    div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu'    
     
-    context = {'selected_product_categories' : selected_product_categories,'articles':articles ,'div_class_name': div_class_name,'default_items':default_items,'default_items_menu_class':default_items_menu_class}        
+    context = {'category':category,'selected_product_categories' : sub_categories,'articles':articles ,'div_class_name': div_class_name,'default_items':default_items,'default_items_menu_class':default_items_menu_class}        
     return render(request,'SelectedProductList.html',context)
 
 
-def GetContextForCategory():
-    # return{
-    #     'clothing': 
-    #             pass
-    #             #return GarmentClassification.object.all()
+def ProductDetails(request):
+    slug = request.GET.get('details','')
+    context = {}
+    if slug:
+        article = Article.objects.get(slug_field = slug)
+        article_details = ArticleDetails.objects.get(article = article.pk)
+        context = {'article': article,'details':article_details}
+    return render(request,'frontend/ProductDetails.html', context)
 
-    #     'kitchen_essentials': 
-    #             pass
-    # } 
-    pass
+
+
+def get_default_subcategory(category):
+
+        switcher={
+            'Fashion & Clothing':"Men's Wear",
+            'Home Appliances':'Refrigerators',
+            'Kitchen Essentials':'Kitchen Appliances',
+            'Electronic Devices':'Television',
+            'Groceries':'Thursday',
+            'Personal Care':'Friday',
+            'Automobile Accesories':'Saturday'
+        }
+        return switcher.get(category,"Invalid")

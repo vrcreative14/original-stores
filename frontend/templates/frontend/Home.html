@@ -9,65 +9,73 @@
 
 <body>
 
-    {% block content %}  
+    {% block content %}
+
         {% include 'ProductCategories.html' %}
-        {% include 'Message.html'%}
+        {% include 'Message.html' %}
     <div class="heading">
          <label class="headLabel">Shop by Category</label></div>
     <div class="displayRow" title="Shop">
-        <div onclick = "window.location='http://www.vcnity.online/Products/?category=clothing';">
+        <div onclick = "window.location='/Products/?category=Fashion+%26+Clothing';">
             <div href="SignUp" style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/Fashion%26Clothing.jpg');"
                 class="categoryImage">
-              
+                <!-- <a style="background-image: url('https://i.ibb.co/wMqvdb0/readymade-Garments.jpg');;"></a> -->
+                <!-- <img src="https://i.ibb.co/wMqvdb0/readymade-Garments.jpg"> <br/> -->
 
             </div>
             <a class="anchor" href="Products" onclick="">Fashion & Clothing</a>
         </div>               
 
-        <div onclick = "window.location='http://www.vcnity.online/Products/?category=household_essentials';">
+        <div onclick = "window.location='/Products/?category=household_essentials';">
             <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/household_essentials_50.jpg');background-repeat: no-repeat;"
                 class="categoryImage">
-             
+                <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
+                <!-- <img src="https://i.ibb.co/ygRbNws/fabrics.jpg"> <br/> -->
+                <!--  -->
             </div>
             <a class="anchor" href="Products" onclick="">Household Essentials</a>
         </div>
 
-        <div onclick = "window.location='http://www.vcnity.online/Products/?category=kitchen_essentials';">
+        <div onclick = "window.location='/Products/?category=Kitchen%20Essentials';">
             <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/kitchen_essentials.jpg');background-repeat: no-repeat;"
                 class="categoryImage">
-            
+                <!-- <img src="https://i.ibb.co/KsHMtxF/Sadar-Bazaar.jpg"> <br/> -->
             </div>
             <a class="anchor" href="Products">Kitchen Essentials</a>
         </div>
 
-        <div onclick = "window.location='http://www.vcnity.online/Products/?category=handicrafts_home_decor';">
+        <div onclick = "window.location='/Products/?category=handicrafts_home_decor';">
             <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/handicrafts_home_decor.jpg');background-repeat: no-repeat;"
                 class="categoryImage">
-                
+              
             </div>
             <a class="anchor" href="Products">Handicrafts & Home Decor</a>
-        </div>        
+        </div>           
           
-        </div>
-
-        
-        
+        </div>      
         
     </div>
 
     <div style="display: flex;justify-content: space-evenly;">
-        <div>            
+        <div>
+          
+
         </div>
     </div>
 
     <div class="heading"> 
     <label class="headLabel">Vcnity Volunteer</label>
-    </div>  
     </div>
+   
+
+    </div> 
+
     <div>
+
+
+    </div>    
     </div>
-    <script src="{% static 'js/Index.js' %}"></script>
-    </div>
+
 
     {% endblock %}
 </body>

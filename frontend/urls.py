@@ -13,4 +13,6 @@ urlpatterns = [
     path('Checkout', views.Checkout, name="AddProducts"),
     path('Products/', views.SelectedProduct),    
     path('AddStore/', views.AddStore, name="AddStore"),    
+    path('products/details/', views.ProductDetails, name="ProductDetails"),    
+    path('buy/', views.Checkout, name="CheckOut"),    
 ]

@@ -27,22 +27,7 @@
       </a>
     </div>
 
-    <!-- <div>
-      <img />
-      <label style="align-self:flex-start">Vcnity...</label> <br />
-      <label>Visit your favourite shops in the city online</label>
-    </div> -->
-    <!-- <div class="searchDiv">
-        <input class="searchbar" type="text" placeholder="What are you searching for ?"></input>
-     
-          <img src='https://i.ibb.co/gPnyS7Z/search-glass.jpg' class="searchImg"></img>
-        
-        </div>  -->
-    <!-- <div id="demo"></div> -->
-    <!-- <div class="ui icon input">
-      <input type="text" placeholder="Search...">
-    <i class="circular search link icon" onclick="() => {console.log('Searching nearby stalls...')};"></i>
-    </div> -->
+   
     <input type="hidden" id="isLocationEdited" value="0">
     <input type="hidden" id="saveLocation" value="">
     <input type="hidden" id="currentEvent" value="">
@@ -55,18 +40,14 @@
       
       <div class="ui small icon input">
         
-        <!-- <i class="location arrow icon link" onclick="() => {  }">Edit</i> -->
+        
         <i id="detectLocation" class="crosshairs icon link" onclick="FetchCitynPin(event)"></i>       
         <input id="locationCity" class="prompt " type="text" style="width: 200px;" value="Lucknow, Charbagh" placeholder="">    
         <input id="locationPin" class="prompt " type="text" style="width: 130px;" value="208012" placeholder="">     
         
            
       </div>     
-      <!-- <span id="" class="ui black basic label">Pincode</span>     -->
-      <!-- <div class="ui small icon input">
-        
-        
-      </div> -->
+    
     </div>
       </div>
 
@@ -98,7 +79,7 @@
     {% else %}
     {% endif %}
     {% if user.is_seller %}
-    <a href="SellerDashboard">Seller Dashboard</a>
+    <a href="../SellerDashboard">Seller Dashboard</a>
     {% else %}
     <a href="/SellerRegistration">Join as a Seller</a>
     {% endif %}

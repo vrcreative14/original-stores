@@ -36,6 +36,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import parser_classes
 from products.models import *
+from orders.models import *
 
 # Create your views here.
 
@@ -221,8 +222,8 @@ def RegisterSeller(request):
     secondary_phone = request.data.get('secondarymobile', False)
 
     try:
-        user_phone = request.COOKIES.get('upl','') 
-        user_email = request.COOKIES.get('uel','')
+        user_phone = request.session['user_phone']
+        user_email = request.session['user_email']
         user = User.objects.get(phone = user_phone) if user_phone != '' else User.objects.get(email = user_email)
         
         Temp_data = {'user': user.pk, 'first_name' : first_name,'middle_name': middle_name,'last_name': last_name, 'secondary_email': secondary_email, 'secondary_phone': secondary_phone}
@@ -236,8 +237,9 @@ def RegisterSeller(request):
 
     serializer = SellerSerializer(data=Temp_data)
     # user = UserSerializer()
-    #try:
-    if serializer.is_valid(raise_exception=ValueError):
+    try:
+        if serializer.is_valid(raise_exception=ValueError):
+            serializer.errors
             seller = serializer.save()
             # usr_otp = random.randint(100000, 999999)
             # print(seller.user)
@@ -254,19 +256,22 @@ def RegisterSeller(request):
 
             # print('seller serializer data:',json.dump(serializer.data,4) )
             #serializer.create(validated_data=request.data)
+            request.session['seller'] = seller.pk
             resp =  Response({
                 'status': True,
-                'detail':'Seller registered successfully. Continue filling the Store Info.'
-            })
-            resp.set_cookie('seller', seller)
+                'detail':'Seller registered successfully. Continue filling the Store Info',
+            }, status.HTTP_201_CREATED)                      
             return resp
             #return Response(serializer.data,status=status.HTTP_201_CREATED)              
     
-    # except:
-    #     e = sys.exc_info()[0]
-    #     print(e)
-    return Response(serializer.error_messages,
-                        status=status.HTTP_400_BAD_REQUEST)
+    except:
+         e = sys.exc_info()[0]
+         print(e)
+         return Response({
+             'status':False,
+             'detail':e
+         })
+        #return Response(serializer.error_messages,status=status.HTTP_400_BAD_REQUEST)
 
 
 # @login_required(login_url='http://127.0.0.1:8000/login')
@@ -477,14 +482,64 @@ class AddProductDetails(APIView):
 
 
 class AddProduct(APIView):
+    parser_classes = [MultiPartParser, FormParser]
     def post(self, request, format = None):
-        serializer = Product_Serializer(data = request.data)
-        if(serializer.is_valid()):
-            prod = serializer.save()
+        seller_id = request.session['seller']
+        if seller is None:
+            return redirect('/SellerRegistration');
+        store = Store.objects.filter(seller = 2)
+        name = request.data.get('product_name', '')
+        price = request.data.get('product_price', '')
+        brand_name = request.data.get('brand_name', '')
+        sub_category_name = request.data.get('select_subcategory', '')        
+        identity_name = request.data.get('select_identity', '')
+        image = request.data.get('image','')
+        image_rear = request.data.get('image_rear','')
+        image_side1 = request.data.get('image_side1','')
+        selected_stores = request.data.get('selected_stores',[])
+        store_ids = [j.store_id for x in Store.object.filter(seller = seller_id)]
+        stores_list = []
+        for store in store_ids:
+            stores_list.append(int(request.data.get(store))) if request.data.get(store) else print('no store')
+
+
+        # if len(selected_stores) > 0:
+        #     for stores in selected_stores:
+                
+
+        #image_thumbnail = request.data.get('product_image_front_thumb','')
+        temp_data = {'name': name, 'price':price, 'brand_name':brand_name,'image':image,'store':store}
+        #image_rear = request.data.get('image_rear','')
+        #image_side1 = request.data.get('image_side1','')
+                
+        serializer = Product_Serializer(data = temp_data)
+        if serializer.is_valid():
+                try:
+                        product_sub_category = ProductSubCategory.objects.get(name = sub_category_name)
+                        product_class = ProductIdentity.objects.get(type = product_sub_category.pk,name = identity_name)
+                        new_product = Article.objects.create(name = name, brand_name = brand_name,
+                        price = price, image = image,image_rear = image_rear,image_side1 = image_side1, product_category = product_sub_category, product_class=product_class)
+                        new_product.store.add(Store.objects.get(id))
+                        #prod = serializer.create(validated_data = serializer.data)
+                        for store_id in stores_list:
+                            new_product.store.add(Store.objects.get(store_id = store_id))
+                        return Response({
+                            'status': True,
+                            'detail': "Product added succesfully"
+                        },status.HTTP_201_CREATED)
+                
+                except Exception as e: 
+                        return Response({
+                            'status': False,
+                            'detail': "Product could not be saved due to some error.Please Try again"
+                        },status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        else:
             return Response({
-                       'status': True,
-                       'details': prod.id
-                   })
+                'status': False,
+                'detail':'Product could not be saved'
+            }, status.HTTP_400_BAD_REQUEST)
+
 
 def RegisterUser(temp_data):
         try:
@@ -570,7 +625,6 @@ class Register(APIView):
             })
 
 
-
 class GetSellers(generics.ListAPIView):
         permission_classes = [permissions.IsAuthenticated,] 
         serializer_class=SellerSerializer
@@ -602,7 +656,6 @@ def GetSellerbyUserId(request,pk):
     seller = Seller.objects.get(user = user.id)
     serializer = SellerSerializer(seller, many=False)
     return Response(serializer.data)
-
 
 
 class RegisterView(generics.GenericAPIView):
@@ -643,7 +696,7 @@ class LoginAPI(KnoxLoginView):
             serializer.is_valid(raise_exception = True)
             print(serializer.is_valid)
             user = serializer.validated_data['user']
-            if user[0].is_active == False:
+            if user.is_active == False:
                     return Response({
                     'status': False,
                     'detail':'Please verify your Mobile number through OTP, before logging in.'
@@ -655,8 +708,8 @@ class LoginAPI(KnoxLoginView):
             # elif user.first_login:
             #     #user.first_login = False
             #     user.save()
-            login(request, user[0], backend='accounts.backends.PhoneBackend')           
-            user_obj = user[0]
+            login(request, user, backend='accounts.backends.PhoneBackend')           
+            user_obj = user
             # request.session['user_token'] = b.data
 
             #return response           
@@ -667,12 +720,17 @@ class LoginAPI(KnoxLoginView):
                            'status' : False,
                            'detail' : 'Entered Mobile number is not registered. <a style="font-size:15px;font-weight:300;" href="/SignUp"> New users Signup from here</a>',                          
                             })
+            
+            elif(not str(e.args[0]).find("Password Incorrect") == -1):
+                    return Response({
+                           'status' : False,
+                           'detail' : 'Password Incorrect',},status.HTTP_401_UNAUTHORIZED)
 
             serializer = LoginSerializer(data = request.data)                            
             serializer.is_valid(raise_exception = True)
             print(serializer.is_valid)
             user = serializer.validated_data['user']
-            if user[0].is_active == False:
+            if user.is_active == False:
                 return Response({
                     'status': False,
                     'detail':'Please verify your Email through OTP, before logging in.'
@@ -685,15 +743,20 @@ class LoginAPI(KnoxLoginView):
             # elif user.first_login:
             #     #user.first_login = False
             #     user.save()
-            login(request, user[0], backend = 'django.contrib.auth.backends.ModelBackend')            
-            user_obj = user[0]
+            login(request, user, backend = 'django.contrib.auth.backends.ModelBackend')            
+            user_obj = user
             # v = super().post(request, format=None)
             # HttpResponse.set_cookie("atl",v.data["token"],expires=v.data["expiry"],httponly=True)
             # return v
-        #request.session['userid'] = user
+        request.session['userid'] = user_obj.pk
         request.session['user_name'] = user_obj.name
         request.session['user_phone'] = user_obj.phone 
         request.session['user_email'] = user_obj.email 
+        seller = Seller.objects.filter(user = user_obj.pk)
+        if seller[0]:
+            request.session['seller'] = seller[0].pk
+        else:
+            request.session['seller'] = None
         response = super().post(request, format=None)
         auth_token = response.data["token"]
         # expiry = response.data["expiry"]
@@ -746,7 +809,6 @@ def GetToken(request):
 def GetTokenforUser(request):
     tkl = request.COOKIES["tkl"]   
     return Response({'status':True, 'tkl':tkl})
-
 
 
 @api_view(['POST'])
@@ -852,12 +914,12 @@ def handle_uploaded_image(request):
     if not serializer.is_valid():
         return Response({'msg':serializer.errors}, status.HTTP_400_BAD_REQUEST)
 
-    clothing = Garment.create()
+    clothing = Article.create()
 
 
 @api_view(['GET'])
 def GetProducts(request):
-    products = Garment.objects.all()
+    products = Article.objects.all()
     Temp_data = []
     for product in products:
         print(product)     
@@ -878,10 +940,46 @@ def GetProducts(request):
 
 
 class GarmentViewSet(viewsets.ModelViewSet):
-    queryset = Garment.objects.all()
+    queryset = Article.objects.all()
     serializer_class = Garment_Serializer
 
 class GarmentDetailsViewSet(viewsets.ModelViewSet):
     queryset = GarmentDetails.objects.all()
     serializer_class = GarmentDetailsSerializer
+
+
+class SaveShipppingAddress(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, *args, **kwargs):
+        # is_self_pickup = request.data.get('self_pickup',False)
+        # temp_data = {}
+        # if is_self_pickup:
+        #         order = OrderSerializer(data = )
+
+
+        # else:                
+                user = request.session['userid']
+                address_line1 = request.data.get('address_line1', False)
+                address_line2 = request.data.get('address_line2', False)
+                pincode = request.data.get('pincode', False)
+                city = request.data.get('city', False)
+                state = request.data.get('state', False)
+                addressee_name = request.data.get('addressee_name',False)                
+                temp_data = {'user':user,'address_line1':address_line1,'address_line2':address_line2,'addressee_name':addressee_name,'city':city,'state':state,'pincode':pincode }
+
+                serializer = ShippingAddressSerializer(data = temp_data)
+                if serializer.is_valid():
+                        serializer.save()
+                        return Response({
+                            'status':True,
+                            'detail':'Shipping Address Saved Successfully'
+                        }, status.HTTP_201_CREATED)
+                
+                else:
+                        return Response({
+                            'status':False,
+                            'detail':serializer.errors
+                        }, status.HTTP_400_BAD_REQUEST)
+
 

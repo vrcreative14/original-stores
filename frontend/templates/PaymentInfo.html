@@ -1,0 +1,113 @@
+
+{% load static %}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+
+        <style>
+
+</style>
+
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+{% block content %}
+       <h4 class="ui dividing header headLabel">Choose Mode Of Payment</h4>            
+     <div class="ui grid" style="padding:40px;">
+  <div class="four wide column">
+    <div class="ui vertical fluid tabular menu">
+      <a class="active green item" style="line-height:45px;">
+        <span class="headLabel">UPI</span>
+      </a>
+      <a class="item" style="line-height:45px;">
+         <span class="headLabel">Debit Card/Credit Card</span>
+      </a>
+      <a class="item" style="line-height:45px;">
+         <span class="headLabel">Net Banking</span>
+      </a>
+      <a class="item" style="line-height:45px;">
+        <span class="headLabel">Cash On Delivery</span>
+        
+      </a>
+      <br/>
+     <div></div>
+    </div>
+  </div>
+  <div class="twelve wide stretched column">
+    <div class="ui segment">
+      This is an stretched grid column. This segment will always match the tab height
+    </div>
+  </div>
+</div> 
+
+{% comment %} 
+<h2>Vertical Tabs</h2>
+<p>Click on the buttons inside the tabbed menu:</p>
+
+<div class="ui vertcal menu tab">
+<div class="item">
+  <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">London</button>
+</div>
+<div class="active item">
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
+</div>
+<div class="item">
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+</div>
+</div>
+
+<div id="London" class="tabcontent">
+  <h3>London</h3>
+  <p>London is the capital city of England.</p>
+</div>
+
+<div id="Paris" class="tabcontent">
+  <h3>Paris</h3>
+  <p>Paris is the capital of France.</p> 
+</div>
+
+<div id="Tokyo" class="tabcontent">
+  <h3>Tokyo</h3>
+  <p>Tokyo is the capital of Japan.</p>
+</div> {% endcomment %}
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+
+        
+       <script src="{% static 'js/Misc.js' %}"></script>
+<script src="{% static 'js/Products.js' %}"></script>
+
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    </body>
+</html>

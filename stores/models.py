@@ -116,10 +116,7 @@ class StoreManager(models.Model):
     def __str__(self):
         return str(self.name)
 
-
-class Store(models.Model):
-    
-    STATE_UT = (
+STATE_UT = [
         ('Andaman and Nicobar Islands', 'Andaman and Nicobar Islands'),
         ('Andhra Pradesh', 'Andhra Pradesh'),
         ('Arunachal Pradesh', 'Arunachal Pradesh'),
@@ -155,7 +152,9 @@ class Store(models.Model):
         ('Uttarakhand', 'Uttarakhand'),
         ('Uttar Pradesh', 'Uttar Pradesh'),
         ('West Bengal', 'West Bengal'),         
-    )
+]
+
+class Store(models.Model):       
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)    
     state = models.CharField(max_length=30, choices=STATE_UT)
@@ -177,9 +176,11 @@ class Store(models.Model):
     def __str__(self):
         return str(self.name)
 
-    def save(self, *args, **kwargs):
-          self.store_id  = str(self.pincode) +str(self.pk)+ str(random.randint(9, 99))
-          super().save(*args, **kwargs)  
+    # def save(self, *args, **kwargs):
+    #     if self.store_id is None:
+    #         self.store_id  = str(self.pincode) +  + str(random.randint(9, 9999))
+
+    #     super().save(*args, **kwargs)  
 
     
         #serializer = StoreSerializer(new_store)
