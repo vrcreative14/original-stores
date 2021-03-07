@@ -21,13 +21,13 @@ function Login() {
             "pft": pw
         })
     }
-    postJSON('http://www.vcnity.online/api/login/', jsonBody)
+    postJSON('/api/login/', jsonBody)
 }
 
 function Logout() {
     debugger
     let jsonBody = ''
-    postLogout('http://www.vcnity.online/api/logout/', jsonBody)
+    getID(postLogout, '/api/logout/', jsonBody)
 }
 
 function validateMobileno(enteredMobile) {
@@ -77,7 +77,7 @@ const postJSON = (url, jsonBody) => {
             if (!response.ok) {
                 console.log(response)
                 response.text().then(text => {
-                    let detail = JSON.parse(text).detail[0];
+                    let detail = JSON.parse(text).detail;
                     DisplayMessage('', detail, false)
                 })
             } else {
@@ -112,8 +112,7 @@ function postJSONAuth(url, jsonBody, tkl) {
                 console.log(response)
                 if (response.status == 401) {
                     DisplayMessage('You have been Logged Out', 'Log in again to continue..', false)
-                    window.open("http://www.vcnity.online/login", "_self")
-
+                    window.open("/login", "_self")
                 }
                 response.text().then(text => {
                     DisplayMessage('', 'Some Error Occurred. Please try again after some time.', false)
@@ -168,7 +167,6 @@ const ShowResult = (data) => {
     var status = data.status
     if (status == false) {
         switch (data.detail) {
-
             case 'Either phone or otp was not received':
                 DisplayMessage('Required Data missing', data.detail, data.status)
                 break;
@@ -184,17 +182,11 @@ const ShowResult = (data) => {
                 OpenMobileVerification();
                 DisplayMessage('', data.detail, data.status)
                 document.querySelector('#mobileField').classList.add('hidden')
-                    //document.querySelector('#signupBtn').classList.add('hidden')
-                    // OpenSignupForm()
                 break;
-
-
             case 'User registered successfully':
-                //DisplayMessage('Required Data missing',data.detail,data.status)
                 debugger
                 var pft = document.getElementById('password').value
                 var mobile_no = document.getElementById('mobile_no').value
-                    //setCookie('user_ph',mobile_no)
                 debugger
                 document.getElementById('otpVerificationDiv').style.display = 'none';
                 $('.ui.modal').modal('show');
@@ -203,13 +195,12 @@ const ShowResult = (data) => {
                     'phone': mobile_no,
                     'pft': pft,
                 })
-                postJSON('http://www.vcnity.online/api/login/', jsonBody)
+                postJSON('/api/login/', jsonBody)
                 debugger
                 setTimeout(() => { window.open('/', '_self') }, 2000);
                 break;
 
             case 'OTP matched':
-                // document.getElementById('otpmatchedIcon').style.display = 'inline';
 
                 DisplayMessage('', 'Excellent! OTP Matched', data.status)
                 OpenSignupForm()
@@ -247,7 +238,21 @@ const ShowResult = (data) => {
                 break;
             case 'Image uploaded succcesfully':
                 DisplayMessage('', 'Store Successfully Created. Now you are ready to list your products online and reach your customers.', true)
+            case 'You have been logged out Successfully.':
+                DisplayMessage('', data.detail, data.status)
+                setTimeout(() => { window.open("/", "_self") }, 2000);
+                break;
+            case 'Seller registered successfully. Continue filling the Store Info':
+                openTab('storeInfo')
+                DisplayMessage('', data.detail, data.status)
+                break;
+            case 'Product Added Successfully':
+                OpenNextStep('product_details')
+                DisplayMessage('Product Added Successfully in your Online Store', 'Continue adding product details to complete the process')
+                break;
+            case 'Shipping Address Saved Successfully':
 
+                break;
             default:
                 if (data.token !== undefined)
                     ProceedLogin(data)
@@ -256,24 +261,22 @@ const ShowResult = (data) => {
     }
 }
 
-const postLogout = (url, jsonBody) => {
-    let tkl = getCookie('tkl')
+const postLogout = (url, jsonBody, tkl) => {
     fetch(url, {
             method: 'POST',
             headers: {
                 'Accept': "application/json, text/plain, */*",
                 'Content-Type': 'application/json',
                 'Accept-Encoding': 'gzip,deflate,br',
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': csrftoken,
+                'Authorization': 'token ' + tkl
             },
-            body: jsonBody
         })
         .then(response => {
             if (!response.ok) {
                 console.log(response)
                 if (response.status == 200) {
-
-                    window.open("http://www.vcnity.online/", "_self")
+                    window.open("/", "_self")
                     DisplayMessage('You have been Logged Out', 'Log in again to continue..', false)
                 }
                 response.text().then(text => {
@@ -282,14 +285,13 @@ const postLogout = (url, jsonBody) => {
 
             } else {
                 return response.json()
+                DisplayMessage('Error Occured', 'Please try again after some time', false)
             }
-        })
-        .then(data => {
+        }).then(data => {
             console.log(data)
             debugger
             ShowResult(data);
-        })
-        .catch(error => console.log(error))
+        }).catch(error => console.log(error))
 }
 
 const OpenModalProceed = (pageurl, text, message) => {
@@ -329,7 +331,7 @@ const DisplayMessage = (heading, detail, status) => {
 
     document.querySelector('.showMessage').style.display = 'block'
     document.querySelector('.showMessage>div').innerText = heading
-    document.querySelector('.showMessage>p').innerHTML = typeof(detail) == "object" ? "" : detail
+    document.querySelector('.showMessage>p').innerHTML = typeof(detail) == "object" ? (detail.length == 0 ? "" : detail[0]) : detail
 }
 
 function setCookie(cname, cvalue, expires) {
@@ -368,7 +370,8 @@ function checkCookie() {
     }
 }
 
-function getID(idurl, callback, url, jsonBoby) {
+function getID(callback, url, jsonBody) {
+    idurl = '/api/get/id/'
     fetch(idurl, {
             method: 'GET',
             headers: {
@@ -394,9 +397,42 @@ function getID(idurl, callback, url, jsonBoby) {
         .then(data => {
             debugger
             console.log(data)
-            document.getElementById('tkl').value = data.tkl
             callback(url, jsonBody, data.tkl);
         })
         .catch(error => console.log(error))
 
+}
+
+function AddProduct(url, formData, tkl) {
+    var headers = new Headers();
+    headers.append("Cookie", `csrftoken =${csrftoken}`);
+
+    // var formdata = new FormData();
+    // formdata.append("product_name", "Sweater");
+    // formdata.append("image", fileInput.files[0], "/D:/Images/Shop/1410028_outerknown_Fisherman_sweater_HEA_f_pdp_c_1400x1400.jpg");
+    // formdata.append("brand_name", ".Raymonds\n\n499\n\n\n \"Duke\"");
+    // formdata.append("product_price", "899");
+
+    var requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: formData,
+        redirect: 'follow'
+    };
+
+    fetch("/api/product/add/", requestOptions)
+        .then(
+            response => response.text()
+        )
+        .then(result => {
+            ShowResult(JSON.parse(result));
+        })
+        .catch(error => console.log('error', error));
+}
+
+function OpenMessageBar(text) {
+    var bar = document.getElementById("messagebar");
+    bar.className = "show";
+    bar.innerText = text
+    setTimeout(function() { bar.className = bar.className.replace("show", ""); }, 6000);
 }

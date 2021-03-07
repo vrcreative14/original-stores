@@ -25,7 +25,7 @@
                     <div class="twelve wide field">     
                       <div class="required inline field">
                               <label>Login with Mobile number or Email</label>                                 
-                              <span id="enterNameLabel" class="ui left pointing red basic label" style="display: none;">Invalid Mobile number or Email</span>             
+                              <span id="mobileno_errorLabel" class="ui left pointing red basic label" style="display: none;">Invalid Mobile number or Email</span>             
                       </div> 
                              <input type="text" id="logincredInput" name="name" placeholder="Enter Mobile number or Email" maxlength="70">
                     </div>
@@ -35,15 +35,14 @@
                     <div class="twelve wide field">     
                       <div class="required inline field">
                               <label >Password</label>                                 
-                              <span id="enterNameLabel" class="ui left pointing red basic label" style="display: none;">Please Enter First Name</span>             
+                              <span id="password_errorLabel" class="ui left pointing red basic label" style="display: none;">Please Enter First Name</span>             
                       </div> 
                              <input type="text" id="logincredInputpw" name="name" placeholder="Enter Password here" maxlength="70">
-                    </div>
-                 
+                    </div>                 
                   </div>
               </form>            
         </div>
-        <div class="centeredDiv"><label> <span class="headingSpan">New to Vcnity?</span> <button class="ui teal button" onclick="GoToPage('http://127.0.0.1:8000/SignUp');" style="margin-left:10px;"> Signup from here</a></label></div>
+        <div class="centeredDiv"><label> <span class="headingSpan">New to Vcnity?</span> <button class="ui teal button" onclick="GoToPage('http://www.vcnity.online/SignUp');" style="margin-left:10px;"> Signup from here</a></label></div>
         <br/>
         <div class="centeredDiv">
           <button class="ui button submitBtn successBtn" onclick="Login()">Login</button>

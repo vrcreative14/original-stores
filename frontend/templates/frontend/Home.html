@@ -9,88 +9,44 @@
 
 <body>
 
-    {% block content %}
-    <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
-
-    <!-- <div class="header">    
-                
-            <div class="hamburger">                                   
-                <a onclick="openNav()">
-                <div class="hb"></div>
-                <div class="hb"></div>
-                <div class="hb"></div>
-                </a>                                                                                                                                                       
-            </div>
-           <img />
-            <span style="align-self:flex-start">Ahead of Time..</span>     
-       
-             <div class="searchDiv">
-                <input class="searchbar" type="text" placeholder="What are you searching for ?"></input>
-             
-                  <img src='https://i.ibb.co/gPnyS7Z/search-glass.jpg' class="searchImg"></img>
-                
-                </div>  -->
-
-    <!--  <div class="navbar">
-                    <a href="login">Login</a>
-                    <a href="SignUp">SignUp</a>
-                    <a href="#">Shop Now</a>
-                    <a href="#">Contact Us </a>                                              
-               </div> 
-           
-        </div> -->
-
-
-
-<!-- {% include 'ScrollMenu.html' %} -->
-
-
+    {% block content %}  
         {% include 'ProductCategories.html' %}
+        {% include 'Message.html'%}
     <div class="heading">
          <label class="headLabel">Shop by Category</label></div>
     <div class="displayRow" title="Shop">
-        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=clothing';">
+        <div onclick = "window.location='http://www.vcnity.online/Products/?category=clothing';">
             <div href="SignUp" style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/Fashion%26Clothing.jpg');"
                 class="categoryImage">
-                <!-- <a style="background-image: url('https://i.ibb.co/wMqvdb0/readymade-Garments.jpg');;"></a> -->
-                <!-- <img src="https://i.ibb.co/wMqvdb0/readymade-Garments.jpg"> <br/> -->
+              
 
             </div>
             <a class="anchor" href="Products" onclick="">Fashion & Clothing</a>
         </div>               
 
-        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=household_essentials';">
+        <div onclick = "window.location='http://www.vcnity.online/Products/?category=household_essentials';">
             <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/household_essentials_50.jpg');background-repeat: no-repeat;"
                 class="categoryImage">
-                <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
-                <!-- <img src="https://i.ibb.co/ygRbNws/fabrics.jpg"> <br/> -->
-                <!--  -->
+             
             </div>
             <a class="anchor" href="Products" onclick="">Household Essentials</a>
         </div>
 
-        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=kitchen_essentials';">
+        <div onclick = "window.location='http://www.vcnity.online/Products/?category=kitchen_essentials';">
             <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/kitchen_essentials.jpg');background-repeat: no-repeat;"
                 class="categoryImage">
-                <!-- <img src="https://i.ibb.co/KsHMtxF/Sadar-Bazaar.jpg"> <br/> -->
+            
             </div>
             <a class="anchor" href="Products">Kitchen Essentials</a>
         </div>
 
-        <div onclick = "window.location='http://127.0.0.1:8000/Products/?category=handicrafts_home_decor';">
+        <div onclick = "window.location='http://www.vcnity.online/Products/?category=handicrafts_home_decor';">
             <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/handicrafts_home_decor.jpg');background-repeat: no-repeat;"
                 class="categoryImage">
-                <!-- <img src="https://i.ibb.co/3p1h3Kr/bookstobangle.jpg"> <br/> -->
-                <!--  -->
+                
             </div>
             <a class="anchor" href="Products">Handicrafts & Home Decor</a>
-        </div>
-        <!--  <div style="background-image: url('https://i.ibb.co/wMqvdb0/readymade-Garments.jpg');;background-repeat: no-repeat;">
-                <img src="https://i.ibb.co/b31g6M7/designer-indian-wear.jpg"> <br/>
-                <label>Tailoring Services</label>
-            </div>    -->
-
-             
+        </div>        
           
         </div>
 
@@ -100,57 +56,18 @@
     </div>
 
     <div style="display: flex;justify-content: space-evenly;">
-        <div>
-            <!-- <p>Hey dear! We heartly welcome you in the World of Original Stores. .</p> -->
-
+        <div>            
         </div>
     </div>
 
     <div class="heading"> 
     <label class="headLabel">Vcnity Volunteer</label>
+    </div>  
     </div>
-   
-
-    </div>
-
-    <!-- <div style="display: flex;flex-direction: row;justify-content: space-around;">
-
-            <div>
-
-            </div>
-
-            <div>
-
-            </div>
-           
-            <div style="">
-            <span class="dot" onclick="currentSlide(1)"></span>
-            <span class="dot" onclick="currentSlide(2)"></span>
-            <span class="dot" onclick="currentSlide(3)"></span>            
-        </div>
-          </div> -->
-
-
-    <!-- <button  class="submitButton" style="float: right;" onclick="">Submit</button> -->
-    <!-- <div style="display: flex;justify-content:flex-start;">
-                        <div>
-                            <p>We really respect your privacy and assure you that your data is in safe hands. </p>
-                        </div>
-                        <div>
-                            <p>We really respect your privacy and assure you that your data is in safe hands. </p>
-                        </div>
-                    <div style="">
-                        <button class="submitButton">Submit</button>
-                    </div>
-                </div> -->
-
     <div>
-
-
     </div>
     <script src="{% static 'js/Index.js' %}"></script>
     </div>
-
 
     {% endblock %}
 </body>

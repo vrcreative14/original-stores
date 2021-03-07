@@ -28,25 +28,18 @@ const SaveSellerInfo = () => {
         dict[list[i]] = document.getElementById(list[i]).value
     }
     jsonBody = JSON.stringify(dict)
-    getID('http://www.vcnity.online/api/get/id/', postJSONAuth, 'http://www.vcnity.online/api/seller/register/', jsonBody)
-    openTab('storeInfo')
+    getID(postJSONAuth, "/api/seller/register/", jsonBody);
+    //document.querySelector('.showMessage').style.display = 'block'
 }
 
 
 const SaveStoreInfo = () => {
-    // if(getCookie('seller')==""){
-    //    DisplayMessage('','Please register yourself as a Seller before registering the Shop/Store', 'info')
-    //    openTab('sellerInfo')
-    //    return
-    // }
+
     let status = ValidateStoreInfo()
     if (status == false)
         return
     const list = ["shopname", "state", "city", "pincode", "latitude", "longitude", "productcategory", "storecategory", "address", "landmark", "gstin"]
     debugger
-    // var user = getCookie('user_ph')
-
-    //var seller = getCookie('seller')
     var dict = {};
     var product_category = []
     var store_category = []
@@ -75,7 +68,7 @@ const SaveStoreInfo = () => {
 
     jsonBody = JSON.stringify(dict)
     debugger
-    getID("http://www.vcnity.online/api/get/id/", postJSONAuth, "http://www.vcnity.online/api/store/create/", jsonBody);
+    getID(postJSONAuth, "/api/store/create/", jsonBody);
 }
 
 
@@ -100,7 +93,7 @@ const SaveStoreDetails = () => {
         dict[list[i]] = document.getElementById(list[i]).value
     }
     jsonBody = JSON.stringify(dict)
-    postJSON('http://www.vcnity.online/api/store/details/', jsonBody)
+    postJSON('/api/store/details/', jsonBody)
 }
 
 function FetchFillLocation(event) {
@@ -235,7 +228,7 @@ const ValidateSellerInfo = () => {
             switch (item) {
                 case "firstname":
                 case "lastname":
-                    itemid = "name_errorLabel"
+                    itemid = "nameerrorLabel"
                     document.getElementById(itemid).style.display = 'inline-block'
                     count = count + 1
                     break;
@@ -250,20 +243,13 @@ const ValidateSellerInfo = () => {
         } else {
             continue
         }
+        if (count === 0)
+            return true
+        else {
+            OpenMessageBar('Could not save.Please Enter the required fields')
+            return false;
+        }
     }
-    if (count == 0)
-        return true
-    else {
-        OpenMessageBar('Could not save.Please Enter the required fields')
-        return false;
-    }
-}
-
-function OpenMessageBar(text) {
-    var bar = document.getElementById("messagebar");
-    bar.className = "show";
-    bar.innerText = text
-    setTimeout(function() { bar.className = bar.className.replace("show", ""); }, 6000);
 }
 
 function CheckStoreAddress(val) {

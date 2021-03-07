@@ -174,14 +174,18 @@ def SelectedProduct(request):
     category = request.GET.get('category','')
     default_items = []
     context = {}
-    if category == 'clothing':
+    # if category == 'clothing':
             #default_items = ['T-Shirts','Formal Shirts','Casual Shirts','Formal Trousers','Lowers','Jeans & Casual Tousers']
-
-            default_items_menu_class = 'ui bottom attached inverted ' + convert_toWords(len(default_items)) + ' item menu'
-            selected_product_categories = ProductSubCategory.objects.filter(type = 1012)
-            articles = Garment.objects.filter(product_category = 4)
-            item_in_words = convert_toWords(len(selected_product_categories))
-            div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu'
+    default_items_menu_class = 'ui bottom attached inverted ' + convert_toWords(len(default_items)) + ' item menu'
+    #selected_product_categories = ProductSubCategory.objects.filter(type = 1012)
+    selected_product_category = ProductCategory.objects.get(name = category)
+    sub_categories = ProductSubCategory.objects.filter(type = selected_product_category.pk)
+    for item in sub_categories:
+        articles = Article.objects.filter(product_category = item.pk)
+    
+    
+    item_in_words = convert_toWords(len(selected_product_categories))
+    div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu'
 
     
     

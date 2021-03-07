@@ -30,7 +30,7 @@
               </div>
             </a>
 
-            <a id="storeInfoLink" class="item disabled step" data-tab="storeInfo" onclick="openTab('storeInfo')">
+            <a id="storeInfoLink" class="item step" data-tab="storeInfo" onclick="openTab('storeInfo')">
               <i class="payment icon"></i>
               <div class="content">
                 <div class="title">Store/Shop Information</div>
@@ -60,8 +60,7 @@
                   <span id="name_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Enter your full name as per legal Identity Card</span>             
                   <div class="three fields">
                     <div class="field">
-                      <input id="firstname" type="text" name="firstname" placeholder="First Name">
-                      
+                      <input id="firstname" type="text" name="firstname" placeholder="First Name">                      
                     </div>
                     <div class="field">
                       <input id="middlename" type="text" name="middlename" placeholder="Middle Name (If any)">
@@ -124,8 +123,7 @@
               </form>    
 
               <div class="centeredDiv">
-                <button class="ui button successBtn submitBtn formheadingSpan" onclick="SaveSellerInfo()">Save & Next</button>
-                {% comment %} <a onclick="getJSON('http://127.0.0.1:8000/api/check/?phone=7565897280')">Check</a> {% endcomment %}
+                <button class="ui button successBtn submitBtn formheadingSpan" onclick="SaveSellerInfo()">Save & Next</button>               
               </div>              
           </div>
 
@@ -138,14 +136,14 @@
                   <br/>
                   <div class="fields">                  
                     <div class="four wide required field">
-                      <label class="">Your Shop/Business Name</label>                  
-                      <input type="text" name="" placeholder="Name of Business/Shop/Store Name" id="shopname">
+                      <label class="">Enter Name of your Shop</label>                  
+                      <input type="text" name="" placeholder="Shop/Store Name" id="shopname">
                       <span id="shopname_errorLabel" class="ui top pointing red basic label promptLabel" style="display: none;">Enter your Shop name for store creation</span>             
                     </div>
                    
                     <div class="eight wide required field">
                       <label class="">Choose Product Category (You may search & choose multiple categories from the below given menu)</label>
-                      <select name="productcategory" id="productcategory" multiple=""  class="ui fluid search selection dropdown" onchange="CheckProductCategory()">
+                      <select name="productCategories" id="productcategory" multiple="" class="ui fluid search selection dropdown" onchange="CheckProductCategory()">
                       <option value="0" disabled>Select Product Categories you deal with</option>
                         {% for category in categories %}    
                         <option value="{{category}}">{{category}}</option>    
@@ -162,7 +160,7 @@
                   <div class="fields">
                     <div class="eight wide required field">
                     <label>Choose Store Category from below options.</label>
-                    <select name="storeCategories" id="storecategory" class="ui fluid search selection dropdown" multiple="">
+                    <select name="productCategories" id="storecategory" class="ui fluid search selection dropdown" multiple="">
                       <option value="0" disabled>Select your Store Category</option>
                         {% for category in store_categories %}    
                         <option value="{{category}}">{{category}}</option>    
@@ -178,10 +176,10 @@
                        <label class="">Is Your Shop registered under GST ?</label>
                     </div>
                     <div class=" inline field">
-                    <input type="radio" name="is_gst_registered" value="1" onclick="CheckGSTINEntry(this.value)" > <label>Yes</label>
+                    <input type="radio" name="isgstregistered" value="1" onclick="CheckGSTINEntry(this.value)" > <label>Yes</label>
                     </div>
                     <div class="inline field">
-                    <input type="radio" name="is_gst_registered" value="0" onclick="CheckGSTINEntry(this.value)"> <label>No</label>
+                    <input type="radio" name="isgstregistered" value="0" onclick="CheckGSTINEntry(this.value)"> <label>No</label>
                     </div>
                    
                     <div class="four wide field"> 
@@ -204,8 +202,17 @@
                        <label>Enter your 15 digit GSTIN </label>                     
                        <input placeholder="" onkeyup="checkGSTIN()" id="gstin">
                        <span id="gstin_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Enter a valid GSTIN under which your business is registered </span>             
-                  </div>                                 
+                  </div>
+                
+                   <!-- <div class="inline field">
+                   <input type="radio"> <label>Yes</label>
+                  </div>
+                   <div class="inline field">
+                   <input type="radio"> <label>No</label>
+                  </div> -->
                  </div>
+
+
                 </div>
                
                 <br/>
@@ -273,28 +280,11 @@
                   </div>                             
                 </div>
                 <br/>
-                <div class="fields">
-                  <div class="four wide required field">
-                   <label>Do you own Existing Brick & Mortar Store</label>
-                   <span id="is_store_existing_errorLabel" class="ui top pointing red basic label promptLabel" style="display: none;">Required Field</span>             
-                   <div class="inline field">
-                    <input type="radio" name="is_store_existing" value="1" onclick="CheckStoreAddress(this.value)"> <label>Yes</label>
-                    </div>
-                    <div class="inline field">
-                    <input type="radio" name="is_store_existing" value="0" onclick="CheckStoreAddress(this.value)"> <label>No</label>
-                    </div>    
-                  </div>
-                </div>
+
                 <div class=" fields">
                   
-                  <div id="addressLine1" class="five wide field">
-                      <label>Address Line 1 (Details like Shop Number, Market name etc.)</label>                      
-                      <input placeholder="Enter address for your Shop" id="address">                
-                       <span id="addressLine1_errorLabel" class="ui top pointing red basic label promptLabel" style="display: none;">Address Required in case of Existing Physical Store</span>                         
-                  </div>
-
-                  <div id="addressLine2" class="five wide field">
-                      <label>Address Line 2 </label>                       
+                  <div class="six wide field">
+                      <label>Address (Details like Shop Number, Market name etc.)</label>
                       <input placeholder="Enter address for your Shop" id="address">                            
                   </div>
 
@@ -302,7 +292,7 @@
                       <label>Nearest Landmark</label>
                       <input placeholder="Enter the landmark situated near your shop" id="landmark">                
                   </div>                
-                </div>                                     
+                </div>                                   
               </form>
                     <div class="centeredDiv">
                       <button class="ui button successBtn submitBtn formheadingSpan" onclick="SaveStoreInfo()">Save & Next</button>

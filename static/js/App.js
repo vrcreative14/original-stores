@@ -199,7 +199,6 @@ function openTab(tabName) {
         document.querySelector('.ui.tab.active').classList.remove('active');
 
     document.querySelector(`[name=${CSS.escape(tabName)}]`).classList.add('active');
-
 }
 
 

@@ -230,7 +230,7 @@ class Prod_Details_Serializer(serializers.ModelSerializer):
 class Product_Serializer(serializers.ModelSerializer):    
     #details = Prod_Details_Serializer(required=True)
     class Meta:
-        model = Garment
+        model = Article
         fields = ('name','img_path','brand_name','price','store','category','garment_details')
     # def create(self, validated_data):
     #     details_data = validated_data.pop('details')

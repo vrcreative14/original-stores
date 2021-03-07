@@ -49,7 +49,7 @@ class Product(models.Model):
     name = models.CharField(max_length=70)
     image = models.ImageField(validators=[check_thumbnail],upload_to='static/images', height_field=None, blank=True)
     #image_front = models.ImageField(validators=[check_detailed_image],upload_to='static/images', height_field=None, blank=True)
-    image_back = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
+    image_rear = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
     image_side1 = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
     image_thumbnail = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
     #store=models.ManyToManyField(Store)
@@ -103,15 +103,15 @@ class Product(models.Model):
 
 class ProductDetails(models.Model):
     #specific_name = models.CharField(max_length=100)
-    weight=models.DecimalField(max_digits=20, decimal_places=2)
+    weight=models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
     height=models.DecimalField(max_digits=20, decimal_places=2,blank=True,null=True)
     width=models.DecimalField(max_digits=20, decimal_places=2,blank=True,null=True)
     depth=models.DecimalField(max_digits=20, decimal_places=2,blank=True,null=True)
     primary_color = models.CharField(max_length=30)
-    other_colors = models.CharField(max_length=150)
+    other_colors = models.CharField(max_length=150, blank=True, null=True)
     material = models.CharField(max_length=100)
-    is_discounted = models.BooleanField(default=False)
-    discount = models.DecimalField(max_digits=5, decimal_places=2)
+    is_discounted = models.BooleanField(default=False, blank=True, null=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     description = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
    # product = models.OneToOneField(Product, on_delete=models.CASCADE)
@@ -127,6 +127,11 @@ class ProductDetails(models.Model):
 class Article(Product):
     def __str__(self):
         return self.name
+
+class ArticleDetails(ProductDetails):
+    article = models.OneToOneField(Article, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.article.name
 
 
 class GarmentSubcategory (models.Model):
