@@ -79,6 +79,9 @@ def RegisterSeller(request):
     #     return redirect('/SellerDashboard');
     #     # return render(request, 'frontend/SellerDashboard.html')
     # else:
+    if request.session['seller'] :
+        return render(request, 'frontend/SellerDashboard.html')
+    else:
         try:
             token = request.session['user_token']
             user_email = token["user"]["email"]
@@ -92,6 +95,8 @@ def RegisterSeller(request):
             context = {'loggedin':True, 'email' : '', 'states': States.STATE_UT, 'categories': categories, 'store_categories': store_category}
 
         return render(request,'frontend/SellerRegistration.html',context)
+   
+        
 
 @login_required(login_url='/login')
 def SellerDashboard(request):
@@ -196,15 +201,16 @@ def SelectedProduct(request):
     if len(selected_product_category) > 0:
         sub_category = get_default_subcategory(category)
         sub_category_obj = ProductSubCategory.objects.filter(type = selected_product_category[0].pk, name = sub_category)
-    
-    if len(sub_category_obj) > 0:                   
+
+        if sub_category_obj:                   
             articles = Article.objects.filter(product_category = sub_category_obj[0].pk).order_by('-id')[:10]
 
     
-    item_in_words = convert_toWords(len(sub_categories))
-    div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu'    
-    
-    context = {'category':category,'selected_product_categories' : sub_categories,'articles':articles ,'div_class_name': div_class_name,'default_items':default_items,'default_items_menu_class':default_items_menu_class}        
+            item_in_words = convert_toWords(len(sub_categories))
+            div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu' 
+            context = {'category':category,'selected_product_categories' : sub_categories,'articles':articles ,'div_class_name': div_class_name,'default_items':default_items,'default_items_menu_class':default_items_menu_class}           
+    else:
+            context = {'category':category,'selected_product_categories' : sub_categories}
     return render(request,'SelectedProductList.html',context)
 
 

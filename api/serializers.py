@@ -19,8 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        #token = Token.objects.create(user=user)
+        user = User.objects.create_user(**validated_data)        
         return user
 
 
@@ -100,18 +99,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ['email','password', 'phone']
         extra_kwargs = {'password': {'write_only': True, 'required': True}}
-    # def validate(self, attrs):
-    #     email = attrs.get('email', '')
-    #     username = attrs.get('username', '')
-
-    #     if not username.isalnum():
-    #         raise serializers.ValidationError(
-    #             self.default_error_messages)
-    #     return attrs
+    
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        #Token.objects.create(user=user)
+        user = User.objects.create_user(**validated_data)        
         return user
 
 
@@ -128,9 +119,8 @@ class LoginSerializer(serializers.Serializer):
         pft = attrs.get('pft')
 
         if email and pft:
-            if User.objects.filter(email = email).exists():
-                #print(email, password)
-                #user = authenticate (request = self.context.get('request'),email = email, password = password)
+            if User.objects.filter(email = email).exists():                
+                
                 user = User.objects.get(email = email)
                 if user.check_password(pft):
                     user = User.objects.get(email = email)
@@ -206,8 +196,7 @@ class Prod_Details_Serializer(serializers.ModelSerializer):
         fields = ('primary_color','material','description','quantity')
 
 class Product_Serializer(serializers.ModelSerializer):    
-    #details = Prod_Details_Serializer(required=True)
-    #store = StoreSerializer(required=True)
+    
     class Meta:
         model = Article
         fields = ('name','price','brand_name','image','image_rear','image_side1')

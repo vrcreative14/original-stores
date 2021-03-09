@@ -38,9 +38,9 @@ from rest_framework.decorators import parser_classes
 from products.models import *
 from orders.models import *
 
-# Create your views here.
 
-#link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=d422a24f-24aa-11eb-83d4-0200cd936042&to={phone}&from='
+
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -107,10 +107,9 @@ class ValidatePhoneSendOTP(APIView):
     first coming phone numbers'''
 
     def post(self, request, *args, **kwargs):
-        # user_name = request.data.get('name')
+        
         phone_number = request.data.get('phone')
-        # if user_name:
-        #     user_name = str(user_name)
+        
         if phone_number:
             phone = str(phone_number)
             user = User.objects.filter(phone__iexact = phone)
@@ -185,8 +184,8 @@ class ValidatePhoneOTP(APIView):
                 if str(otp) == str(otp_sent):
                     old.logged = True
                     old.save()
-                    # temp_data = {'name': name,'phone': phone,'email':email,'password': password }
-                    # if(RegisterUser(temp_data)):                        
+                    
+                    
                     return Response({
                             'status' : True, 
                             'detail' : 'OTP matched'
@@ -236,33 +235,19 @@ def RegisterSeller(request):
    
 
     serializer = SellerSerializer(data=Temp_data)
-    # user = UserSerializer()
+    
     try:
         if serializer.is_valid(raise_exception=ValueError):
             serializer.errors
             seller = serializer.save()
-            # usr_otp = random.randint(100000, 999999)
-            # print(seller.user)
-            # UserOTP.objects.create(user = seller.user, otp = usr_otp)
-            #msg = f"Hello {seller.first_name} \n Your OTP is {usr_otp} \n Thanks"
-
-            # send_mail(
-            #     "Welcome to the world of Vykyoo - Verify Your Email",
-            #     msg,
-            #     settings.EMAIL_HOST_USER,
-            #     [seller.user.email],
-            #     fail_silently=False
-            # )
-
-            # print('seller serializer data:',json.dump(serializer.data,4) )
-            #serializer.create(validated_data=request.data)
+            
             request.session['seller'] = seller.pk
             resp =  Response({
                 'status': True,
                 'detail':'Seller registered successfully. Continue filling the Store Info',
             }, status.HTTP_201_CREATED)                      
             return resp
-            #return Response(serializer.data,status=status.HTTP_201_CREATED)              
+            
     
     except:
          e = sys.exc_info()[0]
@@ -271,18 +256,17 @@ def RegisterSeller(request):
              'status':False,
              'detail':e
          })
-        #return Response(serializer.error_messages,status=status.HTTP_400_BAD_REQUEST)
+        
 
 
-# @login_required(login_url='http://127.0.0.1:8000/login')
+
 
 class RegisterStore(APIView):
         permission_classes = [permissions.IsAuthenticated]
-        #parser_classes = [MultiPartParser]
+        
 
         def post(self, request, format = None):
-                #user_ph = request.data.get('user_ph', '')
-                #user = User.objects.get(phone = user_ph)
+                
                 input_gstin = ''
                 user_phone = request.session["user_phone"] 
                 user = ''
@@ -318,7 +302,7 @@ class RegisterStore(APIView):
                 store_categories = request.data.get('storecategory','')
                 product_categories_list = []
                 store_category_list = []
-                #    # storeimage = request.data["storeimage"]
+                
                 for category in product_categories:
                     prod_category = ProductCategory.objects.filter(name = category)
                     product_categories_list.append(prod_category[0].pk)
@@ -332,23 +316,7 @@ class RegisterStore(APIView):
                 serializer = StoreSerializer(data= temp_data)
                 if serializer.is_valid():
                         store = serializer.save()
-                        # for product_category in product_categories:
-                        #        store.product_category.add(ProductCategory.objects.create(product_category))
                         
-                        # for store_category in store_categories:
-                        #        StoreCategory.objects.create(**store_category)
-                   #store = self.create(self, request)
-                #    store_id = str(pincode) + str(random.randint(9, 99))
-                #    new_store = Store.objects.create(name = name,seller = seller,state=state,city = city,pincode = pincode,latitude=latitude,longitude=longitude,store_id=store_id)
-                #    #new_store.save()
-                #    for category in product_categories:
-                #        prod_category = ProductCategory.objects.get(name = category)
-                #        new_store.product_category.add(prod_category)
-
-                #    for store_category in store_categories:
-                #        category = StoreCategory.objects.get(name = store_category)
-                #        new_store.store_category.add(category) 
-                #if new_store:
                         address_line1 = request.data.get("address")
                         landmark = request.data.get("landmark", "")                                          
                         details_data = {"store":store.pk, "address_line1": address_line1, "nearest_landmark": landmark,"is_gst_registered":is_gst_registered ,"gstin": input_gstin}
@@ -390,10 +358,10 @@ class RegisterStore(APIView):
                 new_store.save()
                 product_categories_list = []
                 store_category_list = []
-                        #    # storeimage = request.data["storeimage"]
+                        
                 for category in product_categories:
                             prod_category = ProductCategory.objects.filter(name = category)
-                            #product_categories_list.append(prod_category[0].pk)
+                            
                             new_store.product_category.add(prod_category[0])
                         
                 for store_category in store_categories:
@@ -411,34 +379,14 @@ class RegisterStore(APIView):
                 'status': True,
                 'detail': 'Image uploaded succcesfully'
             }) 
-        #     temp_data = {"storeimage" : storeimage}
-        #     serializer = StoreSerializer(Store,data= temp_data, partial = True)
-
-        #     if serializer.is_valid():
-        #         serializer.save(update_fields=['storeimage'])
-        #         return Response(serializer.data)
-        # # return a meaningful error response
-        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 class AddProductDetails(APIView):
-        #permission_classes = [permissions.IsAuthenticated]
-        #parser_classes = [MultiPartParser]
+        
 
         def post(self, request, format = None):
-                # user_ph = request.data.get('user_ph', '')
-                # user = User.objects.get(phone = user_ph)
-                # seller = Seller.objects.get(user = user.pk)
-                # name = request.data.get('shopname', False)
-                # state = request.data.get('state', False)
-                # city = request.data.get('city', False)
-                # pincode = request.data.get('pincode', False)
-                # latitude = request.data.get('latitude', False)
-                # longitude = request.data.get('longitude', False)
-               
-               # storeimage = request.data["storeimage"]
-
-               #temp_data = {"seller": seller.pk, "name": name, "state": state, "city" : city, "pincode": pincode, "latitude": latitude, "longitude": longitude}
+                
 
                 serializer = Prod_Details_Serializer(data= request.data)
                 if serializer.is_valid():
@@ -447,27 +395,7 @@ class AddProductDetails(APIView):
                        'status': True,
                        'details': prod.id
                    })
-                #    if prod:
-                #         address_line1 = request.data.get("address")
-                #         landmark = request.data.get("landmark", "")
-                #         is_gst_registered = request.data.get("is_gst_registered", False)
-                #         gstin = request.data.get("gstin")
-
-                #         details_data = {"store":store.pk, "address_line1": address_line1, "nearest_landmark": landmark,"is_gst_registered":is_gst_registered ,"gstin": gstin}
-                #         serializer2 = StoreDetailsSerializer(data = details_data)
-                #         if serializer2.is_valid():
-                #             serializer2.save()                           
-                #             return JsonResponse({
-                #                 'status': True,
-                #                 'detail': 'Store Successfully Created. Continue saving further information',
-                #                 'store' : store.pk
-                #             })
-                # else:
-                #     error = serializer.errors
-                #     return Response({
-                #         'status': False,
-                #         'detail': error
-                #     })
+                
         
         def patch(self, request):
             pk = request.data["store"]
@@ -503,14 +431,12 @@ class AddProduct(APIView):
             stores_list.append(int(request.data.get(store))) if request.data.get(store) else print('no store')
 
 
-        # if len(selected_stores) > 0:
-        #     for stores in selected_stores:
+        
                 
 
-        #image_thumbnail = request.data.get('product_image_front_thumb','')
+        
         temp_data = {'name': name, 'price':price, 'brand_name':brand_name,'image':image,'store':store}
-        #image_rear = request.data.get('image_rear','')
-        #image_side1 = request.data.get('image_side1','')
+        
                 
         serializer = Product_Serializer(data = temp_data)
         if serializer.is_valid():
@@ -519,8 +445,7 @@ class AddProduct(APIView):
                         product_class = ProductIdentity.objects.get(type = product_sub_category.pk,name = identity_name)
                         new_product = Article.objects.create(name = name, brand_name = brand_name,
                         price = price, image = image,image_rear = image_rear,image_side1 = image_side1, product_category = product_sub_category, product_class=product_class)
-                        new_product.store.add(Store.objects.get(id))
-                        #prod = serializer.create(validated_data = serializer.data)
+                        new_product.store.add(Store.objects.get(id))                        
                         for store_id in stores_list:
                             new_product.store.add(Store.objects.get(store_id = store_id))
                         return Response({
@@ -552,9 +477,7 @@ def RegisterUser(temp_data):
         except:
             return False
 
-# @api_view(["GET"])
-# def GetProducts(request):
-#     category = request.data.get
+
 
 class Register(APIView):
     
@@ -598,14 +521,10 @@ class Register(APIView):
                             'status' : True, 
                             'detail' : 'User registered successfully'
                         })
-                        #resp.set_cookie('user', user.pk)
+                        
                         request.session['user'] = user.pk
                         return resp
-                        # return Response({
-                        #     'status' : True, 
-                        #     'detail' : 'User registered successfully'
-                        # })
-
+                        
                     else:
                         return Response({
                             'status': False,
@@ -679,7 +598,7 @@ class RegisterView(generics.GenericAPIView):
         data = {'email_body': email_body, 'to_email': user.email,
                 'email_subject': 'Verify your email'}
 
-        #Util.send_email(data)
+        
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 
@@ -701,18 +620,12 @@ class LoginAPI(KnoxLoginView):
                     'status': False,
                     'detail':'Please verify your Mobile number through OTP, before logging in.'
                 })
-            # if user.last_login is None :
-            #         #user.first_login = True
-            #         user.save()
-                
-            # elif user.first_login:
-            #     #user.first_login = False
-            #     user.save()
+            
             login(request, user, backend='accounts.backends.PhoneBackend')           
             user_obj = user
-            # request.session['user_token'] = b.data
+            
 
-            #return response           
+                       
        
         except Exception as e:            
             if(not str(e.args[0]).find("Mobile number is not registered") == -1):
@@ -736,18 +649,10 @@ class LoginAPI(KnoxLoginView):
                     'detail':'Please verify your Email through OTP, before logging in.'
                 })
 
-            # if user.last_login is None :
-            #         #user.first_login = True
-            #         user.save()
-                
-            # elif user.first_login:
-            #     #user.first_login = False
-            #     user.save()
+           
             login(request, user, backend = 'django.contrib.auth.backends.ModelBackend')            
             user_obj = user
-            # v = super().post(request, format=None)
-            # HttpResponse.set_cookie("atl",v.data["token"],expires=v.data["expiry"],httponly=True)
-            # return v
+         
         request.session['userid'] = user_obj.pk
         request.session['user_name'] = user_obj.name
         request.session['user_phone'] = user_obj.phone 
@@ -759,16 +664,10 @@ class LoginAPI(KnoxLoginView):
             request.session['seller'] = None
         response = super().post(request, format=None)
         auth_token = response.data["token"]
-        # expiry = response.data["expiry"]
+       
         response.set_cookie('tkl',auth_token,24*60*60*10,httponly=True) 
         return response       
-                #response.set_cookie('upl', user_phone, 24*60*60*10)                
-       
-                #response.set_cookie('uel', user_email, 24*60*60*10)          
-        # return Response({
-        #     'status':True,
-        #     'Detail':'Logged in Successfully'
-        # })
+               
 
 
 class LogoutAPI(LogoutView):
@@ -785,10 +684,9 @@ class LogoutAPI(LogoutView):
 
 @api_view(['GET'])
 def GetToken(request):    
-        #credential = request.data["phone"]    
+        
         credential=request.GET.get('phone', '')
-        #user = User.objects.get(phone = credential)
-        #if credential == ''
+        
         if credential == '':
             user = User.objects.get(email = credential)
             if user == '':
@@ -800,9 +698,7 @@ def GetToken(request):
 
         else:
            res = GetTokenforUser(request,user)
-        # def post(self, request, *args, **kwargs):
-        #     token = request.COOKIES['atl']
-        #     pass
+        
         return res
 
 @api_view(['GET'])
@@ -830,11 +726,7 @@ def send_otp(phone):
         key = otp_generator()
         phone = str(phone)
         otp_key = str(key)
-        # seller_name = str(usr_first_name)
-        #link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=fc9e5177-b3e7-11e8-a895-0200cd936042&to={phone}&from=wisfrg&templatename=wisfrags&var1={otp_key}'
-        #link =  f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=d422a24f-24aa-11eb-83d4-0200cd936042&to={phone}&from=ORIGST&templatename=MobileVerificationOTP&var1={seller_name}&var2={otp_key}'
-        #link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=d422a24f-24aa-11eb-83d4-0200cd936042&to={phone}&from=VCNITY&templatename=Mobile+Number+Verification+OTP&var1={seller_name}&var2={otp_key}'
-        #result = requests.get(link, verify=False)
+        
 
         return otp_key
     else:
@@ -853,22 +745,12 @@ def LoginHelper(request,password,phone=None, email=None):
                     'status': False,
                     'detail':'Please verify your Mobile number through OTP, before logging in.'
                 })
-            # if user.last_login is None :
-            #         #user.first_login = True
-            #         user.save()
-                
-            # elif user.first_login:
-            #     #user.first_login = False
-            #     user.save()
+            
             login(request, user[0], backend='accounts.backends.PhoneBackend')
             b = super().post(request, format=None)  
             request.session['user_token'] = b.data
             return b
-            # return Response({
-            #     'status' : True,
-            #     'detail' : 'Logged in Successfully',
-            #     'info' : b,
-            # })  
+            
 
        
      except Exception as e:
@@ -889,13 +771,7 @@ def LoginHelper(request,password,phone=None, email=None):
                     'detail':'Please verify your Email through OTP, before logging in.'
                 })
 
-            # if user.last_login is None :
-            #         #user.first_login = True
-            #         user.save()
-                
-            # elif user.first_login:
-            #     #user.first_login = False
-            #     user.save()
+           
             login(request, user[0], backend = 'django.contrib.auth.backends.ModelBackend')
             return super().post(request, format=None)
 
@@ -925,11 +801,7 @@ def GetProducts(request):
         print(product)     
         dictionary = {'name':product.name, 'price' : product.price, 'category' : 'Men', 'store' : product.store}
         Temp_data.append(dictionary)
-        #Temp_data.append(dictionary)
-        # Temp_data.update({'name' : product.name})
-        # Temp_data.update({'price' : product.price})
-        # Temp_data.update({'category' : 'Men'})
-        # Temp_data.update({'store' : product.store})          
+                  
 
     
     serializer = Garment_Serializer(data = Temp_data)
@@ -952,13 +824,7 @@ class SaveShipppingAddress(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
     def post(self, request, *args, **kwargs):
-        # is_self_pickup = request.data.get('self_pickup',False)
-        # temp_data = {}
-        # if is_self_pickup:
-        #         order = OrderSerializer(data = )
-
-
-        # else:                
+                        
                 user = request.session['userid']
                 address_line1 = request.data.get('address_line1', False)
                 address_line2 = request.data.get('address_line2', False)
