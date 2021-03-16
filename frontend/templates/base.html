@@ -72,14 +72,14 @@
   
   <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="#">Home</a>
+    <a href="/">Home</a>
     <a href="#">Your Cart</a>
     {% if user.is_authenticated%}
       <a href="#"> Order History </a>
     {% else %}
     {% endif %}
     {% if user.is_seller %}
-    <a href="../SellerDashboard">Seller Dashboard</a>
+    <a href="/SellerDashboard">Seller Dashboard</a>
     {% else %}
     <a href="/SellerRegistration">Join as a Seller</a>
     {% endif %}

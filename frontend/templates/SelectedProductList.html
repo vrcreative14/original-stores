@@ -53,8 +53,8 @@
                             {{article.name}}
                         {% comment %} <span class="date">Jan 19, 2020</span> {% endcomment %}
                      </div> 
-                    {% if article.image == '' %}
-                       <div style="background-image: url({{article.imgPath}});" class="categoryImage"> </div>
+                   {% if article.image_thumbnail.name == '' %}
+                        <div style="background-image: url(https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/image_not_available.jpg);" class="productDesc"> </div>
                     {% else %}
                        <div style="background-image: url(https://storage.googleapis.com/vicinity-solutions.appspot.com/{{article.image_thumbnail}});" class="productDesc"></div>
                     {% endif %} 

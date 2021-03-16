@@ -10,23 +10,7 @@
 
 <div style="display:flex;margin-left:40px;">
 
-{% comment %} <div class="dropdown">
-  <button class="dropbtn">Dropdown</button>
-  <div class="dropdown-content">
-    <a class="ui item" href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
-  </div>
-</div> {% endcomment %}
-{% comment %} 
-<div class="dropdown">
-  <button class="dropbtn">Dropdown</button>
-  <div class="dropdown-content">
-    <a class="ui item" href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
-  </div>
-</div> {% endcomment %}
+
 {% if user.is_authenticated %}
 <div class="dropdown">
   <button class="dropbtn">{{request.session.user_name}}'s vcnity
@@ -44,16 +28,9 @@
 </div>
 {% else %}
   <div class="dropdown">
-  <button onclick="GoToPage('http://127.0.0.1:8000/login')" class="dropbtn">Login / Signup </button>
+  <button onclick="GoToPage('/login')" class="dropbtn">Login / Signup </button>
   <div class="dropdown-content">
-  {% comment %} <div class="ui vertical menu">
-   
-    <a class="" href="#">Link 1
-    <span class="ui teal left pointing label">1</span></a>
-    <a class="" href="#">Link 2</a>
-    <a class="" onclick="Logout()">Logout</a>
-   
-    </div> {% endcomment %}
+
   </div>
 </div>
 {% endif %}

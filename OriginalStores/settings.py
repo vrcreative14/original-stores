@@ -92,20 +92,79 @@ CORS_ORIGIN_WHITELIST = [
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
+if os.getenv('GAE_APPLICATION', None):
+    # Running on production App Engine, so connect to Google Cloud SQL using
+    # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
      'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vcnityonline_test',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'vcnity_online',
         'USER' : 'postgres',
-        'PASSWORD' : 'aviral',
-        'HOST': 'localhost',  
-        'PORT':'5432',
+        'PASSWORD' : 'postgres123',
+        'HOST': '/cloudsql/vicinity-solutions:asia-south1:vicinity-instance', 
+        'PORT': '5432',
     }
 }
+else:
+    # Running locally so connect to either a local MySQL instance or connect to
+    # Cloud SQL via the proxy. To start the proxy via command line:
+    #
+    #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
+    #
+    # See https://cloud.google.com/sql/docs/mysql-connect-proxy
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '34.93.205.220',
+            'PORT': '',
+            'NAME': 'vcnity_online',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres123',
+        }
+    }
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'HOST': '127.0.0.1',
+    #         'PORT': '5432',
+    #         'NAME': 'vcnityonline_test',
+    #         'USER': 'postgres',
+    #         'PASSWORD': 'aviral',
+    #     }
+    # }
+
+
+
+
+# if False and DEBUG: 
+#         # Running in development, but want to access the Google Cloud SQL instance in production.
+#         DATABASES = {
+#             'default': {
+#                 'ENGINE': 'django.db.backends.postgresql_psycopg2',  
+#                 'NAME': 'cloud-database-name',  
+#                 'USER': 'dbuser',                      
+#                 'PASSWORD': 'dbpass',                  
+#                 'HOST': '35.242.xxx.xxx', # Set to IP address 
+#                 'PORT': '',  # Set to empty string for default. 
+#             }
+#         }
+#  else if DEBUG:
+#   #Sqlite database
+#  else:
+#      DATABASES = {
+#    'default': {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',  
+#     'NAME': 'cloud-database-name',  
+#     'USER': 'dbuser',                     
+#     'PASSWORD': 'dbpass',                  
+#     'HOST': '/cloudsql/instancename:zone:dbname', #Use socket                   
+#     'PORT': '', # Set to empty string for default.
+#         }
+
 
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=600)
@@ -213,5 +272,5 @@ EMAIL_HOST_USER = 'vcreative14@gmailcom'
 EMAIL_HOST_PASSWORD = 'Sona@1960'
 EMAIL_USE_TLS = True
 
-ALLOWED_HOSTS = ['vcnityonline.herokuapp.com','www.vcnity.online', '127.0.0.1', 'vcnity.online']
+ALLOWED_HOSTS = ['www.vcnity.online', '127.0.0.1', 'vcnity.online', "vicinity-solutions.et.r.appspot.com",]
                     

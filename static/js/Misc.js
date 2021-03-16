@@ -246,9 +246,13 @@ const ShowResult = (data) => {
                 openTab('storeInfo')
                 DisplayMessage('', data.detail, data.status)
                 break;
-            case 'Product Added Successfully':
+            case 'Product added succesfully':
+                debugger
                 OpenNextStep('product_details')
-                DisplayMessage('Product Added Successfully in your Online Store', 'Continue adding product details to complete the process')
+                DisplayMessage('Product Added Successfully in your Online Store', 'Continue adding product details to complete the process', true)
+                document.getElementById('product_specific_name').value = document.getElementById('product_name').value + document.getElementById('brand_name').value
+                document.getElementById('product_id').value = data.data
+                document.getElementById('product_id').innerText = data.data
                 break;
             case 'Shipping Address Saved Successfully':
 
@@ -412,15 +416,26 @@ function AddProduct(url, formData, tkl) {
     // formdata.append("image", fileInput.files[0], "/D:/Images/Shop/1410028_outerknown_Fisherman_sweater_HEA_f_pdp_c_1400x1400.jpg");
     // formdata.append("brand_name", ".Raymonds\n\n499\n\n\n \"Duke\"");
     // formdata.append("product_price", "899");
+    let requestOptions = ''
 
-    var requestOptions = {
-        method: 'POST',
-        headers: headers,
-        body: formData,
-        redirect: 'follow'
-    };
+    if (url == 'api/product/add/') {
+        requestOptions = {
+            method: 'POST',
+            headers: headers,
+            body: formData,
+            redirect: 'follow'
+        };
+    } else {
+        requestOptions = {
+            method: 'PUT',
+            headers: headers,
+            body: formData,
+            redirect: 'follow'
+        };
+    }
 
-    fetch("/api/product/add/", requestOptions)
+
+    fetch(url, requestOptions)
         .then(
             response => response.text()
         )
@@ -429,6 +444,7 @@ function AddProduct(url, formData, tkl) {
         })
         .catch(error => console.log('error', error));
 }
+
 
 function OpenMessageBar(text) {
     var bar = document.getElementById("messagebar");

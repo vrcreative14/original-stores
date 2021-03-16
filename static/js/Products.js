@@ -122,7 +122,7 @@ function UpdateProductIdentity() {
 }
 
 
-const AddTags = (list, category) => {
+const AddTags = (event, list, category) => {
     let div = document.createElement('div');
     debugger
     // var elem = document.getElementById('product_details_div');
@@ -305,7 +305,7 @@ const AddTags = (list, category) => {
             break;
 
         case 'AddFabric':
-            let parentDiv = document.querySelector('#add_fabric_div')
+            let parentDiv = document.querySelector('#add_material_div')
             if (parentDiv.childElementCount >= 10) {
                 break;
             }
@@ -438,7 +438,7 @@ const RemoveTags = (list, category, elem) => {
     debugger
     switch (category) {
         case 'Fabric':
-            document.querySelector('#add_fabric_div').removeChild(elem.parentNode.parentNode);
+            document.querySelector('#add_material_div').removeChild(elem.parentNode.parentNode);
             break;
         case '':
             break;
@@ -482,30 +482,44 @@ function isNumberKey(txt, evt) {
     return true;
 }
 
-function SaveProduct(category) {
+function SaveProduct() {
 
     var dict = {};
+    category = document.querySelector('#select_category').value
+    category = "Fashion & Clothing"
     switch (category) {
-        case 'Clothing':
+        case 'Fashion & Clothing':
             var inputs = document.getElementById('product_details_form').querySelectorAll('input')
-            for (let i = 0; i < inputs.length; i++) {
-                let element_id = inputs[i].id
-                let prod = ['name', 'image', 'image_rear', '', 'img_path', 'brand_name', 'price', 'store', 'category', 'garment_details']
-                let prod_details = ['specific_name', 'colors', 'material', 'is_discounted', 'discount', 'description', 'subcategory', 'neck_design', 'design_pattern', 'sizes_available']
-                switch (element_id) {
-                    case '':
-                        break;
+                // for (let i = 0; i < inputs.length; i++) {
+                //let element_id = inputs[i].id
+            let prod = ['name', 'image', 'image_rear', '', 'img_path', 'brand_name', 'price', 'store', 'category', 'garment_details']
+            let prod_details = ['specific_name', 'colors', 'material', 'is_discounted', 'discount', 'description', 'subcategory', 'neck_design', 'design_pattern', 'sizes_available']
+            let required_fields = ['primary_color', 'material', 'description', 'quantity', 'origin_country', 'manufacturer_name']
+            let material = ''
+            let percent = ''
+
+            for (item in required_fields) {
+                if (required_fields[item] == 'material') {
+                    let composition = document.querySelector('#add_material_div').children
+                    for (item in composition) {
+                        material = document.querySelector('#add_material_div').children[0].querySelector('.material').value
+                        percent = document.querySelector('#add_material_div').children[0].querySelector('.percentage').value
+                        dict['material'] = material + ':' + percent + ','
+                    }
+                    continue
                 }
-                for (item in prod) {
-                    dict[prod[item]] = document.getElementById(prod[item]).value
-                }
+                dict[required_fields[item]] = document.getElementById(required_fields[item]).value
             }
+            dict['product_id'] = document.querySelector('#product_id').value
+            dict['article'] = ''
+            getID(postJSONAuth, 'api/product/details/add/', JSON.stringify(dict))
+                // }
             break;
         case 'Home Appliances':
             break;
     }
     let jsonBody = JSON.stringify(dict)
-    getID(postJSONAuth, 'product/add/', jsonBody)
+        //getID(postJSONAuth, 'product/add/', jsonBody)
 }
 
 function OpenNextStep(step) {
@@ -530,9 +544,9 @@ function OpenNextStep(step) {
     document.querySelector(`[id=${CSS.escape(tabid)}]`).classList.add('active');
 }
 
-function ProceedStep2() {
+function ProceedStep2(value) {
     //UpdateForm1()
-    if (!ValidateProductInfo()) {
+    if (!ValidateProductInfo(value)) {
         DisplayMessage('Required Fields Missing', 'Complete the form below to proceed', false)
 
     }
@@ -667,7 +681,7 @@ function ValidateImg() {
     };
 }
 
-function ValidateProductInfo() {
+function ValidateProductInfo(val) {
     dict = {}
     let requiredFields = ['product_name', 'select_category', 'select_subcategory', 'select_identity', 'product_price', 'product_image_front', 'product_image_rear', 'product_image_side', 'select_store']
     let count = 0
@@ -675,6 +689,10 @@ function ValidateProductInfo() {
     let selectedStores = []
     let errorLabel = ''
     let productInfo = ''
+    let imageName = ''
+    let rearImageName = ''
+    let side1ImageName = ''
+    let img = ''
     for (let field in requiredFields) {
         errorLabel = requiredFields[field] + '_errorLabel'
         if (requiredFields[field] == 'select_store') {
@@ -686,16 +704,23 @@ function ValidateProductInfo() {
                     store_count--;
                 }
             }
-            if (store_count == stores.length) {
-                document.getElementById(errorLabel).classList.remove('hidden')
-                    //document.getElementById(errorLabel).innerHTML = 'This Field is Required'
-                count++
+            if (stores.length > 1) {
+                if (store_count == stores.length) {
+                    document.getElementById(errorLabel).classList.remove('hidden')
+                        //document.getElementById(errorLabel).innerHTML = 'This Field is Required'
+                    count++
+                    continue
+                } else {
+                    formdata.append("store_id", selectedStores)
+                    document.getElementById(errorLabel).classList.add('hidden')
+                }
                 continue
             } else {
-                formdata.append("selected_stores", selectedStores)
-                document.getElementById(errorLabel).classList.add('hidden')
+                store = document.getElementsByName('select_store');
+                selectedStores.push(store[0].value)
+                formdata.append("store_id", selectedStores)
+                continue;
             }
-            continue
         }
         productInfo = document.getElementById(requiredFields[field]).value
         if (productInfo != null && productInfo !== "") {
@@ -704,23 +729,55 @@ function ValidateProductInfo() {
 
             switch (requiredFields[field]) {
                 case 'product_image_front':
+                    img = document.getElementById(requiredFields[field]).value
+                    path = img.split('\\')
+                    imageName = path[path.length - 1]
+                        //imageName = imageName.split('.')
+                        //imageName = imageName[imageName.length - 2]
                     formdata.append("image", document.getElementById('product_image_front').files[0], document.getElementById('product_image_front').files[0].name);
                     continue;
                 case 'product_image_rear':
+                    img = document.getElementById(requiredFields[field]).value
+                    path = img.split('\\')
+                    rearImageName = path[path.length - 1]
+                        //rearImageName = imageName.split('.')
+                        //rearImageName = imageName[imageName.length - 2]
+                    if (imageName == rearImageName) {
+                        document.getElementById(errorLabel).classList.remove('hidden')
+                        document.getElementById(errorLabel).innerHTML = 'Rear Image is same as Front Image'
+                        OpenMessageBar('Upload different rear image.It is same as front image')
+                        count++
+                        return false
+                    }
                     formdata.append("image_rear", document.getElementById('product_image_rear').files[0], document.getElementById('product_image_rear').files[0].name);
                     continue;
                 case 'product_image_side':
+                    img = document.getElementById(requiredFields[field]).value
+                    path = img.split('\\')
+                    side1ImageName = path[path.length - 1]
+                        //side1ImageName = imageName.split('.')
+                        //side1ImageName = imageName[imageName.length - 2]
+                    if (imageName == side1ImageName) {
+                        document.getElementById(errorLabel).classList.remove('hidden')
+                        document.getElementById(errorLabel).innerHTML = 'Side Image is same as Front Image'
+                        OpenMessageBar('Upload different side image.It is same as front image')
+                        count++
+                        return false
+                    }
+                    if (rearImageName == side1ImageName) {
+                        document.getElementById(errorLabel).classList.remove('hidden')
+                        document.getElementById(errorLabel).innerHTML = 'Side Image is same as Rear Image'
+                        OpenMessageBar('Upload different side image.It is same as rear image')
+                        count++
+                        return false
+                    }
+
                     formdata.append("image_side1", document.getElementById('product_image_side').files[0], document.getElementById('product_image_side').files[0].name);
                     continue;
                 case 'select_store':
-                    stores = document.getElementsByName('select_store');
-                    for (store in stores) {
-                        if (stores[store].checked) {
-                            selectedStores.push(stores[store].value)
-                        }
-                    }
-
-                    formdata.append("stores", selectedStores)
+                    store = document.getElementsByName('select_store');
+                    selectedStores.push(store.value)
+                    formdata.append("store_id", selectedStores)
                     continue;
                 default:
                     formdata.append(requiredFields[field], document.getElementById(requiredFields[field]).value);
@@ -747,43 +804,25 @@ function ValidateProductInfo() {
     }
     if (count == 0) {
         let jsonBody = JSON.stringify(dict)
-        formdata.append("product_image_front_thumb", document.querySelector('#product_image_front_thumb').value)
-        getID(AddProduct, 'api/product/add/', formdata)
+        formdata.append("brand_name", document.getElementById('brand_name').value)
+        if (val == "")
+            getID(AddProduct, 'api/product/add/', formdata)
+        else
+            getID(AddProduct, `api/product/add/${val}/`, formdata)
         return true
     } else {
         return false
     }
 }
 
-function ValidateSaveAddress() {
-    let requiredList = ['addressee_name', 'address_line1', 'address_line2', 'pincode', 'city', 'state']
-    let itemValue = ''
-    let dict = {}
-    for (item in requiredList) {
-        if (document.querySelector(`#${requiredList[item]}`) != null) {
-            itemValue = document.querySelector(`#${requiredList[item]}`).value
-            dict[requiredList[item]] = itemValue
-        }
-        if (itemValue == null || itemValue == '') {
-            DisplayMessage('', 'Required Fields Missing', false)
-            OpenMessageBar('Could not save.Please Enter the required fields')
-            return null
-        }
+var discountCheckbox = document.querySelectorAll("input[name=is_discounted]");
+if (discountCheckbox != null)
+    for (let i = 0; i < 2; i++) {
+        discountCheckbox[i].addEventListener('click', function() {
+            if (discountCheckbox[i].value == 1) {
+                document.querySelector('#discount_div').classList.remove('hidden')
+            } else {
+                document.querySelector('#discount_div').classList.add('hidden')
+            }
+        });
     }
-
-    return dict;
-}
-
-function SetAddressInfo(val) {
-    debugger
-    let dict = {}
-    if (val == '') {
-        // getId(postJSONAuth, 'url', jsonBody)
-        document.getElementById('is_self_pickup').value = '1'
-    } else {
-        dict = ValidateSaveAddress()
-        if (dict != null) {
-            getID(postJSONAuth, '/api/address/save', JSON.stringify(dict))
-        }
-    }
-}

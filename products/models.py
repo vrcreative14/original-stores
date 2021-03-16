@@ -10,7 +10,25 @@ import qrcode
 import random
 import os
 from io import BytesIO
+from accounts.models import Seller
+import base64
 # Create your models here.
+
+file_path = ''
+def get_upload_path(self, name):
+        #seller_id = request.session['seller']
+        # if seller_id:
+        #         seller_name = Seller.objects.filter(seller = seller_id)
+        #         seller_name = seller_name + seller_id
+        #         return os.path.join("static/images/products/seller_%d/category_%d" %seller_name ,self.product_class,name)
+        # else: 
+                file_path = os.path.join("static/images/products/store_%s" %self.store.all().first().store_id,name)
+                path_folders = file_path.split("\\")
+                if os.path.exists(file_path):
+                    file_path = path_folders[0] + "/" + path_folders[1] + "/" + name
+                
+                    #file_path = os.path.join("static/images/products/store_%s" %self.store.all().first().store_id,"product_%s" %self.slug_field,name)
+                return file_path
 
 
 class ProductCategory(models.Model):
@@ -54,9 +72,10 @@ def make_thumbnail(self):
 
         thumb_name, thumb_extension = os.path.splitext(self.image.name)
         thumb_extension = thumb_extension.lower()
-        slug_str = "%s" % (thumb_name) 
-        slug_str = slugify(slug_str) + str(random.randint(9, 99)) + thumb_extension
-        thumb_filename = thumb_name + '_thumb' + thumb_extension
+        #slug_str = "%s" % (thumb_name) 
+        #slug_str = slugify(slug_str) + str(random.randint(9, 99)) + thumb_extension
+        #thumb_filename = thumb_name + '_thumb' + thumb_extension
+        thumb_filename = get_file_name(self.image.name,"_thumb",self.slug_field)
 
         if thumb_extension in ['.jpg', '.jpeg']:
             FTYPE = 'JPEG'
@@ -67,29 +86,17 @@ def make_thumbnail(self):
         else:
             return False    # Unrecognized file type
         
-
-        img_field = self.image   
-        image = Image.open(img_field)
-        w,h = image.size      
-        output_size = (300,350)
-        baseheight = 300
-        hpercent = (baseheight / float(image.size[1]))
-        wsize = int((float(image.size[0]) * float(hpercent)))
-        img = image.resize((wsize, baseheight), Image.ANTIALIAS)
-        #self.image_thumbnail = img
-        #thumb_io = BytesIO()
-        #self.image_thumbnail.save(thumb_io, img.format)
-        
-
-
         # Save thumbnail to in-memory file as StringIO
         temp_thumb = BytesIO()
-        # image = image.convert('RGB')
-        # image.save(temp_thumb, FTYPE)
-        # temp_thumb.seek(0)
+        image = image.convert('RGB')
+        image.save(temp_thumb, FTYPE)
+        temp_thumb.seek(0)
 
         # set save=False, otherwise it will run in an infinite loop
-        self.image_thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=True)
+        #image_path = self.image_thumbnail.url
+        if os.path.exists(thumb_filename):
+            os.remove(thumb_filename)
+        self.image_thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=False)
         #self.image_thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=True)
         temp_thumb.close()
 
@@ -99,11 +106,12 @@ def make_thumbnail(self):
 
 class Product(models.Model):
     name = models.CharField(max_length=70)
-    image = models.ImageField(validators=[check_thumbnail],upload_to='static/images', height_field=None, blank=True)
+    image = models.ImageField(validators=[check_thumbnail],upload_to=get_upload_path, height_field=None, blank=True, null=True)
     #image_front = models.ImageField(validators=[check_detailed_image],upload_to='static/images', height_field=None, blank=True)
-    image_rear = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
-    image_side1 = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
-    image_thumbnail = models.ImageField(upload_to='static/images', height_field=None, blank=True, null=True)
+    image_rear = models.ImageField(upload_to=get_upload_path, height_field=None, blank=True, null=True)
+    image_side1 = models.ImageField(upload_to=get_upload_path, height_field=None, blank=True, null=True)
+    image_thumbnail = models.ImageField(upload_to=get_upload_path, height_field=None, blank=True, null=True)
+    #image_thumbnail = models.CharField(max_length=4000,blank=True, null=True)
     #store=models.ManyToManyField(Store)
     #type=models.ForeignKey(ProductType, on_delete=models.CASCADE)        
     img_path = models.CharField(max_length=100, blank=True)    
@@ -120,61 +128,65 @@ class Product(models.Model):
     # def __str__(self):
     #     return str(self.name) + str(self.product_id)
     
-    def save(self, *args, **kwargs):     
-       slug_str = "%s %s" % (self.name, self.image.name) 
-       slug_str = slugify(slug_str) + str(random.randint(9, 99))
-       self.image.name = slug_str if len(slug_str) < 99 else str(slug_str[0:95])+'.jpg'
 
-       slug_str = "%s %s" % (self.name, self.image_rear.name) 
-       slug_str = slugify(slug_str) + str(random.randint(9, 99))
-       self.image_rear.name = slug_str if len(slug_str) < 99 else str(slug_str[0:95])+'.jpg' 
+    
 
-       slug_str = "%s %s" % (self.name, self.image_side1.name) 
-       slug_str = slugify(slug_str) + str(random.randint(9, 99))
-       self.image_rear.name = slug_str if len(slug_str) < 99 else str(slug_str[0:95])+'.jpg' 
+    def save(self, *args, **kwargs):
+        if(self.qrcode_text == None):
+                qrcode_img = qrcode.make(self.name)
+                self.qrcode_text = qrcode_img
+                self.slug_field = slugify(self.name) + str(random.randint(9,99))
+                # img_field = self.image   
+                # image = Image.open(img_field)
+                # w,h = image.size      
+                # output_size = (300,350)
+        super().save(*args, **kwargs) 
 
-       
+    
+    def update(self, *args, **kwargs):   
+        file_name = ''
+       #if(val == image):
+        make_thumbnail(self)
 
-       if(self.qrcode_text == None):
-            qrcode_img = qrcode.make(self.name)
-            self.qrcode_text = qrcode_img
-       self.slug_field = self.image.name
-       img_field = self.image   
-       image = Image.open(img_field)
-       w,h = image.size      
-       output_size = (300,350)
-    #    baseheight = 300
-    #    hpercent = (baseheight / float(image.size[1]))
-    #    wsize = int((float(image.size[0]) * float(hpercent)))
-    #    img = image.resize((wsize, baseheight), Image.ANTIALIAS)
-       #self.image_thumbnail = img
-       #thumb_io = BytesIO()
-       #self.image_thumbnail.save(thumb_io, img.format)
-       #self.image_thumbnail.save(thumb_filename, ContentFile(temp_thumb.read()), save=True)
-       #self.image_thumbnail = image.thumbnail(output_size)
-       #self.image_thumbnail.name = image.name + '_thumnbnail'+'.jpg'
-       make_thumbnail(self)
+        file_name = get_file_name(self.image.name,'_front_image',self.slug_field)        
 
-       super().save(*args, **kwargs)       
-             #image.save(self.image)
-             #img = image.resize((250,310), Image.ANTIALIAS)
-    #    elif w > 260 :
-    #          img = image.resize((int(w/2),int(h)), Image.ANTIALIAS)  
-    #    elif h > 320:
-    #          img = image.resize((int(w),int(h/2)), Image.ANTIALIAS)  
-       
-      
-    #    image_file = io.BytesIO()
-    #    img.save(image_file,'JPEG',quality=90)
-    #    self.image.instance.image = img
-       #self.image.instance.image.save(str(img),ContentFile(image_file.getvalue()), save = False)
-       #super(Product, self).save(*args, **kwargs)
-       #self.image = image_file
-       #self.image.instance.save()
-       #img.save(img.filename, quality = )
+        slug_str = "%s %s" % (self.name, self.image.name) 
+        slug_str = slugify(slug_str) + str(random.randint(9, 9999))
+        self.image.name = slug_str + ".jpg" if len(slug_str) < 99 else str(slug_str[0:95])+'.jpg'
+        self.image.save(file_name, self.image, save = False)
+
+        
+        file_name = get_file_name(self.image_rear.name,'_rear_image',self.slug_field)
+
+        slug_str = "%s %s" % (self.name, self.image_rear.name) 
+        slug_str = slugify(slug_str) + str(random.randint(9, 99))
+        self.image_rear.name = slug_str + ".jpg" if len(slug_str) < 99 else str(slug_str[0:95])+"_rear_image.jpg"
+        self.image_rear.save(file_name, self.image_rear, save = False)
+
+        file_name = get_file_name(self.image_side1.name,'_side1_image',self.slug_field)
+        slug_str = "%s %s" % (self.name, self.image_side1.name) 
+        slug_str = slugify(slug_str) + str(random.randint(9, 99))
+        self.image_side1.name = slug_str + ".jpg" if len(slug_str) < 99 else str(slug_str[0:95])+"_side1_image.jpg"
+        self.image_side1.save(self.image_side1.name, self.image_side1, save = False)
+        store = self.store.all().first()
+        if(self.product_id is None):
+            product_id = str(store.store_id) + str(random.randint(100000,999999))
+            self.product_id = product_id
+        super().save(*args, **kwargs) 
+        return self.product_id         
        
     class Meta:
         abstract = True
+
+
+def get_file_name(name, suffix, slug_field):
+        image_name, image_extension = os.path.splitext(name)
+        image_name = image_name.replace('-','')
+        image_extension = image_extension.lower()
+        slug_str = "%s" % (image_name) 
+        slug_str = slugify(slug_str) + str(random.randint(9, 99)) + image_extension
+        image_filename = image_name + suffix + "product_%s" %slug_field + image_extension
+        return image_filename
 
 
 class ProductDetails(models.Model):
@@ -208,6 +220,10 @@ class Article(Product):
 
 class ArticleDetails(ProductDetails):
     article = models.OneToOneField(Article, on_delete=models.CASCADE)
+    # def save(self, *args, **kwargs):
+    #     print(self)
+    #     super.save(*args, **kwargs)
+        
     def __str__(self):
         return self.article.name
 

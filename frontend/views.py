@@ -79,9 +79,6 @@ def RegisterSeller(request):
     #     return redirect('/SellerDashboard');
     #     # return render(request, 'frontend/SellerDashboard.html')
     # else:
-    if request.session['seller'] :
-        return render(request, 'frontend/SellerDashboard.html')
-    else:
         try:
             token = request.session['user_token']
             user_email = token["user"]["email"]
@@ -95,8 +92,6 @@ def RegisterSeller(request):
             context = {'loggedin':True, 'email' : '', 'states': States.STATE_UT, 'categories': categories, 'store_categories': store_category}
 
         return render(request,'frontend/SellerRegistration.html',context)
-   
-        
 
 @login_required(login_url='/login')
 def SellerDashboard(request):
@@ -178,12 +173,19 @@ def index(request):
 def AddProducts(request):
     categories = ProductCategory.objects.all()    
     seller_id = request.session['seller']
-    
+   
+    product_slug = request.GET.get('product','')
+    product = Article.objects.filter(slug_field = product_slug)
     if seller_id :
-        store = Store.objects.filter(seller = seller_id)
-
-    
-    context = {'productcategories': categories, 'stores':store}
+            store = Store.objects.filter(seller = seller_id)
+    if len(product) > 0:
+        prod = product[0]
+        #category = ProductSubCategory
+        context = {'name':prod.name, 'product_category':prod.product_category.type.name, 'product_subcategory':prod.product_category.name,'product_identity':prod.product_class.name,
+        'image_front':prod.image.url,'image_rear':prod.image_rear.url,'image_side1':prod.image_side1.url,'price':prod.price,'brand_name':prod.brand_name,
+        'productcategories': categories, 'stores':store,'product_id':prod.pk }
+    else:    
+        context = {'productcategories': categories, 'stores':store, 'material':'Fabric'}
     return render(request,'frontend/AddProducts.html', context)
 
 
@@ -193,6 +195,7 @@ def SelectedProduct(request):
     context = {}
     sub_categories = []
     articles = []
+    sub_category_obj = []
     # if category == 'clothing':
     default_items = ['T-Shirts','Formal Shirts','Casual Shirts','Formal Trousers','Lowers','Jeans & Casual Tousers']
     default_items_menu_class = 'ui bottom attached inverted ' + convert_toWords(len(default_items)) + ' item menu'
@@ -201,16 +204,15 @@ def SelectedProduct(request):
     if len(selected_product_category) > 0:
         sub_category = get_default_subcategory(category)
         sub_category_obj = ProductSubCategory.objects.filter(type = selected_product_category[0].pk, name = sub_category)
-
-        if sub_category_obj:                   
-            articles = Article.objects.filter(product_category = sub_category_obj[0].pk).order_by('-id')[:10]
+    
+    if len(sub_category_obj) > 0:                   
+            articles = Article.objects.filter(product_category = sub_category_obj[0].pk).order_by('-id')
 
     
-            item_in_words = convert_toWords(len(sub_categories))
-            div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu' 
-            context = {'category':category,'selected_product_categories' : sub_categories,'articles':articles ,'div_class_name': div_class_name,'default_items':default_items,'default_items_menu_class':default_items_menu_class}           
-    else:
-            context = {'category':category,'selected_product_categories' : sub_categories}
+    item_in_words = convert_toWords(len(sub_categories))
+    div_class_name = 'ui ' +  item_in_words + ' item secondary pointing menu'    
+    
+    context = {'category':category,'selected_product_categories' : sub_categories,'articles':articles ,'div_class_name': div_class_name,'default_items':default_items,'default_items_menu_class':default_items_menu_class}        
     return render(request,'SelectedProductList.html',context)
 
 
@@ -222,7 +224,6 @@ def ProductDetails(request):
         article_details = ArticleDetails.objects.get(article = article.pk)
         context = {'article': article,'details':article_details}
     return render(request,'frontend/ProductDetails.html', context)
-
 
 
 def get_default_subcategory(category):

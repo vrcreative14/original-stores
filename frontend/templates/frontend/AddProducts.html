@@ -59,7 +59,7 @@
                      <div class="card-container">                      
                         {% for store in stores %}
                       <div class="card">
-                            <input name="select_store" class="ui checkbox" type="checkbox" value={{store.pk}} />
+                            <input name="select_store" class="ui checkbox" type="checkbox" value={{store.store_id}} />
                             <span class="headLabel">{{store.name}}</span><br/>
                             <span class="cardLabel">Pincode : {{store.pincode}}</span><br/>
                             <span class="cardLabel">City : {{store.city}}</span><br/>
@@ -75,7 +75,7 @@
                 {% else %}               
                     <div>
                           <span class="ui blue ribbon label" style="line-height:1.7;font-size:15px;font-family:'lato';">Adding Product in store named as {{stores.0.name}}</span>
-                          <input name="select_store" type="hidden" value={{store.0.pk}}>
+                          <input name="select_store" type="hidden" value="{{stores.0.store_id}}">
                     </div>
                 {% endif %}
 
@@ -88,34 +88,37 @@
                                 <label>Product Name</label>
                                 <span id="product_name_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Name is required</span>                                            
                                 </div>
-                                <input type="text" id="product_name">                               
+                                <input type="text" id="product_name" value="{{name}}">                               
                             </div>                          
                           <div class="four wide field">
                                 <div class="required inline field">
-                                <label>Product Category</label>
+                                <label>Product Category</label><span class="promptLabel"> {% if product_category %}{{product_category}} {% endif %}</span>
                                 <span id="select_category_errorLabel" class="ui left pointing red basic label promptLabel hidden">Product Type is required</span>                                            
                                 </div>
                                 <select id="select_category" onchange="UpdateSubCategory()">
                                     <option value="">Select Product Category</option>
-                                    {% for category in productcategories %}                                    
-                                    <option value="{{category}}">{{category}}</option>
+                                    {% for category in productcategories %}                                                               
+                                    <option value="{{category}}"                                    
+                                      {% if category == product_category %}selected = selected{% endif %}>         
+                                    {{category}}
+                                    </option>
                                     {% endfor %}
                                 </select>
                             </div>            
 
                               <div class="four wide field">
                                 <div class="required inline field">
-                                <label>Product SubCategory</label>
-                                <span id="select_subcategory_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Type is required</span>                                            
+                                    <label>Product SubCategory</label><span class="promptLabel">{% if product_subcategory %}{{product_subcategory}} {% endif %}</span>
+                                    <span id="select_subcategory_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Type is required</span>                                            
                                 </div>
-                                <select id="select_subcategory" onchange="UpdateProductIdentity()">
-                                    <option value="">Select Product SubCategory</option>                                   
-                                </select>
-                            </div> 
+                                    <select id="select_subcategory" onchange="UpdateProductIdentity()" value="{{product_subcategory}}">
+                                        <option value="">Select Product SubCategory</option>                                   
+                                    </select>
+                               </div> 
 
                                <div class="four wide field">
                                 <div class="required inline field">
-                                <label>Product Identity</label>
+                                <label>Product Identity</label><span class="promptLabel">{% if product_identity %}{{product_identity}} {% endif %}</span>
                                 <span id="select_identity_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Product Type is required</span>                                            
                                 </div>
                                 <select id="select_identity" onchange="">
@@ -136,7 +139,7 @@
                                     <input type="file" id="product_image_front" onchange="process(this.id)" accept=".jpg, .jpeg, .png">                                   
                                    
                                     <a class="ui image" onclick=""> 
-                                      <img id="output_product_image_front" />
+                                      <img id="output_product_image_front" src="{{image_front}}" />
                                       <!-- <button class="ui orange button shortButton" onclick="">Preview</button> -->
                                       <!-- <label class="ui bottom attached label" onclick="">Preview</label> -->
                                       <!-- <div class="ui top attached label">HTML</div> -->
@@ -151,7 +154,7 @@
                                     </div>
                                     <input type="file" id="product_image_rear" onchange="process(this.id)">
                                     <a class="ui image " onclick="">
-                                        <img id="output_product_image_rear" />
+                                        <img id="output_product_image_rear" src="{{image_rear}}"/>
                                         <!-- <label class="ui bottom attached orange label anchorlabel">Preview</label> -->
                                       </a>
                                     </div>
@@ -165,7 +168,7 @@
                                     </div>
                                     <input type="file" id="product_image_side" onchange="process(this.id)">                                                                
                                     <a class="ui image " onclick="">
-                                      <img id="output_product_image_side" />
+                                      <img id="output_product_image_side" src="{{image_side1}}"/>
                                       <!-- <label class="ui bottom attached orange label anchorlabel">Preview</label> -->
                                     </a>
                                     </div>
@@ -197,10 +200,10 @@
                                                                                                     
                                     <div class="inline field">
                                      <i class="rupee sign icon big"></i>
-                                     <input id="product_price" type="text" maxlength="12" type="number" style="width: 255px;" placeholder="0.00" onkeypress="return isNumberKey(this, event);" pattern="^\d*(\.\d{0,2})?$">
+                                     <input id="product_price" type="text" maxlength="12" type="number" style="width: 255px;" placeholder="0.00" value="{{price}}" onkeypress="return isNumberKey(this, event);" pattern="^\d*(\.\d{0,2})?$">
                                     </div>
                                 </div>                                
-                                <div class="four wide field">
+                                {% comment %} <div class="four wide field">
                                     <label>Name of Manufacturer</label>
                                     <input type="text" id="manufacturer_name">
                                 </div> 
@@ -210,10 +213,10 @@
                                      <span id="origin_country_errorLabel" class="ui left pointing red basic label promptLabel hidden" >Required</span>                                            
                                      </div>
                                     <input type="text" id="origin_country">
-                                </div>    
+                                </div>     {% endcomment %}
                                 <div class="three wide field">
                                     <label>Name of Brand (If any)</label>
-                                    <input type="text" id="brand_name">
+                                    <input type="text" id="brand_name" value="{{brand_name}}">
                                 </div>                              
                             </div>          
                                                               
@@ -224,7 +227,7 @@
                     </div> 
 
                     <div class="centeredDiv">      
-                      <button class="ui teal button submitBtn" onclick="ProceedStep2()">Proceed to next Step</button>             
+                      <button class="ui teal button submitBtn" value="{{product_id}}" onclick="ProceedStep2(this.value)">Proceed to next Step</button>             
             </div>           
                 <input type="hidden" id="image_handler"/>
                 <div id="preview_modal" class="ui modal" style="overflow:scroll;">
@@ -263,6 +266,12 @@
                             </div>
                             <input type="text" id="product_specific_name" value="" readonly>                                            
                         </div>    
+                        <div class="three wide field">
+                            <div class="field">
+                            <label>System Generated Product Id</label>                     
+                            </div>
+                            <label class="headingLabel" type="text" id="product_id" value="" style="font-size:17px;color:rgb(104, 156, 58);">                                          
+                        </div>    
                         <div class="one wide field"></div> 
                         <div  id="product_details_div" class="seven wide field">
 
@@ -276,11 +285,12 @@
                 <div class="fields" id="appearance_details">
                     <div class="three wide field">
                         <div class="inline required field">
-                            <label>Colors </label>
+                            <label>Product Colors </label>
                             <span id="colors_errorLabel" class="ui left pointing red basic label promptLabel">Mention Product Colors</span>                                            
                     </div>
-                    <input type="text">
-                    </div>                                           
+                    <input type="text" id="primary_color">
+                    </div>  
+                                                             
                     <div class="four wide field">
                         <label> Quantity Available </label>                   
                         <div class="inline field">
@@ -294,15 +304,69 @@
                         </button>
                     </div>
                     </div>
+                    <div class="five wide field">
+                        <label>Select if you want to sell this product at discounted price</label>
+                        {% comment %} <div class="ui toggle checkbox">
+                            <input type="checkbox" name="is_discounted">
+                            {% comment %} <label>Subscribe to weekly newsletter</label>
+                        </div> {% endcomment %}
+                        <div class="ui radio checkbox">
+                             <input type="radio" name="is_discounted" value="1">
+                             <label>Yes</label>
+                        </div>
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="is_discounted" checked="checked" value="0">
+                            <label>No</label>
+                        </div>
+                    </div>
+
+                    <div id="discount_div" class="four wide field hidden">
+                    <label>Discount Percentage(%)</label>
+                    <input class="" id="discount" value="" placeholder"Enter Discount Percentage">
+                    </div>
                 
                 </div> 
+
+                <div id="add_material_div">
+                   <div class="fields">
+                            <div class="six wide field">
+                                <div class="required  field">                
+                                    <label>{{material}}</label>  
+                                    <span id="fabricerrorLabel" class="ui bottom pointing red basic label promptLabel">Grament Fabric is required</span>                                                                  
+                                </div>
+                                <input type="text" class="material" placeholder="like Cotton">                
+                            </div>              
+                            <div class="three wide field">
+                                <div class="required field">
+                                    <label>Percentage out of total</label> 
+                                    <span id="fabricpercentageerrorLabel" class="ui bottom pointing red basic label promptLabel">Fabric % is required</span>                                                                  
+                                </div>   
+                                <input type="text" class="percentage" style="width:125px;" placeholder="Enter % like 80">
+                            </div>
+                            <div class="two wide field">
+                                <label>Add {{material}}</label>              
+                                <button class="small ui blue compact icon button" onclick="AddTags(this,[],'AddFabric')">
+                                    <i class="plus icon"></i>
+                                </button>
+                            </div>
+                </div>
+                 </div>   
+
                 <div class="fields">
-                    <div class="five wide field">                  
+                    <div class="three wide field">                  
+                        <label>Country of Origin</label>
+                        <input id="origin_country" placeholder="Entry country of Origin" />                                     
+                    </div>
+                    <div class="four wide field">                  
+                        <label>Name of Manufaturer</label>(Enter your Business Name in you you manufatured it)
+                        <input id="manufacturer_name" placeholder="Manufacturer's name" />                                     
+                    </div>
+                    <div class="eight wide field">                  
                         <label>Product Description</label>
-                        <textarea id="product_description" placeholder="Describe here about the Product in few words."></textarea>                                     
+                        <textarea id="description" placeholder="Describe here about the Product in few words."></textarea>                                     
                     </div>
                 </div>
-                </div>   
+               
                     <div class="centeredDiv">
                     
                         <button class="ui grey button submitBtn" onclick="OpenNextStep('product_info')">

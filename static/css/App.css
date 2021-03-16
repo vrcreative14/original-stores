@@ -937,15 +937,17 @@ i.icon {
 
 .ui.success.message {
     width: 650px !Important;
-    background-color: rgb(235, 249, 220);
-    /* color: rgb(104, 156, 58)!Important;  */
+    /* background-color: rgb(235, 249, 220); */
+    background-color: rgb(104, 156, 58)!Important;
+    color: #fff !important;
     font-size: 16px !Important;
     padding: 20px 50px 20px 50px;
     margin-bottom: 20px;
 }
 
 .ui.success.message>.header {
-    color: rgb(74, 168, 16)!Important;
+    /* color: rgb(74, 168, 16)!Important; */
+    color: #fff !important;
     font-size: 16px;
 }
 

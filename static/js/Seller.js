@@ -222,18 +222,17 @@ const ValidateSellerInfo = () => {
     for (let i = 0; i < list.length; i++) {
         let item = list[i]
         let itemvalue = document.getElementById(item).value
-        let itemid = ""
+        let itemid = item + "_errorLabel"
 
         if (itemvalue == undefined || itemvalue == "") {
             switch (item) {
                 case "firstname":
                 case "lastname":
-                    itemid = "nameerrorLabel"
+                    itemid = "name_errorLabel"
                     document.getElementById(itemid).style.display = 'inline-block'
                     count = count + 1
                     break;
                 default:
-                    itemid = item + "_errorLabel"
                     document.getElementById(itemid).style.display = 'inline-block'
                     count = count + 1
                     break;
@@ -241,14 +240,17 @@ const ValidateSellerInfo = () => {
 
             continue
         } else {
+            itemid = item == "firstname" || item == "lastname" ? "name_errorLabel" : itemid
+            document.getElementById(itemid).style.display = 'none'
             continue
         }
-        if (count === 0)
-            return true
-        else {
-            OpenMessageBar('Could not save.Please Enter the required fields')
-            return false;
-        }
+
+    }
+    if (count === 0)
+        return true
+    else {
+        OpenMessageBar('Could not save.Please Enter the required fields')
+        return false;
     }
 }
 

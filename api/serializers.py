@@ -149,9 +149,8 @@ class MobileNoLoginSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        print(attrs)
+        print(attrs)        
         
-        #email = attrs.get('email')
         phone = attrs.get('phone')
         password = attrs.get('pft')
 
@@ -190,10 +189,16 @@ class StoreDetailsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Prod_Details_Serializer(serializers.ModelSerializer):
-    sizes_available = serializers.ListField()
+    
+    def create(self, validated_data, *args, **kwargs):
+        article_details = ArticleDetails.objects.create(**validated_data)
+        print(article_details)
+        return article_details
+
     class Meta:
         model = ArticleDetails
-        fields = ('primary_color','material','description','quantity')
+        fields = ('article','primary_color','material','description','quantity')
+
 
 class Product_Serializer(serializers.ModelSerializer):    
     

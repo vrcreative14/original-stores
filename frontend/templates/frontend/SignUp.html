@@ -57,74 +57,6 @@
  
     {% block content %}
     {{form}}
-    <!--  <div class="container">
-            <div>
-                <p>Hey dear! We heartly welcome you in the World of Original Stores. A place where we as a team can revolutionize the way shopping is done. Our main motto is to help out our customers and shopkeepers to evolove out of the circumstances created as our fight continues with the worldwnamee Covname-19 pandemic.</p>
-                <p>We really respect your privacy and assure you that your data is in safe hands. We never share your data to any third-party in any circumstances.</p>
-            </div>
-            <form>
-                <div class="formcontainer"> 
-                    <div style="flex-direction: column;justify-content: space-around;">
-                   
-                    <div>
-                        <i></i>
-                        <label class="headinglabel">Store/Shop Name</label>  <label>(Please mention the name for which you are famous for amongst people)</label> <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-                    <div>
-                        <label class="headinglabel">Address </label> <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-                    <div>
-                        <label class="headinglabel">State</label> <br/>
-                       <select>
-                           <option></option>
-                       </select>
-                    </div>
-                    <div>
-                        <label class="headinglabel">City</label> <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-                    <div>
-                        <label class="headinglabel">Store/Shop Name </label><label> (Please mention the name for which you are famous for amongst people)</label> <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-                </div>
-
-                <div>
-
-                    <div>
-                        <label class="headinglabel">Store/Shop Name</label>   <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-                    <div>
-                        <label class="headinglabel">Address </label>  <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-                    <div>
-                        <label class="headinglabel">State</label>  <br/>
-                       <select>
-                           <option></option>
-                       </select>
-                    </div>
-                    <div>
-                        <label class="headinglabel">City</label>  <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-                    <div>
-                        <label class="headinglabel">Store/Shop Name </label><label> </label> <br/>
-                        <input name="textShopName" type="text"/>
-                    </div>
-
-                </div>
-                    
-                </div>
-                    
-
-                    </div>
-            </form>
-
-        </div> -->
        
 <div class="container">
     <div class="centeredDiv headingDiv">        
@@ -140,17 +72,7 @@
     </div>
     <br/>
     {% include 'Message.html' %}
-    <!-- <div class="ui active tiny modal submitModal">
-        <div class="header">Header</div>
-        <div class="content">
-        <p>
-            OTP
-        </p>
-         </div>
-    <div class="actions">
-        <div class="ui approve button"></div>
-    </div>
-    </div> -->
+
 
        
         <br/>
@@ -230,13 +152,7 @@
         <div class="ui column stackable center page grid ">
             <div class="four wide column"></div>
         <div id="otpVerificationDiv" style="display: none;">
-            <!-- <div class="ui attched success message">             
-             <div class="header">
-                  Registration Information Submitted Successfully..
-                </div>
-                <p>An OTP has been sent to your registered Mobile number. <br/>
-                </p>
-            </div> -->
+         
          <div class="three wide column"></div>
          <div class="four wide column" id="mobileOTPInfo">
              <div class="fields">
@@ -255,58 +171,18 @@
                            <input class="verifyOTP" type="text"  id="otpMobile1"  maxlength="1" oninput="{this.value=this.value.replace(/[^0-9]/g,'')};CheckOTP()";>
                            <input class="verifyOTP" type="text"  id="otpMobile2"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP()";>
                            <input class="verifyOTP" type="text"  id="otpMobile3"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP()";>
-                           <input class="verifyOTP" type="text"  id="otpMobile4"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP();";> 
-
-                                <!-- <span id="otpmatchedIcon" style="margin-left: 20px;display: none;">
-                                    <i  class="check icon successIcon"></i>                                
-                                </span>
-                                <span id="otpmismatchedIcon" style="margin-left: 20px;display: none;">
-                                    <i  class="times circle icon errorIcon"></i>                                
-                                </span> -->
-                           
+                           <input class="verifyOTP" type="text"  id="otpMobile4"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP();";>     
                      </div> 
                                      
                         </div>
             </div>
            
-         </form>
-           
-         <!-- <div class="three wide column" id="mobileOTPInfo">
-            <div class="fields">
-                  <label class="infoLabel">Enter the OTP received on your Mobile number</label>
-            </div>
-        </div>
-
-        <form class="ui ten wide column form "> 
-            <div class="fields">
-                <div class="twelve wide field">     
-                    <div class="required  field">
-                            <label >Mobile OTP Verification</label>                             
-                            <span id="enterNameLabel" class="ui left pointing red basic label" style="display: none;">Please Enter First Name</span>             
-                    </div> 
-                   
-                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
-                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
-                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
-                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
-                </div>
-            </div>
-         </form> -->
+         </form>          
+       
 
         </div>
         </div>
 
-   
-    <!-- </div>
-            <button id="signupSubmit" class="submitBtn"   onclick="Signup()"><b>SUBMIT</b></button>
-        </div> 
-      
-       <div class="centeredDiv">
-           
-           
-           <button id="signupSubmit" class="ui green button submitBtn" onclick="Signup()">Green</button>
-
-        </div> -->
         <div class="centeredDiv">
             <ul class="contentDiv">
                 <li>Providing Mobile number enables better communication</li>
@@ -319,91 +195,20 @@
          </div>
          
              <div class="centeredDiv">
-                <span class="headingSpan">Already have an account? <button class="ui brown button" style="margin-left:10px;" onclick="GoToPage('http://www.vcnity.online/login')">Login from here</a></span>
+                <span class="headingSpan">Already have an account? <button class="ui brown button" style="margin-left:10px;" onclick="GoToPage('/login')">Login from here</a></span>
              </div>
              <br/>
-
-
         <div class="centeredDiv">       
              <button id="submitMobileBtn" class="ui blue button submitBtn"  onclick="SendOTP()" ><b>Continue</b></button>
         </div>   
-        <br/>
-      <!-- <div class="centeredDiv contentDiv">
-          <li>
-            If you don't want to register using Mobile number you can register using Email Id          
-          </li>       
-          
-        </div> -->
-        <br/>
-        <!-- <div class="centeredDiv ">
-
-             <button id="emailOptionBtn" class="ui button submitBtn continueBtn" onclick="OpenEmailInput()">Register using Email ID</button>
-        </div> -->
-
+        <br/>     
+        <br/>       
 </div>
-
        
      <div style="display: flex;padding: 50px;" class="formDiv">
            <h5></h5>
-
           <div>
-
-
-          </div>
-
-
-        <!-- <div style="display: flex;flex-direction: column;" class="labelcontainer">
-
-            <label>Shop/Store Name</label>
-            <label>E-mail</label>
-            <label>Select your state</label>
-
-            <label>City</label>
-
-            <label>Pincode</label>
-
-            <label>Category</label>
-            <label>Sub Category</label>
-
-
-        </div>
-        <div style="align-self: flex-end;position: relative;top: 40px;">
-            <button class="submitBtn" onclick="">Submit</button>
-        </div>
-
-        <div style="display: flex;flex-direction: column;">
-
-            <input class="inputDetails"  placeholder="Enter your full name" style="margin-top: 6px;" />
-            <input class="inputDetails" placeholder="Enter your E-mail" style="margin-top: 6px;" />
-            <select class="selectDetails">
-                <option>---Select---</option>
-                {% for state in states %}
-                <option>{{state}}</option>
-                {% endfor %}
-            </select>
-            <input class="inputDetails" id  placeholder="Enter your city" />
-            <input class="inputDetails" placeholder="Enter your pincode" />
-
-
-            <select class="selectDetails">
-                <option>---Select---</option>
-                {% for store_category in store_categories%}
-                <option>{{store_category}}</option>
-                {%endfor%}
-            </select>
-
-            <select class="selectDetails">
-                <option>---Select---</option>
-                {% for store_subcategory in store_subcategories%}
-                <option>{{store_subcategory}}</option>
-                {%endfor%}
-            </select>
-
-        </div> -->
-
-      
-       
-        
+          </div>                       
     </div>
     <script src="{% static 'js/App.js' %}"></script>
     <script src="{% static 'js/Signup.js' %}"></script>

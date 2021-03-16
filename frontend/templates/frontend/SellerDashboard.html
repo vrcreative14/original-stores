@@ -1,4 +1,4 @@
-{% extends 'SellerBase.html' %}
+{% extends 'Sellerbase.html' %}
 
 {% load static %}
 <!DOCTYPE html>
@@ -51,20 +51,28 @@
          
             </div>
             </div>                
-       <div class="ui two wide segment">
+       {% comment %} <div class="ui two wide segment">
           
-       </div>
+       </div> {% endcomment %}
          
           <div class="ui segment">
-                 <h4 class="ui dividing header headLabel" style="padding-left:20px;">Your Listed Products</h4>
+                 <label class="ui dividing header headLabel" style="padding-left:20px;">Your Listed Products</label>
                     <button class="ui green button" onclick="GoToPage('/AddProducts')">Add Product</button>
+                  <br/>
                 {% if products%}
+                <div class="verticalFlex">
                 {% for product in products%}  
-                    <div>
-                    <a class="headingSpan">{{product.name}}</a> 
+                    <div class="ui segment">
+                    <label class="headingSpan">{{product.name}}</label> 
+                    {% comment %} <br/>
+                    <label>{{product.slug_field}}</label> {% endcomment %}
                     {% comment %} :<span class="headingSpan"> {{store}} </span> {% endcomment %}
-                    </div>                  
+                    <button class="ui button" style="float:right;" onclick="GoToPage('/AddProducts?product={{product.slug_field}}')">Edit Info</button>
+                          
+                    </div>      
+                   
                 {% endfor %}
+                </div>
                 {% else %}
                     <div class="ui segment">
                     <label class="headingSpan">No Products Listed as of now</label> 
