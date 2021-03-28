@@ -94,43 +94,13 @@
 </div>
 <script src="{% static 'js/Misc.js' %}"></script>
 
-<script>
-function ValidateSaveAddress() {
-    let requiredList = ['addressee_name', 'address_line1', 'address_line2', 'pincode', 'city', 'state']
-    let itemValue = ''
-    let dict = {}
-    for (item in requiredList) {
-        if (document.querySelector(`#${requiredList[item]}`) != null) {
-            itemValue = document.querySelector(`#${requiredList[item]}`).value
-            dict[requiredList[item]] = itemValue
-        }
-        if (itemValue == null || itemValue == '') {
-            DisplayMessage('', 'Required Fields Missing', false)
-            OpenMessageBar('Could not save.Please Enter the required fields')
-            return null
-        }
-    }
 
-    return dict;
-}
-
-function SetAddressInfo(val) {
-    debugger
-    let dict = {}
-    if (val == '') {
-        // getId(postJSONAuth, 'url', jsonBody)
-        document.getElementById('is_self_pickup').value = '1'
-    } else {
-        dict = ValidateSaveAddress()
-        if (dict != null) {
-            getID(postJSONAuth, '/api/address/save', JSON.stringify(dict))
-        }
-    }
-}
-</script>
 {% endblock %}
 
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
 </body>
+   
+   
 
+  
 </html> 

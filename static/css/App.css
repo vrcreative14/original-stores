@@ -218,7 +218,7 @@
     justify-content: space-around;
     background-color: rgb(236, 240, 241);
     flex-wrap: wrap;
-    padding: 3%;
+    padding: 2% 2% 7% 2%;
 }
 
 
@@ -243,7 +243,6 @@
     font-size: 20px !Important;
     line-height: 2.25;
     white-space: nowrap;
-    color: black;
 }
 
 .formcontainer {
@@ -321,7 +320,8 @@ select {
 }
 
 .successBtn {
-    background-color: rgb(135, 196, 19)!Important;
+    /* background-color: rgb(135, 196, 19)!Important; */
+    background-color: rgb(104, 156, 58)!Important;
     border: 2px solid rgb(104, 156, 58)!Important;
     border-radius: 2.285714rem!Important;
     color: #fff!Important;
@@ -704,11 +704,16 @@ li input {
 }
 
 .errormsg {
-    color: rgb(254, 106, 99);
+    /* color: rgb(254, 106, 99); */
 }
 
 .successmsg {
-    color: rgb(104, 156, 58)
+    color: rgb(104, 156, 58);
+    font-weight: 700;
+}
+
+.infoSpan {
+    color: #2185d0!important;
 }
 
 
@@ -1081,11 +1086,22 @@ p {
     margin: 12px;
     font-size: 15px;
     font-weight: 700;
+    font-family: 'barlow';
+    font-size: 17.5px;
 }
 
 .headingText {
     font-weight: 500;
     color: #fff;
+}
+
+.divContent {
+    font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+.tinyimg {
+    width: 75px !important;
+    height: 80px;
 }
 
 .container {}

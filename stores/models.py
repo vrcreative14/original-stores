@@ -176,11 +176,11 @@ class Store(models.Model):
     def __str__(self):
         return str(self.name)
 
-    # def save(self, *args, **kwargs):
-    #     if self.store_id is None:
-    #         self.store_id  = str(self.pincode) +  + str(random.randint(9, 9999))
+    def save(self, *args, **kwargs):
+        if self.store_id is None:
+            self.store_id  = str(self.pincode) + str(random.randint(9, 9999))
 
-    #     super().save(*args, **kwargs)  
+        super().save(*args, **kwargs)  
 
     
         #serializer = StoreSerializer(new_store)

@@ -37,6 +37,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import parser_classes
 from products.models import *
 from orders.models import *
+import json
+from django.shortcuts import redirect
 
 # Create your views here.
 
@@ -218,15 +220,23 @@ def RegisterSeller(request):
     first_name = request.data.get('firstname', False)
     middle_name = request.data.get('middlename', False)
     last_name = request.data.get('lastname', False)
+    seller_email = request.data.get('primaryemail', '')
+    seller_phone = request.data.get('primarymobile','')
     secondary_email = request.data.get('secondaryemail', False)
     secondary_phone = request.data.get('secondarymobile', False)
+    is_business_registered = request.data.get('is_business_registered', False)
+    business_name = request.data.get('business_name', False)
+    is_store_physical = request.data.get('is_physical_store', False)
 
     try:
         user_phone = request.session['user_phone']
         user_email = request.session['user_email']
         user = User.objects.get(phone = user_phone) if user_phone != '' else User.objects.get(email = user_email)
         
-        Temp_data = {'user': user.pk, 'first_name' : first_name,'middle_name': middle_name,'last_name': last_name, 'secondary_email': secondary_email, 'secondary_phone': secondary_phone}
+        Temp_data = {'user': user.pk, 'first_name' : first_name,'middle_name': middle_name,'last_name': last_name, 'secondary_email': secondary_email, 'secondary_phone': secondary_phone,
+        'seller_email':seller_email,'seller_phone':seller_phone,'secondary_email':secondary_email,
+        'secondary_phone':secondary_phone,'is_business_registered':is_business_registered,
+        'business_name':business_name,'is_physical_store':is_store_physical}
       
     except:
        return Response({
@@ -259,7 +269,7 @@ def RegisterSeller(request):
             request.session['seller'] = seller.pk
             resp =  Response({
                 'status': True,
-                'detail':'Seller registered successfully. Continue filling the Store Info',
+                'detail':'Seller Information saved successfully.We will contact you at your mobile number:'+seller_phone+' for further verification. Continue filling the Store Info',
             }, status.HTTP_201_CREATED)                      
             return resp
             #return Response(serializer.data,status=status.HTTP_201_CREATED)              
@@ -446,10 +456,13 @@ class AddProductDetails(APIView):
                 serializer = Prod_Details_Serializer(data= request.data)
                 if serializer.is_valid():
                    prod = serializer.save()
-                   return Response({
+                   response = Response({
                        'status': True,
                        'detail': 'Product Details have been saved successfully'
                    })
+                   response.set_cookie('messageText',str("Product Details have been saved successfully"),24*60*60*1) 
+                   response.set_cookie('messageType','true',24*60*60*1)                             
+                   return response
                 #    if prod:
                 #         address_line1 = request.data.get("address")
                 #         landmark = request.data.get("landmark", "")
@@ -838,7 +851,7 @@ class LoginAPI(KnoxLoginView):
             # HttpResponse.set_cookie("atl",v.data["token"],expires=v.data["expiry"],httponly=True)
             # return v
         request.session['userid'] = user_obj.pk
-        request.session['user_name'] = user_obj.name
+        request.session['user_name'] = user_obj.name.split(" ")[0]
         request.session['user_phone'] = user_obj.phone 
         request.session['user_email'] = user_obj.email 
         seller = Seller.objects.filter(user = user_obj.pk)
@@ -868,8 +881,12 @@ class LogoutAPI(LogoutView):
         response =  Response({'status': True,'detail': 'You have been logged out Successfully.'})
         response.delete_cookie('upe')
         response.delete_cookie('tkl')
+        redirect_to = request.GET.get('redirectTo',None)
+        if redirect_to is not None:
+            return redirect(redirect_to)
         return response
-    pass
+        return response
+    
 
 
 @api_view(['GET'])

@@ -14,12 +14,23 @@ from products.models import *
 from api.utils import convert_toWords
 from django.shortcuts import redirect
 from orders.models import Order, ShippingAddress
-
+import hashlib
+import hmac
+import base64
 #from .forms import SellerForm
 #from api.models import Product
 # Create your views here.
-
-
+appId = '59627866e07fd8257a056c53972695'
+orderId = '1'
+orderAmount = '10'
+orderCurrency = 'INR'
+orderNote = 'test'
+customerName = 'Kartik'
+secretKey = 'aecfa278fed6dae860fd93ca39fee75fac1213e0'
+customerPhone = '7565897280'
+customerEmail = 'mkartik231@gmail.com'
+returnUrl = 'http://127.0.0.1:8000/buy/'
+notifyUrl = 'http://127.0.0.1:8000/'
 def Home(request):
     try:
         #name = request.session['user_name']
@@ -41,24 +52,27 @@ def Home(request):
 
 def Login(request):
     #put logic here to check whether len(request.GET)==0 OR check that token in cookie has expired..
+    if request.user.is_authenticated:
+        return redirect('/')
     return render(request,'frontend/Login.html')
 
 
-def SignUp(request):   
-        
-        # return render(request,'frontend/SignUp.html')
-   
-  
+def SignUp(request):           
+        # return render(request,'frontend/SignUp.html')    
         # #dynamic_content = DynamicPageContent.breif_signup_hindi  
+        if request.user.is_authenticated:
+            return redirect('/')
+            
         context = {'states' : "states", 'store_categories' : "store_categories", 'store_subcategories' : "store_subcategories"}
         # print('no')
         return render(request,'frontend/SignUp.html', context)
 
 @login_required(login_url='/login')
 def Checkout(request):      
+        sign = get_signature()
         user_id = request.session['userid']
         saved_addresses = ShippingAddress.objects.filter(user = user_id)
-        context = {'addresses': saved_addresses,'states': States.STATE_UT}
+        context = {'addresses': saved_addresses,'states': States.STATE_UT, 'signature':sign}
         save_address = ''
         # if orders:
         #         saved_address = orders.destination
@@ -79,6 +93,10 @@ def RegisterSeller(request):
     #     return redirect('/SellerDashboard');
     #     # return render(request, 'frontend/SellerDashboard.html')
     # else:
+        seller = request.session["seller"]
+        if seller is not None:                
+                return redirect('/SellerDashboard')
+
         try:
             token = request.session['user_token']
             user_email = token["user"]["email"]
@@ -97,18 +115,23 @@ def RegisterSeller(request):
 def SellerDashboard(request):
     stores = Store.objects.filter(seller = request.user.seller.pk)
     seller = Seller.objects.filter(user = request.user.pk)
+    if seller is None:
+        return render(request,'frontend/SellerRegistration.html')
     products = ''
     if len(stores) > 0:
         for store in stores:
             products = Article.objects.filter(store = store.pk)
+
     context = {'stores': stores,'seller_name':seller[0].first_name+ ' ' +seller[0].last_name,'products':products}    
     return render(request,'frontend/SellerDashboard.html', context)
 
 @login_required(login_url='/login')
 def AddStore(request):
+    seller_id = request.session['seller']
+    seller = Seller.objects.filter(pk = seller_id)
     categories = ProductCategory.objects.all()
     store_category = StoreCategory.objects.all()
-    context = {'states': States.STATE_UT, 'categories': categories, 'store_categories': store_category}
+    context = {'states': States.STATE_UT, 'categories': categories, 'store_categories': store_category, 'seller':seller[0]}
     return render(request, 'AddStore.html', context)
 
 
@@ -189,6 +212,15 @@ def AddProducts(request):
     return render(request,'frontend/AddProducts.html', context)
 
 
+
+@login_required(login_url='/login')
+def AddBlogPost(request):
+    categories = ProductCategory.objects.all()    
+    seller_id = request.session['seller']      
+    
+    return render(request,'frontend/AddBlogPost.html')
+
+
 def SelectedProduct(request):
     category = request.GET.get('category','')
     default_items = []
@@ -238,3 +270,37 @@ def get_default_subcategory(category):
             'Automobile Accesories':'Saturday'
         }
         return switcher.get(category,"Invalid")
+
+def get_signature():
+
+        postData = {
+        "appId" : appId,
+        "orderId" : orderId,
+        "orderAmount" : orderAmount,
+        "orderCurrency" : orderCurrency,
+        "orderNote" : orderNote,
+        "customerName" : customerName,
+        "customerPhone" : customerPhone,
+        "customerEmail" : customerEmail,
+        "returnUrl" : returnUrl,
+        "notifyUrl" : notifyUrl
+        }
+
+        sortedKeys = sorted(postData)
+        signatureData = ""
+        for key in sortedKeys:
+            signatureData += key+postData[key];
+
+        message = bytes(signatureData, encoding = 'utf8')
+        #get secret key from your config
+        secret = bytes(secretKey, encoding = 'utf8')
+        signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
+        return signature
+
+@login_required(login_url='/login')
+def Volunteer(request):
+    type = request.GET.get('type','')   
+    context = {'type' : type}
+    return render(request, 'frontend/Volunteer.html', context)
+
+#signature = get_signature()

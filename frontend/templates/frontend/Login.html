@@ -25,7 +25,7 @@
                     <div class="twelve wide field">     
                       <div class="required inline field">
                               <label>Login with Mobile number or Email</label>                                 
-                              <span id="mobileno_errorLabel" class="ui left pointing red basic label" style="display: none;">Invalid Mobile number or Email</span>             
+                              <span id="enterNameLabel" class="ui left pointing red basic label" style="display: none;">Invalid Mobile number or Email</span>             
                       </div> 
                              <input type="text" id="logincredInput" name="name" placeholder="Enter Mobile number or Email" maxlength="70">
                     </div>
@@ -35,10 +35,11 @@
                     <div class="twelve wide field">     
                       <div class="required inline field">
                               <label >Password</label>                                 
-                              <span id="password_errorLabel" class="ui left pointing red basic label" style="display: none;">Please Enter First Name</span>             
+                              <span id="enterNameLabel" class="ui left pointing red basic label" style="display: none;">Please Enter First Name</span>             
                       </div> 
-                             <input type="text" id="logincredInputpw" name="name" placeholder="Enter Password here" maxlength="70">
-                    </div>                 
+                             <input type="password" id="logincredInputpw" name="name" placeholder="Enter Password here" maxlength="70">
+                    </div>
+                 
                   </div>
               </form>            
         </div>
@@ -49,9 +50,8 @@
         </div>
       </div>
 
-      <script src="{% static 'js/Misc.js' %}"></script>   
-     
-        {%endblock%}
+      <script src="{% static 'js/Misc.js' %}"></script>       
+        {% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
     </body>
 </html>

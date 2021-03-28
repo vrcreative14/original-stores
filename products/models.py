@@ -214,6 +214,7 @@ class ProductDetails(models.Model):
       
 
 class Article(Product):
+    is_approved = models.BooleanField(default=False)
     def __str__(self):
         return self.name
 

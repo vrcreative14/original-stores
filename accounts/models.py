@@ -162,12 +162,17 @@ class Seller(models.Model):
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
+    seller_email = models.EmailField(max_length=255, blank=True, null=True)
+    seller_phone = models.CharField(validators=[phone_regex], max_length=13, blank=True, null=True)
     secondary_email = models.EmailField(max_length=255, blank=True, null=True)
     secondary_phone = models.CharField(validators=[phone_regex], max_length=13, blank=True, null=True)
     #email = models.EmailField()    
     #login_password = models.CharField(max_length=50)
     #organization = models.ForeignKey(Organization, on_delete=models.CASCADE, default=5)
     joining_date = models.DateField(auto_now_add=True)
+    is_business_registered = models.BooleanField(default=False)
+    business_name = models.CharField(max_length=50, blank=True)
+    is_physical_store = models.BooleanField(default=True)
     
     def __str__(self):
         return self.first_name

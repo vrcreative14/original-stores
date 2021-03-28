@@ -24,9 +24,9 @@ function Login() {
     postJSON('/api/login/', jsonBody)
 }
 
-function Logout() {
+function Logout(redirectTo) {
     debugger
-    let jsonBody = ''
+    let jsonBody = JSON.stringify({ 'redirect': redirectTo })
     getID(postLogout, '/api/logout/', jsonBody)
 }
 
@@ -162,7 +162,7 @@ const postImage = (url, jsonBody) => {
 
 }
 
-const ShowResult = (data) => {
+const ShowResult = (data, redirectTo) => {
     var detail = data.detail
     var status = data.status
     if (status == false) {
@@ -234,11 +234,16 @@ const ShowResult = (data) => {
                     OpenModalProceed('/SellerDashboard', 'Store Successfully Created. Now you are ready to list your products online and reach your customers.', 'Redirecting you to Dashboard')
                     break;
                 }
-                postImage('http://www.vcnity.online/api/store/create/', JSON.stringify(dict))
+                postImage('/api/store/create/', JSON.stringify(dict))
                 break;
             case 'Image uploaded succcesfully':
                 DisplayMessage('', 'Store Successfully Created. Now you are ready to list your products online and reach your customers.', true)
             case 'You have been logged out Successfully.':
+                if (redirectTo != undefined || redirectTo != null || redirectTo != '') {
+                    DisplayMessage('Logged out successfully', 'Switch to a different account', data.status)
+                    setTimeout(() => { window.open(redirectTo, "_self") }, 2000);
+                    break
+                }
                 DisplayMessage('', data.detail, data.status)
                 setTimeout(() => { window.open("/", "_self") }, 2000);
                 break;
@@ -246,11 +251,16 @@ const ShowResult = (data) => {
                 openTab('storeInfo')
                 DisplayMessage('', data.detail, data.status)
                 break;
+            case 'Product Details have been saved successfully':
+                //DisplayMessage('', data.detail, data.status)
+                document.getElementById('messageText').value = data.detail
+                window.open('/SellerDashboard', '_self')
+                break;
             case 'Product added succesfully':
                 debugger
                 OpenNextStep('product_details')
                 DisplayMessage('Product Added Successfully in your Online Store', 'Continue adding product details to complete the process', true)
-                document.getElementById('product_specific_name').value = document.getElementById('product_name').value + document.getElementById('brand_name').value
+                document.getElementById('product_specific_name').value = document.getElementById('product_name').value + ' by' + document.getElementById('brand_name').value
                 document.getElementById('product_id').value = data.data
                 document.getElementById('product_id').innerText = data.data
                 break;
@@ -292,9 +302,15 @@ const postLogout = (url, jsonBody, tkl) => {
                 DisplayMessage('Error Occured', 'Please try again after some time', false)
             }
         }).then(data => {
-            console.log(data)
-            debugger
-            ShowResult(data);
+            if (jsonBody != undefined) {
+                let redirectTo = JSON.parse(jsonBody)['redirect']
+                if (redirectTo != null) {
+                    ShowResult(data, redirectTo);
+                }
+            } else {
+                debugger
+                ShowResult(data, redirectTo);
+            }
         }).catch(error => console.log(error))
 }
 
@@ -312,7 +328,7 @@ const ProceedLogin = (data) => {
     $('.ui.modal').modal('show');
     document.querySelector('.ui.modal > div > span').innerText = 'Logged in Successfully'
     document.querySelector('.content > p').innerText = 'Redirecting you to home page..'
-    setTimeout(() => { window.open('/', '_self') }, 3000);
+    setTimeout(() => { window.open('/', '_self') }, 2000);
 }
 
 const DisplayMessage = (heading, detail, status) => {

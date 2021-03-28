@@ -176,6 +176,9 @@
                 </div>
                 <br/>
                 <div class="fields">
+                 {% if seller.is_physical_store == True %}
+                
+                {% else %}
                   <div class="four wide required field">
                    <label>Do you own Existing Brick & Mortar Store</label>
                    <span id="is_store_existing_errorLabel" class="ui top pointing red basic label promptLabel" style="display: none;">Required Field</span>             
@@ -186,6 +189,7 @@
                     <input type="radio" name="is_store_existing" value="0" onclick="CheckStoreAddress(this.value)"> <label>No</label>
                     </div>    
                   </div>
+                {% endif %}
                 </div>
                 <div class=" fields">
                   

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+         <div class="ui column stackable center page grid ">
+            <div class="four wide column"></div>
+        <div id="otpVerificationDiv" style="display: none;">
+            <!-- <div class="ui attched success message">             
+             <div class="header">
+                  Registration Information Submitted Successfully..
+                </div>
+                <p>An OTP has been sent to your registered Mobile number. <br/>
+                </p>
+            </div> -->
+         <div class="three wide column"></div>
+         <div class="four wide column" id="mobileOTPInfo">
+             <div class="fields">
+                   <label class="infoLabel">Enter the OTP received on your Mobile number</label>
+             </div>
+         </div>
+        
+         <form class="ui attached ten wide column form" id="formSubmitOTP"> 
+            <div class="fields">
+                <div class="twelve wide field">     
+                    <div class="inline required field">
+                            <label >Mobile OTP Verification</label>                             
+                            <span id="enterNameLabel" class="ui left pointing red basic label" style="display: none;">Please Enter OTP sent to your Mobile number</span>             
+                     </div>
+                     <div>
+                           <input class="verifyOTP" type="text"  id="otpMobile1"  maxlength="1" oninput="{this.value=this.value.replace(/[^0-9]/g,'')};CheckOTP()";>
+                           <input class="verifyOTP" type="text"  id="otpMobile2"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP()";>
+                           <input class="verifyOTP" type="text"  id="otpMobile3"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP()";>
+                           <input class="verifyOTP" type="text"  id="otpMobile4"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP();";> 
+
+                                <!-- <span id="otpmatchedIcon" style="margin-left: 20px;display: none;">
+                                    <i  class="check icon successIcon"></i>                                
+                                </span>
+                                <span id="otpmismatchedIcon" style="margin-left: 20px;display: none;">
+                                    <i  class="times circle icon errorIcon"></i>                                
+                                </span> -->
+                           
+                     </div> 
+                                     
+                        </div>
+            </div>
+           
+         </form>
+           
+         <!-- <div class="three wide column" id="mobileOTPInfo">
+            <div class="fields">
+                  <label class="infoLabel">Enter the OTP received on your Mobile number</label>
+            </div>
+        </div>
+
+        <form class="ui ten wide column form "> 
+            <div class="fields">
+                <div class="twelve wide field">     
+                    <div class="required  field">
+                            <label >Mobile OTP Verification</label>                             
+                            <span id="enterNameLabel" class="ui left pointing red basic label" style="display: none;">Please Enter First Name</span>             
+                    </div> 
+                   
+                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
+                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
+                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
+                           <input class="verifyOTP" type="text"  name="otpMobile"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'')";>
+                </div>
+            </div>
+         </form> -->
+
+        </div>
+        
+        <script src="" async defer></script>
+    </body>
+</html>

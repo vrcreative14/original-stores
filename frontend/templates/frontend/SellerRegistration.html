@@ -30,13 +30,13 @@
               </div>
             </a>
 
-            <a id="storeInfoLink" class="item step" data-tab="storeInfo" onclick="openTab('storeInfo')">
+            <div id="storeInfoLink" class="item step disabled" data-tab="storeInfo" onclick="openTab('storeInfo')">
               <i class="payment icon"></i>
               <div class="content">
                 <div class="title">Store/Shop Information</div>
                 <div class="description">Store/Shop Information is required for pickup of items</div>
               </div>
-            </a>
+            </div>
 
             <!-- <a class="item step" data-tab="taxInfo">
               <i class="info icon"></i>
@@ -47,13 +47,10 @@
           </div>
 
           {% include 'Message.html' %}
-
-
           <div id="sellerInfo" name="sellerInfo" class="ui tab active" data-tab="sellerInfo">            
-            <form class="ui form">
-                <!-- <h4 class="ui dividing header">Shipping Information</h4> -->
+            <form class="ui form">                
                 <div class="ui header centeredDiv formheadingDiv">
-                  <span class="formheadingSpan"> Seller Contact Information </span>
+                  <span class="formheadingSpan"> Seller Information </span>
                  </div>
                 <div class="required inline field">
                   <label>Enter your Full Name as per the Official Identity Card</label>
@@ -70,12 +67,103 @@
                     </div>
                   </div>
                 </div>
+               <div class="fields">
+              <div class="four wide field">  
+                <div class="required inline field">
+                      <label class="">Do you Sell goods through a Physical Store</label>
+                        <span id="is_physical_store_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Required field</span>             
+                </div>
+                    
+      <div class="ui radio checkbox">
+        <input type="radio" name="is_physical_store"  value="1">
+        <label class="formLabel">Yes</label>
+      </div>
+       <div class="ui radio checkbox">
+        <input type="radio" name="is_physical_store" value="0">
+        <label class="formLabel">No</label>
+      </div>
+       {% comment %} <div class="ui radio checkbox">
+        <input type="radio" name="selling_channel">
+        <label class="formLabel">Both</label>
+      </div> {% endcomment %}
+    
+                </div>
+    
+
+    
+  
+      <div class="seven wide field">
+      <li><i>If you sell goods through your shop (retail counter) select Yes</i></li>
+      <li><i>If you sell goods online and don't have a retail shop select No</i></li>
+      {% comment %} <li><i>If you sell goods through both mediums, online and also have a retail shop select Both</i></li> {% endcomment %}
+          {% comment %} <div class="required inline field">
+              <label>Business Name</label>
+              <span id="email_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Required Field</span>                        
+          </div>
+          <input type="text" id="businessname" /> {% endcomment %}
+      </div>
+  </div>
+               <div class="fields">
+              <div class="four wide field">  
+                <div class="required inline field">
+                      <label class="formLabel">Is your Business registered ?</label>
+                      <span id="is_business_registered_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Required field</span>             
+
+                </div>
+                    
+      <div class="ui radio checkbox">
+        <input type="radio" value="1" name="is_business_registered"  onclick="CheckBusinessRegistration()">
+        <label class="formLabel">Yes</label>
+      </div>
+       <div class="ui radio checkbox">
+        <input type="radio" value="0" name="is_business_registered" onclick="CheckBusinessRegistration()"> 
+        <label class="formLabel">No</label>
+      </div>    
+    </div>
+    
+
+    
+  
+  <div class="four wide field" id="businessname">
+  <div class="required inline field">
+  <label>Business Name</label>
+  <span id="business_name_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Required Field</span>                        
+  </div>
+  <input type="text" id="business_name" />
+  </div>
+  </div>
+  
+             
                 <div class="field">
-                  <h4>Communication Info</h4>
-                  <div class="fields">
+             
+  <h4 class="ui dividing header">Communication Info</h4>
+                  
+                     <div class="fields">
+                <div class="four wide field">
+                {% if request.session.user_email is None %}
+                {% else %}
+                <label>Registered Email: <span id="registered_email">{{request.session.user_email}}</span></label>
+                {% endif %}
+                {% if request.session.user_phone is None %}
+                {% else %}
+                <label>Registered Mobile number:<span id="registered_mobile"> {{request.session.user_phone}}</span></label>
+                {% endif %}
+                </div>
+              
+              
+              
+                </div>
+                   <h4>Contact Information for Seller Profile</h4>
+                    <div class="four wide field">
+                      <div class="ui checkbox">
+                        <input type="checkbox" name="same_as_registered" onchange="SameAsRegistered()" >
+                        <label>Same as Registered Details</label>
+                    </div>
+                    </div>
+                  <div class="fields">                                  
                     <div class="four wide field">
                       <div class="required inline field">
-                        <label>Primary Email</label>    
+                        <label>Primary Email </label>    
                         <span id="primaryemail_errorLabel" class="ui left pointing red basic label promptLabel" style="display: none;">Enter a valid Email Id</span>                        
                       </div>
 
@@ -91,11 +179,13 @@
                           <input class="ui mini" style="width: 55px;margin-right: 0px;" placeholder="+91" readonly></input>   
                           <input type="text" name="mobile" id="primarymobile" placeholder="Enter Your Primary Mobile number" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" maxlength="10" style="width: 265px;">
                           </div>
-                      </div>
-                   
-                  
-                    
-                    </div>                   
+                         
+                      </div>                                                                            
+                    </div>    
+                    <div class="ten wide field">                
+                     <li style="font-weight:400;"><i>You may either enter the email & mobile number which you entered in SignUp form OR enter different details here</i></li>
+                     <li style="font-weight:400;"><i>Make sure Email & Mobile numbers are accessible for verification </i></li>
+                     </div>
                   </div>
                 </div>
                 <div class="two fields">
@@ -123,7 +213,7 @@
               </form>    
 
               <div class="centeredDiv">
-                <button class="ui button successBtn submitBtn formheadingSpan" onclick="SaveSellerInfo()">Save & Next</button>               
+                <button class="ui button successBtn submitBtn formheadingSpan" onclick="ValidateSaveSellerInfo()">Save Seller Information</button>               
               </div>              
           </div>
 
@@ -312,7 +402,29 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.js"></script>
         <script>
             $('#storecategory').dropdown()            
-            $('#productcategory').dropdown()        
+            $('#productcategory').dropdown()     
+
+            function CheckBusinessRegistration(){
+             if(document.querySelector('input[name="is_business_registered"]:checked').value == '1')
+                document.querySelector('#businessname').classList.remove('hidden')
+             else
+             document.querySelector('#businessname').classList.add('hidden')
+            }   
+
+
+            function SameAsRegistered(){
+             if(document.querySelector('input[name="same_as_registered"]:checked')){
+               if(document.querySelector('#registered_email') != null)
+               document.querySelector('#primaryemail').value = document.querySelector('#registered_email').innerText
+               if(document.querySelector('#registered_mobile') != null)
+               document.querySelector('#primarymobile').value = document.querySelector('#registered_mobile').innerText
+             }
+             else
+                document.querySelector('#primarymobile').value = ""             
+                document.querySelector('#primaryemail').value = ""             
+            }
+              
+            
         </script>
     {% endblock %}
 </body>

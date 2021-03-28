@@ -15,7 +15,6 @@
         <link rel="stylesheet" href="">
 
         <style>
-
 </style>
 
     </head>
@@ -28,16 +27,16 @@
      <div class="ui grid" style="padding:40px;">
   <div class="four wide column">
     <div class="ui vertical fluid tabular menu">
-      <a class="active green item" style="line-height:45px;">
+      <a id="upi" class="item active green" style="line-height:45px;" onclick="SelectPayMode(this.id)">
         <span class="headLabel">UPI</span>
       </a>
-      <a class="item" style="line-height:45px;">
+      <a id="card" class="item" style="line-height:45px;" onclick="SelectPayMode(this.id)">
          <span class="headLabel">Debit Card/Credit Card</span>
       </a>
-      <a class="item" style="line-height:45px;">
+      <a id="net" class="item" style="line-height:45px;" onclick="SelectPayMode(this.id)">
          <span class="headLabel">Net Banking</span>
       </a>
-      <a class="item" style="line-height:45px;">
+      <a id="cash" class="item" style="line-height:45px;" onclick="SelectPayMode(this.id)">
         <span class="headLabel">Cash On Delivery</span>
         
       </a>
@@ -47,41 +46,24 @@
   </div>
   <div class="twelve wide stretched column">
     <div class="ui segment">
-      This is an stretched grid column. This segment will always match the tab height
+      {% comment %} This is an stretched grid column. This segment will always match the tab height {% endcomment %}
+    <form id="redirectForm" method="post" action="https://test.cashfree.com/billpay/checkout/post/submit">
+      <input type="hidden" name="appId" value="59627866e07fd8257a056c53972695"/>
+      <input type="hidden" name="orderId" value="1"/>
+      <input type="hidden" name="orderAmount" value="10"/>
+      <input type="hidden" name="orderCurrency" value="INR"/>
+      <input type="hidden" name="orderNote" value="test"/>
+      <input type="hidden" name="customerName" value="Kartik"/>
+      <input type="hidden" name="customerEmail" value="mkartik231@gmail.com"/>
+      <input type="hidden" name="customerPhone" value="7565897280"/>
+      <input type="hidden" name="returnUrl" value="http://127.0.0.1:8000/buy/"/>
+      <input type="hidden" name="notifyUrl" value="http://127.0.0.1:8000/"/>
+      <input type="hidden" name="signature" value="{{signature}}"/>
+     <input type="submit" value="Pay">
+    </form>
     </div>
   </div>
-</div> 
-
-{% comment %} 
-<h2>Vertical Tabs</h2>
-<p>Click on the buttons inside the tabbed menu:</p>
-
-<div class="ui vertcal menu tab">
-<div class="item">
-  <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">London</button>
 </div>
-<div class="active item">
-  <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
-</div>
-<div class="item">
-  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
-</div>
-</div>
-
-<div id="London" class="tabcontent">
-  <h3>London</h3>
-  <p>London is the capital city of England.</p>
-</div>
-
-<div id="Paris" class="tabcontent">
-  <h3>Paris</h3>
-  <p>Paris is the capital of France.</p> 
-</div>
-
-<div id="Tokyo" class="tabcontent">
-  <h3>Tokyo</h3>
-  <p>Tokyo is the capital of Japan.</p>
-</div> {% endcomment %}
 
 <script>
 function openCity(evt, cityName) {
@@ -97,16 +79,23 @@ function openCity(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " active";
 }
-// Get the element with id="defaultOpen" and click on it
-//document.getElementById("defaultOpen").click();
-</script>
 
-        
-       <script src="{% static 'js/Misc.js' %}"></script>
 
+function SelectPayMode(id) {   
+
+    document.querySelector('a.active').classList.remove('active')    
+    document.querySelector(`#${id}`).classList.add('active')
+    document.querySelector(`#${id}`).classList.add('green')
+    if(activeItem.length>1){       
+        activeItem[0].classList.remove("active")
+        console.log(activeItem[0])
+    }
+}
+
+</script>            
 
 {% endblock %}
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
     </body>
 </html>

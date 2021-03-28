@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'frontend',
     'knox',    
+    'blogpost',    
 ]
 
 AUTH_USER_MODEL = 'accounts.User'               #changes the built-in user model to ours 

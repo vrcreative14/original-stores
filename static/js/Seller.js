@@ -133,8 +133,8 @@ function CheckProductCategory() {
 }
 
 const ValidateStoreInfo = () => {
-    const list = ["shopname", "state", "city", "pincode", "productcategory", "storecategory", "isgstregistered", "gstin", "is_store_existing", 'addressLine1']
-    var listDup = ["shopname", "state", "city", "pincode", "productcategory", "storecategory", "isgstregistered", "gstin", "is_store_existing"]
+    const list = ["shopname", "state", "city", "pincode", "productcategory", "storecategory", "isgstregistered", "gstin", 'addressLine1']
+    var listDup = ["shopname", "state", "city", "pincode", "productcategory", "storecategory", "isgstregistered", "gstin"]
     const optionalList = ['address', 'latitude', 'longitude', 'storeimage']
     var index = 0
     for (let i = 0; i < list.length; i++) {
@@ -148,15 +148,15 @@ const ValidateStoreInfo = () => {
             document.getElementById('isgstregistered_errorLabel').style.display = 'none'
             continue
         }
-        if (item == 'is_store_existing') {
-            if (document.querySelector('input[name="is_store_existing"]:checked') == null) {
-                document.getElementById('is_store_existing_errorLabel').style.display = 'inline-block'
-                continue
-            }
-            listDup.shift()
-            document.getElementById('is_store_existing_errorLabel').style.display = 'none'
-            continue
-        }
+        // if (item == 'is_store_existing') {
+        //     if (document.querySelector('input[name="is_store_existing"]:checked') == null) {
+        //         document.getElementById('is_store_existing_errorLabel').style.display = 'inline-block'
+        //         continue
+        //     }
+        //     listDup.shift()
+        //     document.getElementById('is_store_existing_errorLabel').style.display = 'none'
+        //     continue
+        // }
 
         let itemvalue = document.getElementById(item).value
         let itemid = item + "_errorLabel"
@@ -213,46 +213,140 @@ const ValidateStoreInfo = () => {
         OpenMessageBar('Could not save.Please Enter the required fields')
         return false;
     }
-
 }
 
-const ValidateSellerInfo = () => {
-    const list = ["firstname", "lastname", "primaryemail", "primarymobile"]
+const ValidateSaveSellerInfo = () => {
+    const list = ["firstname", "lastname", "primaryemail", "primarymobile", "is_physical_store", "is_business_registered"]
+    const optional = ["secondaryemail", "secondarymobile"]
     let count = 0
+    var dict = {};
+    // let itemvalue = ""
+    let itemid = ""
+
     for (let i = 0; i < list.length; i++) {
         let item = list[i]
-        let itemvalue = document.getElementById(item).value
-        let itemid = item + "_errorLabel"
 
-        if (itemvalue == undefined || itemvalue == "") {
-            switch (item) {
-                case "firstname":
-                case "lastname":
-                    itemid = "name_errorLabel"
+        // if (itemvalue == undefined || itemvalue == "") {
+        switch (item) {
+            case "firstname":
+            case "lastname":
+                itemvalue = document.getElementById(item).value
+                itemid = "name_errorLabel"
+                if (document.getElementById(item).value == "" || document.getElementById(item).value == undefined) {
                     document.getElementById(itemid).style.display = 'inline-block'
                     count = count + 1
-                    break;
-                default:
+                } else {
+                    dict[item] = itemvalue
+                    document.getElementById(itemid).style.display = 'none'
+                }
+                break;
+                // case "is_physical_store":
+                //     if (document.querySelector('input[name="is_physical_store"]:checked').value == "1")
+                //         dict["is_physical_store"] = true
+                //     else
+                //         dict["is_physical_store"] = false
+                //     break;
+                // case "is_business_registered":
+                //     if (document.querySelector('input[name="is_business_registered"]:checked').value == "1") {
+                //         dict["is_business_registered"] = true
+                //         dict["business_name"] = document.querySelector('#business_name').value
+                //     } else {
+                //         dict["is_business_registered"] = false
+                //         dict["business_name"] = ""
+                //     }
+
+                //     break;
+            case 'is_physical_store':
+                itemvalue = document.querySelector('input[name="is_physical_store"]:checked')
+                if (itemvalue == null) {
+                    document.getElementById('is_physical_store_errorLabel').style.display = 'inline-block'
+                    count = count + 1
+                    break
+                } else if (itemvalue.value == 1) {
+                    dict["is_physical_store"] = true
+                        //dict["business_name"] = document.querySelector('#business_name').value
+                } else {
+                    dict["is_physical_store"] = false
+                        //dict["business_name"] = ""
+                }
+                document.getElementById('is_physical_store_errorLabel').style.display = 'none'
+                break;
+            case 'is_business_registered':
+                itemvalue = document.querySelector('input[name="is_business_registered"]:checked')
+                if (itemvalue == null) {
+                    document.getElementById('is_business_registered_errorLabel').style.display = 'inline-block'
+                    count = count + 1
+                    break
+                } else if (itemvalue.value == 1) {
+                    let busName = document.querySelector('#business_name').value
+                    if (busName == "") {
+                        document.querySelector('#business_name_errorLabel').style.display = 'inline-block'
+                        count++
+                        break
+                    }
+                    dict["is_business_registered"] = true
+                    dict["business_name"] = document.querySelector('#business_name').value
+                } else {
+                    dict["is_business_registered"] = false
+                    dict["business_name"] = ""
+                }
+                document.getElementById('is_business_registered_errorLabel').style.display = 'none'
+                document.querySelector('#business_name_errorLabel').style.display = 'none'
+                break;
+
+            default:
+                itemvalue = document.getElementById(item).value
+                if (document.getElementById(item).value == "" || document.getElementById(item).value == undefined) {
+                    itemid = item + "_errorLabel"
                     document.getElementById(itemid).style.display = 'inline-block'
                     count = count + 1
-                    break;
-            }
-
-            continue
-        } else {
-            itemid = item == "firstname" || item == "lastname" ? "name_errorLabel" : itemid
-            document.getElementById(itemid).style.display = 'none'
-            continue
+                } else {
+                    dict[item] = itemvalue
+                    document.getElementById(itemid).style.display = 'none'
+                }
+                break;
         }
 
+        continue
+        // } else {
+        //     switch (item) {
+        //         case "firstname":
+        //         case "lastname":
+        //             itemid = "name_errorLabel"
+        //             document.getElementById(itemid).style.display = 'inline-block'
+        //             count = count + 1
+        //             break;
+        //         case "is_physical_store":
+        //             if (document.querySelector('input[name="is_physical_store"]:checked').value == "1")
+        //                 dict["is_physical_store"] = true
+        //             else
+        //                 dict["is_physical_store"] = false
+        //             break;
+        //         case "is_business_registered":
+        //             if (document.querySelector('input[name="is_business_registered"]:checked').value == "1") {
+        //                 dict["is_business_registered"] = true
+        //                 dict["business_name"] = document.querySelector('#business_name').value
+        //             } else {
+        //                 dict["is_business_registered"] = false
+        //                 dict["business_name"] = ""
+        //             }
+        //             break;
+        //         default:
+        //             itemid = item + "_errorLabel"
+        //             document.getElementById(itemid).style.display = 'inline-block'
+        //             count = count + 1
+        //             break;
+        //     }
     }
-    if (count === 0)
-        return true
-    else {
+    if (count === 0) {
+        jsonBody = JSON.stringify(dict)
+        getID(postJSONAuth, "/api/seller/register/", jsonBody);
+    } else {
         OpenMessageBar('Could not save.Please Enter the required fields')
         return false;
     }
 }
+
 
 function CheckStoreAddress(val) {
     debugger

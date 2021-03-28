@@ -41,30 +41,21 @@
       
       <div class="ui small icon input">
         
-        <!-- <i class="location arrow icon link" onclick="() => {  }">Edit</i> -->
+      
         <i id="detectLocation" class="crosshairs icon link" onclick="FetchCitynPin(event)"></i>       
         <input id="locationCity" class="prompt " type="text" style="width: 200px;" value="Lucknow, Charbagh" placeholder="">    
         <input id="locationPin" class="prompt " type="text" style="width: 130px;" value="208012" placeholder="">     
         <input id="tkl" type="hidden" />
            
       </div>     
-      <!-- <span id="" class="ui black basic label">Pincode</span>     -->
-      <!-- <div class="ui small icon input">
-        
-        
-      </div> -->
+    
     </div>
       </div>
 
-      {% comment %} <div class="right item">
-    <div class="ui category search">
-      <div class="ui large icon input">
-        <input class="prompt searchInput" type="text" placeholder="Search Shops,Stores and Products..." onchange="SearchShopsProducts()">
-        <i class="search icon link" onclick="SearchShopsProducts()"></i>
-      </div>
-      <div class="results"></div>
-    </div> {% endcomment %}
+     
      </div>
+     <input id="messageText" type="hidden" value="" />
+     {% include 'HeaderMenu.html'%}
   </div>
   <div>
   
@@ -83,19 +74,10 @@
     <a href="#">Products Listed</a>
     <a href="#">Orders Received</a>
     <a href="#">Taxation</a>
-    <a href="#">Blogs & Articles</a>
-    {% comment %} {% if user.is_authenticated%}
-      <a href="#"> Order History </a>
-    {% else %}
-    {% endif %} {% endcomment %}
-    {% comment %} {% if user.is_seller %}
-    <a>Seller Dashboard</a>
-    {% else %}
-    <a href="/SellerRegistration">Join as a Seller</a>
-    {% endif %} {% endcomment %}
-    {% comment %} <a href="/api/logout">Logout</a> {% endcomment %}
+    <a href="/blogs/seller/">Blogs & Articles</a>
     <a href="#">Help/Contact us</a>
   </div> 
+  
   
     {% block content %}
    
@@ -123,7 +105,7 @@
           </li>
           <li>
             <a>
-              Change Location
+              Privacy Policy
             </a>
           </li>
           </ul>                      
@@ -141,46 +123,10 @@
 
  
   <script>
-    
-    
-    // let signupRequest = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Accept': "application/json",
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     "user": {
-    //       "email": email,
-    //       "password": password,
-    //       "phone": mobile_no
-    //     },
-    //     "first_name": first_name,
-    //     "last_name": last_name
-    //   }),
-    // };
-
-//     function getCookie(name) {
-//     let cookieValue = null;
-//     if (document.cookie && document.cookie !== '') {
-//         const cookies = document.cookie.split(';');
-//         for (let i = 0; i < cookies.length; i++) {
-//             const cookie = cookies[i].trim();
-//             // Does this cookie string begin with the name we want?
-//             if (cookie.substring(0, name.length + 1) === (name + '=')) {
-//                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-//                 break;
-//             }
-//         }
-//     }
-//     return cookieValue;
-// }
-
-    // const csrftoken=getCookie('csrftoken');
 
  
   </script>
-<!-- <script src="{% static 'js/App.js' %}"></script> -->
+
 
 
 <script src="{%static 'js/App.js' %}"></script>  

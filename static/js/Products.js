@@ -504,12 +504,13 @@ function SaveProduct() {
                     for (item in composition) {
                         material = document.querySelector('#add_material_div').children[0].querySelector('.material').value
                         percent = document.querySelector('#add_material_div').children[0].querySelector('.percentage').value
-                        dict['material'] = material + ':' + percent + ','
+                        dict['material'] += material + ':' + percent + ','
                     }
                     continue
                 }
                 dict[required_fields[item]] = document.getElementById(required_fields[item]).value
             }
+            //dict['product_id'] = '226001754380733'
             dict['product_id'] = document.querySelector('#product_id').value
             dict['article'] = ''
             getID(postJSONAuth, 'api/product/details/add/', JSON.stringify(dict))
@@ -815,8 +816,41 @@ function ValidateProductInfo(val) {
     }
 }
 
+function ValidateSaveAddress() {
+    let requiredList = ['addressee_name', 'address_line1', 'address_line2', 'pincode', 'city', 'state']
+    let itemValue = ''
+    let dict = {}
+    for (item in requiredList) {
+        if (document.querySelector(`#${requiredList[item]}`) != null) {
+            itemValue = document.querySelector(`#${requiredList[item]}`).value
+            dict[requiredList[item]] = itemValue
+        }
+        if (itemValue == null || itemValue == '') {
+            DisplayMessage('', 'Required Fields Missing', false)
+            OpenMessageBar('Could not save.Please Enter the required fields')
+            return null
+        }
+    }
+
+    return dict;
+}
+
+function SetAddressInfo(val) {
+    debugger
+    let dict = {}
+    if (val == '') {
+        // getId(postJSONAuth, 'url', jsonBody)
+        document.getElementById('is_self_pickup').value = '1'
+    } else {
+        dict = ValidateSaveAddress()
+        if (dict != null) {
+            getID(postJSONAuth, '/api/address/save', JSON.stringify(dict))
+        }
+    }
+}
+debugger
 var discountCheckbox = document.querySelectorAll("input[name=is_discounted]");
-if (discountCheckbox != null)
+if (discountCheckbox != null || discountCheckbox != undefined) {
     for (let i = 0; i < 2; i++) {
         discountCheckbox[i].addEventListener('click', function() {
             if (discountCheckbox[i].value == 1) {
@@ -826,3 +860,4 @@ if (discountCheckbox != null)
             }
         });
     }
+}

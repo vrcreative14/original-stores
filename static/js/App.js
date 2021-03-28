@@ -26,8 +26,8 @@ function showPosition(position) {
     fetchLocationName(position);
     //l.placeholder = "Latitude: " + position.coords.latitude +
     //"<br>Longitude: " + position.coords.longitude;
-    document.getElementById('latitude').value = position.coords.latitude
-    document.getElementById('longitude').value = position.coords.longitude
+    document.getElementById('latitude').value = position.coords["latitude"]
+    document.getElementById('longitude').value = position.coords["longitude"]
 }
 
 function fetchLocationName(position) {
@@ -192,7 +192,6 @@ function openTab(tabName) {
     var activeLink = document.getElementsByClassName('item step active')
     activeLink[0].classList.remove('active')
     let link = tabName + 'Link'
-    document.getElementById(link).classList.remove('disabled')
     document.getElementById(link).classList.add('active')
     var a = document.querySelector('.ui.tab.active')
     if (a !== null)
@@ -214,9 +213,24 @@ function currentSlide(n) {
     showSlides(slideIndex = n);
 }
 
+function setCookie(cname, cvalue, expires) {
+    var d = new Date();
+    var t = new Date(Date.parse(expires));
+    // d.setTime(parseInt(d.getTime() + (t.getTime() * 24*60*60*1000)));
+    var expires = "expires=" + t.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 window.onload = function() {
 
-    debugger
+    let msg = getCookie('messageText')
+    let status = getCookie('messageType')
+    if (msg != "") {
+        DisplayMessage('', msg, status)
+        setCookie('messageText', '')
+    }
+    //document.getElementById('messageText').value = ""
+
     // if (tkl == undefined || tkl == ''){
     //     var headerLinks=document.querySelectorAll('.navbar > .signedout')
     //     for(let i=0;i<headerLinks.length;i++){
@@ -233,6 +247,8 @@ window.onload = function() {
 
     //FetchCitynPin()
 }
+
+
 
 function getCookie(cname) {
     debugger
