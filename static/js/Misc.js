@@ -239,7 +239,7 @@ const ShowResult = (data, redirectTo) => {
             case 'Image uploaded succcesfully':
                 DisplayMessage('', 'Store Successfully Created. Now you are ready to list your products online and reach your customers.', true)
             case 'You have been logged out Successfully.':
-                if (redirectTo != undefined || redirectTo != null || redirectTo != '') {
+                if (redirectTo != undefined && redirectTo != null && redirectTo != '') {
                     DisplayMessage('Logged out successfully', 'Switch to a different account', data.status)
                     setTimeout(() => { window.open(redirectTo, "_self") }, 2000);
                     break
@@ -247,9 +247,10 @@ const ShowResult = (data, redirectTo) => {
                 DisplayMessage('', data.detail, data.status)
                 setTimeout(() => { window.open("/", "_self") }, 2000);
                 break;
-            case 'Seller registered successfully. Continue filling the Store Info':
+            case 'Seller Information saved successfully. Continue saving the Store Details':
+                debugger
                 openTab('storeInfo')
-                DisplayMessage('', data.detail, data.status)
+                DisplayMessage(data.detail, `We will contact you at your mobile number: ${document.getElementById('primarymobile').value} for further verification`, data.status)
                 break;
             case 'Product Details have been saved successfully':
                 //DisplayMessage('', data.detail, data.status)
@@ -304,12 +305,14 @@ const postLogout = (url, jsonBody, tkl) => {
         }).then(data => {
             if (jsonBody != undefined) {
                 let redirectTo = JSON.parse(jsonBody)['redirect']
-                if (redirectTo != null) {
-                    ShowResult(data, redirectTo);
-                }
-            } else {
-                debugger
+                    // if (redirectTo != undefined) {
                 ShowResult(data, redirectTo);
+
+                //ShowResult(data)
+
+
+                // debugger
+                // ShowResult(data, redirectTo);
             }
         }).catch(error => console.log(error))
 }
@@ -426,6 +429,7 @@ function getID(callback, url, jsonBody) {
 function AddProduct(url, formData, tkl) {
     var headers = new Headers();
     headers.append("Cookie", `csrftoken =${csrftoken}`);
+    headers.append("X-Requested-With", 'XMLHttpRequest');
 
     // var formdata = new FormData();
     // formdata.append("product_name", "Sweater");

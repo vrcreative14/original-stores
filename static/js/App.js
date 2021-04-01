@@ -9,7 +9,6 @@ function getCoordinates() {
     }
 }
 
-
 function getLocation() {
     var locat = document.getElementById("storelocation")
     if (navigator.geolocation) {
@@ -190,6 +189,7 @@ function getCookie(name) {
 function openTab(tabName) {
     debugger;
     var activeLink = document.getElementsByClassName('item step active')
+    activeLink[0].classList.add('disabled')
     activeLink[0].classList.remove('active')
     let link = tabName + 'Link'
     document.getElementById(link).classList.add('active')
@@ -198,6 +198,12 @@ function openTab(tabName) {
         document.querySelector('.ui.tab.active').classList.remove('active');
 
     document.querySelector(`[name=${CSS.escape(tabName)}]`).classList.add('active');
+    document.querySelector(`[id=${CSS.escape(link)}]`).classList.remove('disabled');
+    window.scroll({
+        top: 100,
+        left: 0,
+        behavior: 'smooth'
+    });
 }
 
 

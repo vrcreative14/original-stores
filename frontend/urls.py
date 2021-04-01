@@ -16,5 +16,6 @@ urlpatterns = [
     path('products/details/', views.ProductDetails, name="ProductDetails"),    
     path('buy/', views.Checkout, name="CheckOut"),    
     path('register/', views.Volunteer, name="register"),    
-    path('blogs/seller/', views.AddBlogPost, name="blogs"),    
+    path('blogs/', views.ViewBlogs, name="blogs"),    
+    path('blogs/add/', views.AddBlogPost, name="addblogs"),    
 ]

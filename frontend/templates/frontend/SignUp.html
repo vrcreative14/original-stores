@@ -172,8 +172,7 @@
                            <input class="verifyOTP" type="text"  id="otpMobile2"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP()";>
                            <input class="verifyOTP" type="text"  id="otpMobile3"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP()";>
                            <input class="verifyOTP" type="text"  id="otpMobile4"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP();";>     
-                     </div> 
-                                     
+                     </div>
                         </div>
             </div>
            
@@ -183,12 +182,18 @@
         </div>
         </div>
 
+         <div class="centeredDiv">       
+             <button id="submitMobileBtn" class="ui blue button submitBtn"  onclick="SendOTP()" ><b>Continue</b></button>
+        </div>  
+
         <div class="centeredDiv">
             <ul class="contentDiv">
                 <li>Providing Mobile number enables better communication</li>
                 <li>We never share your data to any third-party</li>
             </ul>
         </div>
+
+        
 
         <div class="centeredDiv">
             <button id="signupBtn" class="ui button submitBtn successBtn hidden" onclick="Register()"><b>Signup</b></button>
@@ -198,9 +203,7 @@
                 <span class="headingSpan">Already have an account? <button class="ui brown button" style="margin-left:10px;" onclick="GoToPage('/login')">Login from here</a></span>
              </div>
              <br/>
-        <div class="centeredDiv">       
-             <button id="submitMobileBtn" class="ui blue button submitBtn"  onclick="SendOTP()" ><b>Continue</b></button>
-        </div>   
+        
         <br/>     
         <br/>       
 </div>

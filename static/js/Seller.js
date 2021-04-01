@@ -166,12 +166,15 @@ const ValidateStoreInfo = () => {
                 switch (isGST) {
                     case "1":
                         document.getElementById('gstin_errorLabel').style.display = 'inline-block'
-
                         document.getElementById(itemid).style.display = 'inline-block'
+                        break;
+                    case "0":
+                        document.getElementById('gstin_errorLabel').style.display = 'none'
+                        listDup.shift();
                         break;
                     default:
                         document.getElementById('gstin_errorLabel').style.display = 'none'
-                        listDup.shift()
+                        listDup.shift();
                         break;
                 }
             }
@@ -225,8 +228,7 @@ const ValidateSaveSellerInfo = () => {
 
     for (let i = 0; i < list.length; i++) {
         let item = list[i]
-
-        // if (itemvalue == undefined || itemvalue == "") {
+            // if (itemvalue == undefined || itemvalue == "") {
         switch (item) {
             case "firstname":
             case "lastname":

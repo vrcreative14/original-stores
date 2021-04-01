@@ -91,11 +91,11 @@ function UpdateProductIdentity() {
     switch (productSubcategory) {
         case "Men's Wear":
         case "Boys Wear":
-            prod_identity_list = ['T-Shirts', 'Formal Shirts', 'Casual Shirts', 'Blazors', 'Jackets', 'Trousers', 'Chinos']
+            prod_identity_list = ['T-Shirts', 'Formal Shirts', 'Casual Shirts', 'Blazors', 'Jackets', 'Trousers', 'Chinos', 'Caps', 'Sports Shoes']
             break;
         case "Women's Wear":
         case "Girls Wear":
-            prod_identity_list = ['T-Shirts', 'Formal Shirts', 'Casual Shirts', 'Blazors', 'Jackets', 'Trousers', 'Chinos']
+            prod_identity_list = ['T-Shirts', 'Formal Shirts', 'Casual Shirts', 'Blazors', 'Jackets', 'Trousers', 'Chinos', 'Caps', 'Sports Shoes']
             break;
         case 'Utensils':
             prod_identity_list = ['Stoves', 'Washing Machine', 'Refrigerators', 'Mixers & Grinders', 'Vaccum Cleaners', 'Room Heaters', 'Fans', 'Desert Coolers', 'Blenders', 'Others']

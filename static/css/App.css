@@ -1087,7 +1087,11 @@ p {
     font-size: 15px;
     font-weight: 700;
     font-family: 'barlow';
-    font-size: 17.5px;
+    font-size: 17.3px;
+}
+
+.darkLabel {
+    color: #17202A !Important;
 }
 
 .headingText {
@@ -1263,6 +1267,17 @@ img {
 .verticalLine {
     border-left: solid 3px black;
 }
+
+
+/* .height {
+    height: 270px;
+    width: 300px !important;
+}
+
+.blogimage {
+    width: 300px !important;
+    height: 225px !important;
+} */
 
 @media only screen and (max-width: 600px) {
     .verticalFlex {

@@ -177,7 +177,7 @@ class Store(models.Model):
         return str(self.name)
 
     def save(self, *args, **kwargs):
-        if self.store_id is None:
+        if self.store_id is None or self.store_id == '':
             self.store_id  = str(self.pincode) + str(random.randint(9, 9999))
 
         super().save(*args, **kwargs)  

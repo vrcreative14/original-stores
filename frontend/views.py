@@ -113,14 +113,19 @@ def RegisterSeller(request):
 
 @login_required(login_url='/login')
 def SellerDashboard(request):
-    stores = Store.objects.filter(seller = request.user.seller.pk)
+    stores = Store.objects.filter(seller = request.session.get('seller', None))
     seller = Seller.objects.filter(user = request.user.pk)
-    if seller is None:
-        return render(request,'frontend/SellerRegistration.html')
-    products = ''
+    
+    if seller is None or len(seller) == 0:
+        request.session["seller"] = None
+        return redirect('/SellerRegistration')
+    #products = ''
+    products = []
     if len(stores) > 0:
         for store in stores:
-            products = Article.objects.filter(store = store.pk)
+            product = Article.objects.filter(store = store.pk)
+            if len(product) > 0:
+                products.append(Article.objects.filter(store = store.pk))
 
     context = {'stores': stores,'seller_name':seller[0].first_name+ ' ' +seller[0].last_name,'products':products}    
     return render(request,'frontend/SellerDashboard.html', context)
@@ -185,6 +190,9 @@ def FetchProducts(request):
     article = Garment.objects.all()
     context = {'articles' : article,}
     return render(request,'frontend/Products.html', context)
+
+def ViewBlogs(request):
+    return render(request,'frontend/Blogs.html')
 
 
 def index(request):
@@ -297,7 +305,7 @@ def get_signature():
         signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
         return signature
 
-@login_required(login_url='/login')
+
 def Volunteer(request):
     type = request.GET.get('type','')   
     context = {'type' : type}

@@ -1,7 +1,7 @@
 
 <div class="centeredDiv">   
   <div class="ui message showMessage" style="display: none;">
-        <!-- <i class="close icon"></i> -->
+        <i class="close icon" style="background-color:transparent!Important;"></i>
             <div class="header">
             
             </div>       
@@ -11,3 +11,12 @@
   </div>
 </div>
 <div style="position:fixed; bottom:305px" id="messagebar"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+<script>
+ $('.message .close')
+    .on('click', function() {
+        $(this)
+            .closest('.message')
+            .transition('fade');
+    });
+</script>

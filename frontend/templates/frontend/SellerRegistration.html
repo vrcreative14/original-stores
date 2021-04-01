@@ -47,6 +47,7 @@
           </div>
 
           {% include 'Message.html' %}
+          {% include 'Modal.html' %}
           <div id="sellerInfo" name="sellerInfo" class="ui tab active" data-tab="sellerInfo">            
             <form class="ui form">                
                 <div class="ui header centeredDiv formheadingDiv">
@@ -266,10 +267,10 @@
                        <label class="">Is Your Shop registered under GST ?</label>
                     </div>
                     <div class=" inline field">
-                    <input type="radio" name="isgstregistered" value="1" onclick="CheckGSTINEntry(this.value)" > <label>Yes</label>
+                    <input type="radio" name="is_gst_registered" value="1" onclick="CheckGSTINEntry(this.value)" > <label>Yes</label>
                     </div>
                     <div class="inline field">
-                    <input type="radio" name="isgstregistered" value="0" onclick="CheckGSTINEntry(this.value)"> <label>No</label>
+                    <input type="radio" name="is_gst_registered" value="0" onclick="CheckGSTINEntry(this.value)"> <label>No</label>
                     </div>
                    
                     <div class="four wide field"> 
@@ -371,7 +372,7 @@
                 </div>
                 <br/>
 
-                <div class=" fields">
+                {% comment %} <div class=" fields">
                   
                   <div class="six wide field">
                       <label>Address (Details like Shop Number, Market name etc.)</label>
@@ -382,7 +383,43 @@
                       <label>Nearest Landmark</label>
                       <input placeholder="Enter the landmark situated near your shop" id="landmark">                
                   </div>                
-                </div>                                   
+                </div>                                    {% endcomment %}
+
+                 <div class="fields">
+                 {% if seller.is_physical_store == True %}
+                
+                {% else %}
+                  {% comment %} <div class="four wide required field">
+                   <label>Do you own Existing Brick & Mortar Store</label>
+                   <span id="is_store_existing_errorLabel" class="ui top pointing red basic label promptLabel" style="display: none;">Required Field</span>             
+                   <div class="inline field">
+                    <input type="radio" name="is_store_existing" value="1" onclick="CheckStoreAddress(this.value)"> <label>Yes</label>
+                    </div>
+                    <div class="inline field">
+                    <input type="radio" name="is_store_existing" value="0" onclick="CheckStoreAddress(this.value)"> <label>No</label>
+                    </div>    
+                  </div> {% endcomment %}
+                {% endif %}
+                </div>
+                <div class=" fields">
+                  
+                  <div id="addressLine1" class="five wide field">
+                      <label>Address Line 1 (Details like Shop Number, Market name etc.)</label>                      
+                      <input placeholder="Enter address for your Shop" id="address">                
+                       <span id="addressLine1_errorLabel" class="ui top pointing red basic label promptLabel" style="display: none;">Address Required in case of Existing Physical Store</span>                         
+                  </div>
+
+                  <div id="addressLine2" class="five wide field">
+                      <label>Address Line 2 </label>                       
+                      <input placeholder="Enter address for your Shop" id="address">                            
+                  </div>
+
+                  <div class="four wide field">
+                      <label>Nearest Landmark</label>
+                      <input placeholder="Enter the landmark situated near your shop" id="landmark">                
+                  </div>                
+                </div>                  
+
               </form>
                     <div class="centeredDiv">
                       <button class="ui button successBtn submitBtn formheadingSpan" onclick="SaveStoreInfo()">Save & Next</button>
@@ -419,9 +456,10 @@
                if(document.querySelector('#registered_mobile') != null)
                document.querySelector('#primarymobile').value = document.querySelector('#registered_mobile').innerText
              }
-             else
+             else{
                 document.querySelector('#primarymobile').value = ""             
                 document.querySelector('#primaryemail').value = ""             
+             }
             }
               
             

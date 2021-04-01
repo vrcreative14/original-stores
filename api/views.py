@@ -217,15 +217,15 @@ class ValidatePhoneOTP(APIView):
 @api_view(['POST'])
 def RegisterSeller(request):    
     usr = request.data.get('user', False)
-    first_name = request.data.get('firstname', False)
-    middle_name = request.data.get('middlename', False)
-    last_name = request.data.get('lastname', False)
+    first_name = request.data.get('firstname', '')
+    middle_name = request.data.get('middlename', '')
+    last_name = request.data.get('lastname', '')
     seller_email = request.data.get('primaryemail', '')
     seller_phone = request.data.get('primarymobile','')
-    secondary_email = request.data.get('secondaryemail', False)
-    secondary_phone = request.data.get('secondarymobile', False)
+    secondary_email = request.data.get('secondaryemail', '')
+    secondary_phone = request.data.get('secondarymobile', '')
     is_business_registered = request.data.get('is_business_registered', False)
-    business_name = request.data.get('business_name', False)
+    business_name = request.data.get('business_name','')
     is_store_physical = request.data.get('is_physical_store', False)
 
     try:
@@ -266,10 +266,12 @@ def RegisterSeller(request):
 
             # print('seller serializer data:',json.dump(serializer.data,4) )
             #serializer.create(validated_data=request.data)
+            #Seller Information saved successfully.We will contact you at your mobile number:'+seller_phone+' for further verification. Continue filling the Store Info
+            
             request.session['seller'] = seller.pk
             resp =  Response({
                 'status': True,
-                'detail':'Seller Information saved successfully.We will contact you at your mobile number:'+seller_phone+' for further verification. Continue filling the Store Info',
+                'detail':'Seller Information saved successfully. Continue saving the Store Details',
             }, status.HTTP_201_CREATED)                      
             return resp
             #return Response(serializer.data,status=status.HTTP_201_CREATED)              
@@ -294,10 +296,12 @@ class RegisterStore(APIView):
                 #user_ph = request.data.get('user_ph', '')
                 #user = User.objects.get(phone = user_ph)
                 input_gstin = ''
-                user_phone = request.session["user_phone"] 
+                user_phone = request.session.get('user_phone', None)
                 user = ''
                 if user_phone is None:
-                    user_email = request.session["user_email"]
+                    user_email = request.session.get('user_email', None)
+                    if(user_email is None):
+                        Logout(request)
                     user = User.objects.filter(email = user_email)
                 else:
                     user = User.objects.filter(phone = user_phone)
@@ -881,12 +885,23 @@ class LogoutAPI(LogoutView):
         response =  Response({'status': True,'detail': 'You have been logged out Successfully.'})
         response.delete_cookie('upe')
         response.delete_cookie('tkl')
+        response.set_cookie('messageText','You have been Logged out successfully',24*60*60*1) 
+        response.set_cookie('messageType','true',24*60*60*1)            
         redirect_to = request.GET.get('redirectTo',None)
         if redirect_to is not None:
             return redirect(redirect_to)
-        return response
-        return response
+        return response        
     
+
+def Logout(request):
+        v = logout(request)
+        response =  Response({'status': True,'detail': 'You have been logged out Successfully.'})
+        response.delete_cookie('upe')
+        response.delete_cookie('tkl')
+        response.set_cookie('messageText','You have been Logged out successfully',24*60*60*1) 
+        response.set_cookie('messageType','true',24*60*60*1)   
+        return response         
+        #redirect_to = request.GET.get('redirectTo',None)
 
 
 @api_view(['GET'])
@@ -914,7 +929,8 @@ def GetToken(request):
 @api_view(['GET'])
 def GetTokenforUser(request):
     tkl = request.COOKIES["tkl"]   
-    return Response({'status':True, 'tkl':tkl})
+    resp = Response({'status':True, 'tkl':tkl})                   
+    return resp
 
 
 @api_view(['POST'])
