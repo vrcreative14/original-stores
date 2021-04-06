@@ -118,13 +118,21 @@ else:
     #
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'HOST': '34.93.205.220',
+#             'PORT': '',
+#             'NAME': 'vcnity_online',
+#             'USER': 'postgres',
+#             'PASSWORD': 'postgres123',
+#         }
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'HOST': '34.93.205.220',
-            'PORT': '',
-            'NAME': 'vcnity_online',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres123',
+            'HOST': 'ec2-34-203-155-237.compute-1.amazonaws.com',
+            'PORT': '5432',
+            'NAME': 'vcnityonline',
+            'USER': 'sefpclnhqedars',
+            'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
         }
     }
     # DATABASES = {
