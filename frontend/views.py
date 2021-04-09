@@ -247,7 +247,7 @@ def SelectedProduct(request):
         sub_category_obj = ProductSubCategory.objects.filter(type = selected_product_category[0].pk, name = sub_category)
     
     if len(sub_category_obj) > 0:                   
-            articles = Article.objects.filter(product_category = sub_category_obj[0].pk).order_by('-id')
+            articles = Article.objects.filter(product_category = sub_category_obj[0].pk, is_approved=True).order_by('-id')
 
     
     item_in_words = convert_toWords(len(sub_categories))
