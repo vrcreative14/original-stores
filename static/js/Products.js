@@ -500,9 +500,9 @@ function SaveProduct() {
 
             for (item in required_fields) {
                 if (required_fields[item] == 'material') {
-                    if (document.getElementById(required_fields[item]).value == '') {
+                    // if (document.getElementById(required_fields[item]).value == '') {
 
-                    }
+                    // }
                     let composition = document.querySelector('#add_material_div').children
                     for (let i = 0; i < composition.length; i++) {
                         //material = document.querySelector('#add_material_div').children[i].querySelector('.material').value
