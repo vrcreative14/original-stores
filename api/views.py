@@ -351,6 +351,14 @@ class RegisterStore(APIView):
                 serializer = StoreSerializer(data= temp_data)
                 if serializer.is_valid():
                         store = serializer.save()
+                else:
+                        send_mail(
+                            'errors',
+                            'detail'+ serializer.errors,
+                            'vcnityonline@gmail.com',
+                            ['vrcreative14@gmail.com'],
+                            fail_silently=False,
+                        )
                         # for product_category in product_categories:
                         #        store.product_category.add(ProductCategory.objects.create(product_category))
                         
@@ -583,7 +591,7 @@ class AddProduct(APIView):
                 'detail':'Product could not be saved'
             }, status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, pk):
+    def put(self, request,  pk):
         product = Article.objects.get(pk = pk)
         if product is None:
             return Response({
