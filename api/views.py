@@ -359,35 +359,20 @@ class RegisterStore(APIView):
                             ['vrcreative14@gmail.com'],
                             fail_silently=False,
                         )
-                        # for product_category in product_categories:
-                        #        store.product_category.add(ProductCategory.objects.create(product_category))
                         
-                        # for store_category in store_categories:
-                        #        StoreCategory.objects.create(**store_category)
-                   #store = self.create(self, request)
-                #    store_id = str(pincode) + str(random.randint(9, 99))
-                #    new_store = Store.objects.create(name = name,seller = seller,state=state,city = city,pincode = pincode,latitude=latitude,longitude=longitude,store_id=store_id)
-                #    #new_store.save()
-                #    for category in product_categories:
-                #        prod_category = ProductCategory.objects.get(name = category)
-                #        new_store.product_category.add(prod_category)
-
-                #    for store_category in store_categories:
-                #        category = StoreCategory.objects.get(name = store_category)
-                #        new_store.store_category.add(category) 
-                #if new_store:
-                        address_line1 = request.data.get("address")
-                        landmark = request.data.get("landmark", "")                                          
-                        details_data = {"store":store.pk, "address_line1": address_line1, "nearest_landmark": landmark,"is_gst_registered":is_gst_registered ,"gstin": input_gstin}
-                        serializer2 = StoreDetailsSerializer(data = details_data)
-                        if serializer2.is_valid():
+               
+                address_line1 = request.data.get("address")
+                landmark = request.data.get("landmark", "")                                          
+                details_data = {"store":store.pk, "address_line1": address_line1, "nearest_landmark": landmark,"is_gst_registered":is_gst_registered ,"gstin": input_gstin}
+                serializer2 = StoreDetailsSerializer(data = details_data)
+                if serializer2.is_valid():
                             serializer2.save()                           
                             return JsonResponse({
                                 'status': True,
                                 'detail': 'Store Successfully Created. Continue saving further information',
                                 'store' : store.pk
                             })
-                        else:
+                else:
                             error = serializer.errors
                             return Response({
                                'status': False,
@@ -1136,7 +1121,7 @@ def send_otp_mail(request):
     detail =  '' 
     count = 0
     if len(usr) > 0:
-        detail ='Your OTP for account password change is <b>' + str(otp)+'</b>. Enter this OTP at vcnity.online to change your password.'
+        detail ='Your OTP for account password change is ' + str(otp)+'. Enter this OTP at vcnity.online to change your password.'
         old = UserOTP.objects.filter(user = usr[0])
         if old.exists():
            # old = old.first()
@@ -1200,33 +1185,51 @@ def send_otp_mobile(request):
     # if len(user) == 0:
     #     
     if user.exists():
-            user = user[0]
-            otp = send_otp(phone, 6)
-            if otp:
-                otp = str(otp)
-                count = 0
-                old = UserOTP.objects.filter(user = user)
-                if old.exists():
+            old = UserOTP.objects.filter(user = user)
+            user = user[0]          
+            
+                
+            if old.exists():
                     count = old.first().count
-                    old_otp_obj = old.first()
-                    old_otp_obj.otp = otp
-                    old_otp_obj.count = count + 1
-                    old_otp_obj.save(force_update=True)
+                    if count > 5:
+                            return Response({
+                                'status':'False',
+                                'detail':'Error in sending OTP, Limit exceeded. Please contact customer support.'
+                            })
+                    
+                    if otp:
+                            otp = str(otp)   
+                            request.session['forgot_password_user'] = user.pk                         
+                            old_otp_obj = old.first()
+                            old_otp_obj.otp = otp
+                            old_otp_obj.count = count + 1
+                            old_otp_obj.save(force_update=True)
+
+                    else:
+                            return Response({
+                            'status':False,
+                            'detail':'Error in sending OTP'
+                        })
                    
 
-                else:
-                    count = count + 1       
-                    UserOTP.objects.create(
-                        user = user,
-                        otp = otp,
-                        count = count
-                    )
-
-                    if count > 5:
-                        return Response({
-                            'status':'False',
-                            'detail':'Error in sending OTP, Limit exceeded. Please contact customer support.'
+            else:
+                    otp = send_otp(phone, 6)
+                    if otp:
+                            request.session['forgot_password_user'] = user.pk      
+                            count = count + 1       
+                            UserOTP.objects.create(
+                                user = user,
+                                otp = otp,
+                                count = count
+                            )
+                    else:
+                            return Response({
+                            'status':False,
+                            'detail':'Error in sending OTP'
                         })
+
+
+                    
                     
                     # old.count = count + 1
                     # old.save()
@@ -1240,15 +1243,11 @@ def send_otp_mobile(request):
                 #     otp = key
                 # )
                 # pass
-                return Response({
+            return Response({
                     'status':True,
                     'detail':'Email with OTP has been sent to the registered mobile number'
                 })
-            else:
-                return Response({
-                    'status':False,
-                    'detail':'Error in sending OTP'
-                })
+            
 
             
     else:
@@ -1295,8 +1294,8 @@ def check_otp(request):
 
 @api_view(['POST'])
 def ChangePassword(request):
-    changed_password = request.data.get('changedpw',False)
-    if changed_password:
+    changed_password = request.data.get('changedpw',None)
+    if changed_password is not None:
         if 'forgot_password_user' in request.session:
             user = request.session['forgot_password_user']
         else:
