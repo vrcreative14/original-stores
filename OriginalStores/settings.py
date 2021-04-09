@@ -118,6 +118,7 @@ if os.getenv('development', None):
             'USER': 'sefpclnhqedars',
             'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
         }
+
 }
 else:
     # Running locally so connect to either a local MySQL instance or connect to
@@ -286,5 +287,5 @@ EMAIL_HOST_PASSWORD = 'Vcnity@2021'
 EMAIL_USE_TLS = True
 #EMAIL_USE_SSL = True
 
-ALLOWED_HOSTS = [ '127.0.0.1','www.vcnity.online', 'vcnity.online', "vicinity-solutions.et.r.appspot.com","vikreta.vcnity.online"]
+ALLOWED_HOSTS = [ '127.0.0.1','vcnityonline.herokuapp.com','www.vcnity.online', 'vcnity.online', "vicinity-solutions.et.r.appspot.com","vikreta.vcnity.online"]
                     
