@@ -1,7 +1,11 @@
 import random
 
-def otp_generator():
-    otp = random.randint(999, 9999)
+def otp_generator(no_of_digits):
+    if no_of_digits == 6:
+            otp = random.randint(99999, 999999)
+    elif no_of_digits == 4:
+            otp = random.randint(999, 9999)
+
     return otp
 
 

@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.contrib.auth import update_session_auth_hash
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import api_view
 from accounts.models import User, UserOTP, PhoneOTP
 from .serializers import *
 from accounts.models import Seller
+from accounts.models import UserOTP
 from rest_framework.response import Response
 from django.http import  JsonResponse
 from rest_framework import status
@@ -22,7 +24,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
 from django.core.mail import send_mail
-from django.conf import settings
+
 from .utils import otp_generator
 import sys
 import random
@@ -39,6 +41,9 @@ from products.models import *
 from orders.models import *
 import json
 from django.shortcuts import redirect
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -59,7 +64,7 @@ def validate_phone_otp(phone, usr_first_name):
                 'detail':'Mobile number already exists'
             })
         else:
-            otp = send_otp(phone)
+            otp = send_otp(phone,4)
             if otp:
                 otp = str(otp)
                 count = 0
@@ -120,7 +125,7 @@ class ValidatePhoneSendOTP(APIView):
                 return Response({'status': False, 'detail': 'Phone Number already exists'})
                 # logic to send the otp and store the phone number and that otp in table. 
             else:
-                otp = send_otp(phone)
+                otp = send_otp(phone, 4)
                 print(phone, otp)
                 if otp:
                     otp = str(otp)
@@ -942,21 +947,21 @@ def AddStoreDetails(request):
     return Response(serializer.data)
 
 
-def send_otp(phone):
+def send_otp(phone, no_of_digits):
     """
     This is an helper function to send otp to session stored phones or 
     passed phone number as argument.
     """
 
     if phone:        
-        key = otp_generator()
+        key = otp_generator(no_of_digits)
         phone = str(phone)
         otp_key = str(key)
-        # seller_name = str(usr_first_name)
+        user_name = 'Dear Vcnity User'
         #link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=fc9e5177-b3e7-11e8-a895-0200cd936042&to={phone}&from=wisfrg&templatename=wisfrags&var1={otp_key}'
         #link =  f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=d422a24f-24aa-11eb-83d4-0200cd936042&to={phone}&from=ORIGST&templatename=MobileVerificationOTP&var1={seller_name}&var2={otp_key}'
-        #link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=d422a24f-24aa-11eb-83d4-0200cd936042&to={phone}&from=VCNITY&templatename=Mobile+Number+Verification+OTP&var1={seller_name}&var2={otp_key}'
-        #result = requests.get(link, verify=False)
+        link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=d422a24f-24aa-11eb-83d4-0200cd936042&to={phone}&from=VCNITY&templatename=Mobile+Number+Verification+OTP&var1={user_name}&var2={otp_key}'
+        result = requests.get(link, verify=False)
 
         return otp_key
     else:
@@ -1105,3 +1110,227 @@ class SaveShipppingAddress(APIView):
                         }, status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['POST'])
+def send_otp_mail(request):
+    email = request.data.get('email',None)
+    if email is None:
+        return Response({
+            'status':False,
+            'detail':'Please provide valid Email-Id'
+        })
+    usr = User.objects.filter(email= email)
+    #user = request.session['user']
+    #seller = request.session['seller']
+    #usr = User.objects.filter(pk = user)
+    #seller = Seller.objects.filter(pk = seller)
+    otp = random.randint(100000, 999999)
+    subject = 'OTP for account recovery from vcnity.online'
+    detail =  '' 
+    count = 0
+    if len(usr) > 0:
+        detail ='Your OTP for account password change is <b>' + str(otp)+'</b>. Enter this OTP at vcnity.online to change your password.'
+        old = UserOTP.objects.filter(user = usr[0])
+        if old.exists():
+           # old = old.first()
+            count = old.first().count
+            if old.first().count > 7:
+                    return Response({
+                        'detail':'Maximum number of attempts exhausted.Please try changing password after 24 hours. Contact customer care for more help',
+                        'status': False
+                    })
+            else:   
+                    count = old.first().count
+                    old_otp_obj = old.first()
+                    old_otp_obj.otp = otp
+                    old_otp_obj.count = count + 1
+                    old_otp_obj.save(force_update=True)
+                    #old.first().count = count + 1
+                    #old.first().otp = otp
+                    # old.first().save(force_update=True)
+                    #result = send_email_registered(subject,detail,email)
+        else:
+            count = count + 1
+            UserOTP.objects.create(
+                user = usr[0],
+                otp = otp
+            )
+        result = send_email_registered(subject,detail,email)
+        if result:
+                request.session['forgot_password_user'] = usr[0].pk
+                return Response({
+                    'status': True,
+                    'detail':'Email with OTP has been sent to the registered email id',
+                })
+        # registered_email = usr[0].email
+        # seller_email = seller[0].seller_email
+        # secondary_mail = seller[0].secondary_email
+    else:
+    #         seller = Seller.objects.filter(seller_email=email)
+    #         if len(seller)>0:
+    #             seller = Seller.objects.filter(seller_email=email)
+
+    #         else:
+    #             seller = Seller.objects.filter(secondary_email=email)
+    
+    # #if email==registered_email or email==seller_email or email==secondary_mail:
+    #         otp = random.randint(100000, 999999)
+    #         send_email_registered(subject,detail,email)
+            return Response({
+                        'status':False,
+                        'detail':'The entered Email id is not registered with the User account'
+                    })
+
+@api_view(['POST'])
+def send_otp_mobile(request):
+    phone = request.data.get('mobile', None)
+    if phone is None:
+        return Response({
+            'detail':"Invalid Mobile number",
+            'status':False
+        })
+    user = User.objects.filter(phone = phone)
+    # if len(user) == 0:
+    #     
+    if user.exists():
+            user = user[0]
+            otp = send_otp(phone, 6)
+            if otp:
+                otp = str(otp)
+                count = 0
+                old = UserOTP.objects.filter(user = user)
+                if old.exists():
+                    count = old.first().count
+                    old_otp_obj = old.first()
+                    old_otp_obj.otp = otp
+                    old_otp_obj.count = count + 1
+                    old_otp_obj.save(force_update=True)
+                   
+
+                else:
+                    count = count + 1       
+                    UserOTP.objects.create(
+                        user = user,
+                        otp = otp,
+                        count = count
+                    )
+
+                    if count > 5:
+                        return Response({
+                            'status':'False',
+                            'detail':'Error in sending OTP, Limit exceeded. Please contact customer support.'
+                        })
+                    
+                    # old.count = count + 1
+                    # old.save()
+                    print("count increase", count)
+                    return Response({
+                        'status' : True,
+                        'detail': 'OTP matched.Now you can create new password'
+                    })
+                # PhoneOTP.objects.create(
+                #     phone = phone,
+                #     otp = key
+                # )
+                # pass
+                return Response({
+                    'status':True,
+                    'detail':'Email with OTP has been sent to the registered mobile number'
+                })
+            else:
+                return Response({
+                    'status':False,
+                    'detail':'Error in sending OTP'
+                })
+
+            
+    else:
+            return Response({              
+                  'detail':'This Mobile number is not registered.New users can signup from here <a href="/SignUp">Signup</a>',
+                  'status': False            
+            })           
+    pass
+
+
+@api_view(['POST'])
+def check_otp(request):
+    credential = request.data.get('cred',None)
+    if credential is None:
+        return Response({
+            'status':False,
+            'detail':'Please provide valid Email id/Mobile number'
+        })
+    val = credential.split('@')
+    if len(val) > 1:
+        user = User.objects.filter(email= credential)
+    else:
+        user = User.objects.filter(phone= credential)    
+    
+    user_otp = UserOTP.objects.filter(user = user[0])
+    otp = user_otp[0].otp
+    entered_otp = request.data.get('otp',False)
+    if entered_otp:
+        if otp == entered_otp:
+            return Response({
+                'status':True,
+                'detail':'OTP matched.Now you can create new password'
+            })
+        else:
+            return Response({
+                        'status' : False, 
+                        'detail' : 'OTP incorrect, please try again'
+                    })
+    else:
+        return Response({
+                        'status' : False, 
+                        'detail' : 'OTP incorrect, please try again'
+                    })
+
+@api_view(['POST'])
+def ChangePassword(request):
+    changed_password = request.data.get('changedpw',False)
+    if changed_password:
+        if 'forgot_password_user' in request.session:
+            user = request.session['forgot_password_user']
+        else:
+            return Response({
+                'status':False,
+                'detail':'Invalid response',
+            })
+        usr = User.objects.get(pk = user)
+        usr.set_password(changed_password)
+        usr.save()
+        update_session_auth_hash(request, usr)
+        del request.session['forgot_password_user']
+        response = Response({
+                       'status': True,
+                       'detail': 'Password changed successfully.Login to your account'
+                   })
+        response.set_cookie('messageText',str('Password changed successfully.Login to your account'),24*60*60*1) 
+        response.set_cookie('messageType','true',24*60*60*1)      
+        #redirect_to = request.GET.get('redirectTo',None)
+        #if redirect_to is not None:
+        
+        #    return 
+        #return response                       
+        return response
+    else:
+        return Response({
+            'status':False,
+            'detail':'Invalid Request'
+        })
+
+def send_email_registered(subject,detail,email):
+    send_mail(
+            subject,
+            detail,
+            'vcnityonline@gmail.com',
+            [email],
+            fail_silently=False,
+            )
+    return True
+
+
+class ChangePasswordView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('login')
+    pass

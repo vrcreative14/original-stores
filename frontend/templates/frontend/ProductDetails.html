@@ -21,20 +21,14 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
          {% block content%}
-         <div class="" style="display:flex;">
+         <div class="" style="display:flex;"> 
+       
 
-        <div style="display:flex;flex-direction:column;margin-left:20px;margin-top:20px;">
-        {% comment %} <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/{{article.image}}" style="width:15%;height:35%;margin-top:18px;"/>
-        <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/{{article.image_rear}}" style="width:15%;height:35%;margin-top:18px;"/>
-        <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/{{article.image_side1}}" style="width:15%;height:35%;margin-top:18px;"/>      {% endcomment %}
-
-        </div>
-
-        <div class="" style="margin-top:20px;display:flex;">                                                                         
+        <div class="" style="margin-top:20px;display:flex;flex-wrap:wrap;">                                                                         
            {% if article.image == '' %}
                   <img class="ui left image" src="{{article.imgPath}}">
             {% else %}
-                   <img class="" src="https://storage.googleapis.com/vicinity-solutions.appspot.com/{{article.image}}" style="width:600px;height:500px;%"/>
+                   <img class="" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/{{article.image}}" style="width:600px;height:500px;%"/>
             {% endif %} 
             <div class="" style="display:flex;flex-direction:column;margin-left:20px;">          
               <h4 class="ui dividing header headLabel">{{article.name}}</h4>            

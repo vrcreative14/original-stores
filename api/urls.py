@@ -5,6 +5,7 @@ from .views import UserViewSet
 from django.conf.urls import include
 from . import views
 from knox import views as knox_views
+from django.contrib.auth import views as auth_views
 
 
 router = routers.DefaultRouter()
@@ -32,6 +33,11 @@ urlpatterns = [
     path("api/auth", include('knox.urls')),
     path("get/id/", views.GetTokenforUser),
     path('address/save', views.SaveShipppingAddress.as_view()),
+    path('sendotp/email', views.send_otp_mail),
+    path('sendotp/mobile', views.send_otp_mobile),
+    path('checkotp/account', views.check_otp),
+    path('change/credential', views.ChangePassword),
+    path('password/', auth_views.PasswordChangeView.as_view(template_name = 'frontend/ChangePassword.html')),
     #path('checkout/cashfree',views.CheckoutCashFree) 
    #path('products/list/',views.GarmentViewSet, name='get-products')
    # path("api/auth/register",RegisterAPI.as_views()),

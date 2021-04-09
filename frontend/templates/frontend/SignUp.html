@@ -151,7 +151,7 @@
         </div>
         <div class="ui column stackable center page grid ">
             <div class="four wide column"></div>
-        <div id="otpVerificationDiv" style="display: none;">
+        <div id="otpVerificationDiv" style="display:none;">
          
          <div class="three wide column"></div>
          <div class="four wide column" id="mobileOTPInfo">
@@ -173,8 +173,13 @@
                            <input class="verifyOTP" type="text"  id="otpMobile3"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP()";>
                            <input class="verifyOTP" type="text"  id="otpMobile4"  maxlength="1" oninput="this.value=this.value.replace(/[^0-9]/g,'');CheckOTP();";>     
                      </div>
+                     <br/>
+                     <span class="ui medium basic label">The otp is valid only for 10 mins</span><br/>
+                     <span class="ui medium basic label">Not received OTP ? Click here</span> <a class="ui large label" onclick="SendOTP()">Resend OTP</a>
                         </div>
+                
             </div>
+
            
          </form>          
        

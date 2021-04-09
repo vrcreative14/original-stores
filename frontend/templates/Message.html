@@ -1,7 +1,7 @@
 
 <div class="centeredDiv">   
   <div class="ui message showMessage" style="display: none;">
-        <i class="close icon" style="background-color:transparent!Important;"></i>
+        <i class="close icon" style="background-color:transparent!Important;" value=""></i>
             <div class="header">
             
             </div>       
@@ -17,6 +17,8 @@
     .on('click', function() {
         $(this)
             .closest('.message')
-            .transition('fade');
+            .transition('scale');
+    document.querySelector('.close').value = '1'
+
     });
 </script>

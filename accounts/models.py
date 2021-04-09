@@ -226,7 +226,8 @@ class CustomerDetails(models.Model):
 class UserOTP(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     time_stamp = models.DateTimeField(auto_now=True)
-    otp = models.IntegerField()
+    otp = models.CharField(max_length=9)
+    count = models.IntegerField(default=0)
 
 
 class PhoneOTP(models.Model):

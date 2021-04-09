@@ -500,10 +500,22 @@ function SaveProduct() {
 
             for (item in required_fields) {
                 if (required_fields[item] == 'material') {
+                    if (document.getElementById(required_fields[item]).value == '') {
+
+                    }
                     let composition = document.querySelector('#add_material_div').children
-                    for (item in composition) {
-                        material = document.querySelector('#add_material_div').children[0].querySelector('.material').value
-                        percent = document.querySelector('#add_material_div').children[0].querySelector('.percentage').value
+                    for (let i = 0; i < composition.length; i++) {
+                        //material = document.querySelector('#add_material_div').children[i].querySelector('.material').value
+                        //percent = document.querySelector('#add_material_div').children[i].querySelector('.percentage').value
+                        material = composition[i].querySelector('.material')
+                        if (material == null)
+                            material = composition[i].querySelector('.fabric').value
+                        else
+                            material = composition[i].querySelector('.material').value
+                        percent = composition[i].querySelector('.percentage')
+                        if (percent != null)
+                            percent = composition[i].querySelector('.percentage').value
+
                         dict['material'] += material + ':' + percent + ','
                     }
                     continue

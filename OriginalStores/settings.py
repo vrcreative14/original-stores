@@ -93,7 +93,8 @@ CORS_ORIGIN_WHITELIST = [
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-if os.getenv('GAE_APPLICATION', None):
+# if os.getenv('GAE_APPLICATION', None):
+if os.getenv('development', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
     DATABASES = {
@@ -101,14 +102,22 @@ if os.getenv('GAE_APPLICATION', None):
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'vcnity_online',
-        'USER' : 'postgres',
-        'PASSWORD' : 'postgres123',
-        'HOST': '/cloudsql/vicinity-solutions:asia-south1:vicinity-instance', 
-        'PORT': '5432',
-    }
+    #  'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'vcnity_online',
+    #     'USER' : 'postgres',
+    #     'PASSWORD' : 'postgres123',
+    #     'HOST': '/cloudsql/vicinity-solutions:asia-south1:vicinity-instance', 
+    #     'PORT': '5432',
+    # }
+    'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': 'ec2-34-203-155-237.compute-1.amazonaws.com',
+            'PORT': '5432', 
+            'NAME': 'd452dugs2bth6t',
+            'USER': 'sefpclnhqedars',
+            'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
+        }
 }
 else:
     # Running locally so connect to either a local MySQL instance or connect to
@@ -117,26 +126,26 @@ else:
     #     $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306
     #
     # See https://cloud.google.com/sql/docs/mysql-connect-proxy
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'HOST': '34.93.205.220',
-            'PORT': '',
-            'NAME': 'vcnity_online',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres123',
-        }
-    }
     # DATABASES = {
     #     'default': {
     #         'ENGINE': 'django.db.backends.postgresql',
-    #         'HOST': '127.0.0.1',
-    #         'PORT': '5432',
-    #         'NAME': 'vcnityonline_test',
+    #         'HOST': '34.93.205.220',
+    #         'PORT': '',
+    #         'NAME': 'vcnity_online',
     #         'USER': 'postgres',
-    #         'PASSWORD': 'aviral',
+    #         'PASSWORD': 'postgres123',
     #     }
     # }
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': '127.0.0.1',
+            'PORT': '5432', 
+            'NAME': 'vcnityonline_test',
+            'USER': 'postgres',
+            'PASSWORD': 'aviral',
+        }       
+    }
 
 
 
@@ -228,12 +237,14 @@ from google.oauth2 import service_account
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(os.path.join(BASE_DIR,'credential.json'))
 
 DEFAULT_FILE_STORAGE = "OriginalStores.gcloud.GoogleCloudMediaFileStorage"
-GS_PROJECT_ID = 'vicinity-solutions'
+GS_PROJECT_ID = 'vcnity-solutions'
 # GS_BUCKET_NAME = 'vicinity-stores'
-GS_BUCKET_NAME = 'vicinity-solutions.appspot.com'
+GS_BUCKET_NAME = 'vcnity-solutions.appspot.com'
 MEDIA_ROOT = "media/"
 UPLOAD_ROOT = 'media/uploads/'
-MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)
+#MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_BUCKET_NAME)
+MEDIA_URL = 'https://storage.cloud.google.com/{}/'.format(GS_BUCKET_NAME)
+#https://storage.cloud.google.com/vcnity-solutions.appspot.com/jaipur_hawa_mahal.jpg
 
 #STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
@@ -268,10 +279,12 @@ AUTHENTICATION_BACKENDS = (
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'vcreative14@gmailcom'
-EMAIL_HOST_PASSWORD = 'Sona@1960'
+#EMAIL_HOST = 'localhost'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'vcnityonline@gmail.com'
+EMAIL_HOST_PASSWORD = 'Vcnity@2021'
 EMAIL_USE_TLS = True
+#EMAIL_USE_SSL = True
 
 ALLOWED_HOSTS = [ '127.0.0.1','www.vcnity.online', 'vcnity.online', "vicinity-solutions.et.r.appspot.com","vikreta.vcnity.online"]
                     

@@ -124,8 +124,9 @@ def SellerDashboard(request):
     if len(stores) > 0:
         for store in stores:
             product = Article.objects.filter(store = store.pk)
-            if len(product) > 0:
-                products.append(Article.objects.filter(store = store.pk))
+            for item in product:                       
+                #if len(item) > 0:
+                    products.append(item)
 
     context = {'stores': stores,'seller_name':seller[0].first_name+ ' ' +seller[0].last_name,'products':products}    
     return render(request,'frontend/SellerDashboard.html', context)

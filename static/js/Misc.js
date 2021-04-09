@@ -5,6 +5,16 @@ function Login() {
     debugger
     let credInput = document.getElementById('logincredInput').value
     let pw = document.getElementById('logincredInputpw').value
+    if (credInput == '') {
+        document.getElementById('enterCredLabel').style.display = 'inline-block'
+        return false
+    }
+    if (pw == '') {
+        document.getElementById('enterPasswordLabel').style.display = 'inline-block'
+        return false
+    }
+    document.getElementById('enterCredLabel').style.display = 'none'
+    document.getElementById('enterPasswordLabel').style.display = 'none'
     let jsonBody = ''
     if (!validateMobileno(credInput)) {
         if (!validateEmail(credInput))
@@ -14,14 +24,16 @@ function Login() {
                 "email": credInput,
                 "pft": pw
             })
+            postJSON('/api/login/', jsonBody)
         }
     } else {
         jsonBody = JSON.stringify({
             "phone": credInput,
             "pft": pw
         })
+        postJSON('/api/login/', jsonBody)
     }
-    postJSON('/api/login/', jsonBody)
+
 }
 
 function Logout(redirectTo) {
@@ -55,7 +67,6 @@ function validateEmail(email) {
     if (regex.test(String(email).toLowerCase())) {
         return true
     } else {
-
         isFormValid = false;
         return false
     }
@@ -215,6 +226,13 @@ const ShowResult = (data, redirectTo) => {
                 window.scrollBy(0, -300);
 
                 break;
+            case 'OTP matched.Now you can create new password':
+                DisplayMessage('OTP matched', 'Enter your new password', true)
+                document.getElementById('otpVerificationDiv').style.display = 'none'
+                document.getElementById('change_password_div').style.display = 'block'
+
+
+                break;
             case 'Logged in Successfully':
                 ProceedLogin(data)
 
@@ -267,6 +285,22 @@ const ShowResult = (data, redirectTo) => {
                 break;
             case 'Shipping Address Saved Successfully':
 
+                break;
+            case 'Email with OTP has been sent to the registered email id':
+                let email = document.getElementById('registered_email').value
+                DisplayMessage('Email sent successfully', 'Check your email id ' + email + ' for the OTP & enter the same here.', true)
+                document.getElementById('otpVerificationDiv').style.display = 'block'
+                document.getElementById('forgotPassDiv').classList.add('hidden')
+
+                break;
+            case 'Email with OTP has been sent to the registered mobile number':
+                let mobile = document.getElementById('registered_mobile').value
+                DisplayMessage('Text message sent successfully', 'Check your phone  ' + mobile + ' for the OTP & enter the same here.', true)
+                document.getElementById('otpVerificationDiv').style.display = 'block'
+                document.getElementById('forgotPassDiv').classList.add('hidden')
+                break;
+            case 'Password changed successfully.Login to your account':
+                window.location.href = '/login'
                 break;
             default:
                 if (data.token !== undefined)
@@ -355,6 +389,14 @@ const DisplayMessage = (heading, detail, status) => {
     document.querySelector('.showMessage').style.display = 'block'
     document.querySelector('.showMessage>div').innerText = heading
     document.querySelector('.showMessage>p').innerHTML = typeof(detail) == "object" ? (detail.length == 0 ? "" : detail[0]) : detail
+    if (heading == '')
+        OpenMessageBar(detail)
+    else
+        OpenMessageBar(heading)
+
+    window.scrollBy(0, 0);
+    $('.message')
+        .transition('bounce');
 }
 
 function setCookie(cname, cvalue, expires) {
@@ -469,6 +511,59 @@ function AddProduct(url, formData, tkl) {
 function OpenMessageBar(text) {
     var bar = document.getElementById("messagebar");
     bar.className = "show";
-    bar.innerText = text
+    bar.innerHTML = text
     setTimeout(function() { bar.className = bar.className.replace("show", ""); }, 6000);
+}
+
+function forgotPassword() {
+    document.getElementById('login_div').classList.add('hidden')
+    document.getElementById('forgotPassDiv').classList.remove('hidden')
+}
+
+function ForgotPasswordEmail(val) {
+    debugger
+    if (val == 1)
+        document.getElementById('email_password_change').classList.remove('hidden')
+    else
+        document.getElementById('email_password_change').classList.remove('hidden')
+}
+
+function sendOTPMail() {
+    debugger
+    let email = document.getElementById('registered_email').value
+    if (!validateEmail(email)) {
+        let mobile = document.getElementById('registered_mobile').value
+        if (!validateMobileno(mobile)) {
+            DisplayMessage('Invalid Entry', 'Please Enter valid Mobile number', false)
+            OpenMessageBar('Mobile number you entered is invalid')
+            return false
+        } else {
+            sendOTPMobile()
+        }
+        DisplayMessage('Invalid Entry', 'Please Enter valid Email address', false)
+        OpenMessageBar('Email address you entered is invalid')
+        return false
+    }
+    document.getElementById('registered_mobile').value = ''
+    document.getElementById('mobile_password_change').style.display = 'none'
+    jsonBody = JSON.stringify({
+        "email": email
+    })
+    postJSON('/api/sendotp/email', jsonBody)
+}
+
+function sendOTPMobile() {
+    debugger
+    let mobile = document.getElementById('registered_mobile').value
+    if (!validateMobileno(mobile)) {
+        DisplayMessage('Invalid Entry', 'Please Enter valid Mobile number', false)
+        OpenMessageBar('Mobile number you entered is invalid')
+        return false
+    }
+    document.getElementById('registered_email').value = ''
+    document.getElementById('email_password_change').style.display = 'none'
+    jsonBody = JSON.stringify({
+        "mobile": mobile
+    })
+    postJSON('/api/sendotp/mobile', jsonBody)
 }

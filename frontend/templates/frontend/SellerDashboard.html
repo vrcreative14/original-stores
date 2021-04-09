@@ -75,16 +75,16 @@
               
                     {% comment %} <div class="ui segment"> {% endcomment %}
                     <div class="category-title">
-                    <label class="headingSpan">{{product.0.name}}</label> 
+                    <label class="headingSpan">{{product.name}}</label> 
                   </div>
-                  {% if product.0.image_thumbnail %}
-                  <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/{{product.0.image_thumbnail}}" style="width:150px;height:140px;">
+                  {% if product.image_thumbnail  %}
+                        <img src="https://storage.googleapis.com/vcnity-solutions.appspot.com/{{product.image_thumbnail}}" style="width:150px;height:140px;">
                   {% else %}
-                       <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/image_not_available.jpg" style="width:150px;height:140px;"/>
+                        <img src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/misc/image_not_available.jpg" style="width:150px;height:140px;"/>
                     {% endif %}
 
                     <div>
-                    {% if product.0.is_approved %}
+                    {% if product.is_approved %}
                     <label class="headingSpan">Status</label><label class="cardLabel successmsg">Approved</label>
                     {% else %}
                     <label class="inputLabel infoSpan">Status:</label><label> Not Approved</label>
