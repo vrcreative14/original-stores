@@ -140,12 +140,12 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'HOST': '127.0.0.1',
+            'HOST': 'ec2-34-203-155-237.compute-1.amazonaws.com',
             'PORT': '5432', 
-            'NAME': 'vcnityonline_test',
-            'USER': 'postgres',
-            'PASSWORD': 'aviral',
-        }       
+            'NAME': 'd452dugs2bth6t',
+            'USER': 'sefpclnhqedars',
+            'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
+        }      
     }
 
 
