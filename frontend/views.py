@@ -17,11 +17,12 @@ from orders.models import Order, ShippingAddress
 import hashlib
 import hmac
 import base64
+from blogpost.models import BlogPost
 #from .forms import SellerForm
 #from api.models import Product
 # Create your views here.
 appId = '59627866e07fd8257a056c53972695'
-orderId = '1'
+orderId = 'order00001'
 orderAmount = '10'
 orderCurrency = 'INR'
 orderNote = 'test'
@@ -193,7 +194,17 @@ def FetchProducts(request):
     return render(request,'frontend/Products.html', context)
 
 def ViewBlogs(request):
-    return render(request,'frontend/Blogs.html')
+    blogs = BlogPost.objects.all()
+    context = {'blogs': blogs}
+    return render(request,'frontend/Blogs.html', context)
+ 
+def BlogsDetailed(request):
+    id = request.GET.get('dveucvuyr3vybrvbcurbno')
+    blog = BlogPost.objects.get(pk = id)
+    #next_blog = blog.get_next_by_created()
+    context = {'blog' : blog}
+
+    return render(request, 'frontend/BlogDetails.html', context)
 
 
 def index(request):

@@ -17,5 +17,6 @@ urlpatterns = [
     path('buy/', views.Checkout, name="CheckOut"),    
     path('register/', views.Volunteer, name="register"),    
     path('blogs/', views.ViewBlogs, name="blogs"),    
+    path('blogs/detail/', views.BlogsDetailed, name="blogs"),    
     path('blogs/add/', views.AddBlogPost, name="addblogs"),    
 ]
