@@ -586,10 +586,7 @@ function OpenMessageBar(text) {
     setTimeout(function() { bar.className = bar.className.replace("show", ""); }, 6000);
 }
 
-function forgotPassword() {
-    document.getElementById('login_div').classList.add('hidden')
-    document.getElementById('forgotPassDiv').classList.remove('hidden')
-}
+
 
 function ForgotPasswordEmail(val) {
     debugger
