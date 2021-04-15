@@ -1184,11 +1184,10 @@ def send_otp_mobile(request):
     user = User.objects.filter(phone = phone)
     # if len(user) == 0:
     #     
+    count = 0
     if user.exists():
-            old = UserOTP.objects.filter(user = user)
-            user = user[0]          
-            
-                
+            old = UserOTP.objects.filter(user = user[0])
+            user = user[0]                                    
             if old.exists():
                     count = old.first().count
                     if count > 5:
