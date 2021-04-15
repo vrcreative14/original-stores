@@ -499,7 +499,7 @@ a {
 .heading {
     display: flex;
     justify-content: center;
-    color: rgb(98, 153, 151);
+    /* color: rgb(98, 153, 151); */
 }
 
 .formDiv>div {
@@ -1091,7 +1091,7 @@ p {
 }
 
 .darkLabel {
-    color: #17202A !Important;
+    color: #17202A !important;
 }
 
 .headingText {

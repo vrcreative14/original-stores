@@ -317,10 +317,11 @@ def get_signature():
         signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
         return signature
 
-
 def Volunteer(request):
     type = request.GET.get('type','')   
     context = {'type' : type}
     return render(request, 'frontend/Volunteer.html', context)
 
+def contact_us(request):    
+    return render(request, 'frontend/ContactUs.html')
 #signature = get_signature()

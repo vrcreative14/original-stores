@@ -12,7 +12,7 @@
     {% block content %}
 
 
-        {% include 'ProductCategories.html' %}
+        {% comment %} {% include 'ProductCategories.html' %} {% endcomment %}
         {% include 'Message.html' %}
         <!-- Load Facebook SDK for JavaScript -->
       <div id="fb-root"></div>
@@ -38,16 +38,57 @@
         page_id="111672204047171">
       </div>
     <!--Select your category-->
-    <div>
-    <img class="ui top aligned tiny image" src="/images/wireframe/square-image.png">
-        <span>Top Aligned</span>
+     {% comment %} <div class="heading">
+         <span class="headingSpan darkLabel">Select your category</span>
+     </div>
+    <div class="ui segment">
+    <img class="ui left small image" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/avatar_1201.png">
+        <p>I am a Shopkeeper/Store owner</p>
+    {% comment %} <div class="ui divider"></div> 
+    <img class="ui right floated medium image" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/buyer_vector_01234.png">
+         <p>I am a Buyer</p>
     <div class="ui divider"></div>
-    <img class="ui middle aligned tiny image" src="/images/wireframe/square-image.png">
-         <span>Middle Aligned</span>
-    <div class="ui divider"></div>
-    <img class="ui bottom aligned tiny image" src="/images/wireframe/square-image.png">
-        <span>Bottom Aligned</span>
+    <img class="ui left small image" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/home_delivery_10987.png">
+        <p>I provide Services</p>
+    </div> {% endcomment %}
+
+    
+    <div class="heading">
+         <span class="headingSpan darkLabel">Select your category</span></div>
+    <div class="ui four column stackable grid">
+  <div class="column">
+    <div class="ui segment">
+        <a href="/register/?type=seller">
+            <img class="ui medium image" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/shopkeeper.png">
+            <span class="anchor">I am a Shopkeeper</span>
+        </a>
     </div>
+  </div>
+  <div class="column">
+    <div class="ui segment">
+      <a href="/register/?type=buyer">
+      <img class="ui medium image" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/buyer_vector_01234.png">
+      <span class="anchor">I buy articles from my city markets</span>
+      </a>
+    </div>
+  </div>
+  <div class="column">
+    <div class="ui segment">
+       <a href="/">
+      <img class="ui medium image" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/deliver_goods_small_10987.png">
+      <span class="anchor">I deliver/transport goods</span>
+      </a>
+    </div>
+  </div>
+  <div class="column">
+    <div class="ui segment">
+       <a href="/">
+      <img class="ui medium image" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/services_tailoring_small_19678.png">
+      <span class="anchor">I provide services</span>
+      </a>
+    </div>
+  </div>
+</div>
 
 
 
@@ -106,11 +147,11 @@
         </div>
     </div>
 
-    <div class="heading"> 
+    {% comment %} <div class="heading"> 
     <label class="headingSpan darkLabel">Vcnity Volunteer</label>
-    </div>   
+    </div>    {% endcomment %}
 
-    <div class="displayRow" title="Shop" style="margin-bottom:75px;padding-bottom:85px;">
+    {% comment %} <div class="displayRow" title="Shop" style="margin-bottom:75px;padding-bottom:85px;">
         <div onclick = "window.location='register?type=seller';">
           <div style="text-align:center;" class="categoryImage">
                 <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
@@ -124,7 +165,7 @@
         <div onclick = "window.location='register?type=buyer';">
             <div style="text-align:center;" class="categoryImage">
                 <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
-                 {% comment %} <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/store_small_vector.png" style="width:300px;height:250px;">  {% endcomment %}
+                 {% comment %} <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/store_small_vector.png" style="width:300px;height:250px;"> 
                  <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/shopping_person_3310.png" style="width:300px;height:260px;"> 
                 <!--  -->
                 <a class="anchor" href="register?type=buyer" onclick="">I Buy from Offline Stores</a>
@@ -151,7 +192,7 @@
             
         </div>             
           
-        </div>
+        </div> {% endcomment %}
 
     {% endblock %}
 </body>
