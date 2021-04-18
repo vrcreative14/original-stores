@@ -1225,10 +1225,7 @@ def send_otp_mobile(request):
                             return Response({
                             'status':False,
                             'detail':'Error in sending OTP'
-                        })
-
-
-                    
+                        })                    
                     
                     # old.count = count + 1
                     # old.save()
