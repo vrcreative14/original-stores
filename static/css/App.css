@@ -113,6 +113,14 @@
     /* color: black!Important; */
 }
 
+a {
+    cursor: pointer;
+}
+
+a:active {
+    background-color: #fff;
+}
+
 .icon {
     background-color: black!Important;
 }
@@ -490,10 +498,6 @@ select {
 
 .footer {
     background-color: black;
-}
-
-a {
-    font-weight: bold;
 }
 
 .heading {

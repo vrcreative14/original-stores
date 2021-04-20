@@ -26,15 +26,23 @@
     </div>
   </div>
 </div>
+<div>
+  <a>Blogs</a>
+</div>
 {% else %}
   <div class="dropdown">
-  <button onclick="GoToPage('/login')" class="dropbtn">Login / Signup </button>
+  <a onclick="GoToPage('/login')" class="dropbtn">Login / Signup </a>
   <div class="dropdown-content">
 
   </div>
 </div>
+<div class="dropdown">
+  <a class="dropbtn" onclick="window.location = '/blogs'">Blogs</a>
+</div>
+<div class="dropdown">
+  <a class="dropbtn" onclick="window.location = '/contact-us'">Contact/Help</a>
+</div>
 {% endif %}
 </div>
 </body>
-
 </html>

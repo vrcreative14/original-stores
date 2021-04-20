@@ -89,56 +89,48 @@
     </div>
   </div>
 </div>
+<div class="heading">
+         <span class="headingSpan darkLabel">Shop by category</span>
+</div>
 
-
-
-    <div class="heading">
-         <span class="headingSpan darkLabel">Shop by Category</span></div>
-    <div class="displayRow" title="Shop">
-        <div onclick = "window.location='/Products/?category=Fashion+%26+Clothing';" style="text-align:center;">
-            {% comment %} <div href="SignUp" style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/Fashion%26Clothing.jpg');"
-                class="categoryImage">
-                <!-- <a style="background-image: url('https://i.ibb.co/wMqvdb0/readymade-Garments.jpg');;"></a> -->
-                <!-- <img src="https://i.ibb.co/wMqvdb0/readymade-Garments.jpg"> <br/> -->
-
-            </div> {% endcomment %}
-            <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/Fashion%26Clothing.jpg" style="width:330px;height:260px;" />
-            <a class="anchor" href="Products" onclick="">Fashion & Clothing</a>
-        </div>               
-
-        <div onclick = "window.location='/Products/?category=household_essentials';" style="text-align:center;">
-            {% comment %} <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/household_essentials_50.jpg');background-repeat: no-repeat;"
-                class="categoryImage">
-                <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
-                <!-- <img src="https://i.ibb.co/ygRbNws/fabrics.jpg"> <br/> -->
-                <!--  -->
-            </div> {% endcomment %}
-            <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/household_essentials_50.jpg" style="width:330px;height:260px;" />
-            <a class="anchor" href="Products" onclick="">Household Essentials</a>
-        </div>
-
-        <div onclick = "window.location='/Products/?category=Kitchen%20Essentials';" style="text-align:center;">
-            {% comment %} <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/kitchen_essentials.jpg');background-repeat: no-repeat;"
-                class="categoryImage">
-                <!-- <img src="https://i.ibb.co/KsHMtxF/Sadar-Bazaar.jpg"> <br/> -->
-            </div> {% endcomment %}
-            <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/kitchen_essentials.jpg" style="width:330px;height:260px;"/>
-            <a class="anchor" href="Products">Kitchen Essentials</a>
-        </div>
-
-        <div onclick = "window.location='/Products/?category=handicrafts_home_decor';" style="text-align:center;">
-            {% comment %} <div style="background-image: url('https://storage.googleapis.com/vicinity-solutions.appspot.com/handicrafts_home_decor.jpg');background-repeat: no-repeat;"
-                class="categoryImage">
-                <!-- <img src="https://i.ibb.co/3p1h3Kr/bookstobangle.jpg"> <br/> -->
-                <!--  -->
-            </div> {% endcomment %}
-            <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/handicrafts_home_decor.jpg" style="width:330px;height:260px;"/>
-            <a class="anchor" href="Products">Handicrafts & Home Decor</a>
-        </div>          
-          
-        </div>           
-        
+    <div class="ui four column stackable grid">
+  <div class="column">
+    <div class="ui segment">
+        <a href="/Products/?category=Fashion+%26+Clothing">
+            <img class="ui medium image" src="https://storage.googleapis.com/vicinity-solutions.appspot.com/Fashion%26Clothing.jpg" style="width:330px;height:260px;">
+            <span class="anchor">Fashion & Clothing</span>
+        </a>
     </div>
+  </div>
+  <div class="column">
+    <div class="ui segment">
+      <a href="/Products/?category=household_essentials">
+      <img class="ui medium image" src="https://storage.googleapis.com/vicinity-solutions.appspot.com/household_essentials_50.jpg" style="width:300px;height:250px;">
+      <span class="anchor">Household Essentials</span>
+      </a>
+    </div>
+  </div>
+  <div class="column">
+    <div class="ui segment">
+        <a href="/Products/?category=Kitchen%20Essentials">
+          <img class="ui large image" src="https://storage.googleapis.com/vicinity-solutions.appspot.com/kitchen_essentials.jpg" style="width:300px;height:250px;">
+          <span class="anchor">Kitchen Essentials</span>
+        </a>
+    </div>
+  </div>
+  <div class="column">
+    <div class="ui segment">
+       <a href="/Products/?category=handicrafts_home_decor">
+           <img class="ui medium image" src="https://storage.googleapis.com/vicinity-solutions.appspot.com/handicrafts_home_decor.jpg" style="width:330px;height:260px;">
+           <span class="anchor">Handicrafts & Home Decor</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+
+   
 
     <div style="display: flex;justify-content: space-evenly;">
         <div>
@@ -146,53 +138,6 @@
 
         </div>
     </div>
-
-    {% comment %} <div class="heading"> 
-    <label class="headingSpan darkLabel">Vcnity Volunteer</label>
-    </div>    {% endcomment %}
-
-    {% comment %} <div class="displayRow" title="Shop" style="margin-bottom:75px;padding-bottom:85px;">
-        <div onclick = "window.location='register?type=seller';">
-          <div style="text-align:center;" class="categoryImage">
-                <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
-                 <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/store_small_vector.png" style="width:300px;height:260px;"> 
-                <!--  -->
-                <a class="anchor" href="register/?type=seller" onclick="">I am ShopKeeper</a>
-          </div>
-            
-        </div>               
-
-        <div onclick = "window.location='register?type=buyer';">
-            <div style="text-align:center;" class="categoryImage">
-                <!-- <a style="background-image: url('https://i.ibb.co/ygRbNws/fabrics.jpg');background-size: 120%;"></a> -->
-                 {% comment %} <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/store_small_vector.png" style="width:300px;height:250px;"> 
-                 <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/shopping_person_3310.png" style="width:300px;height:260px;"> 
-                <!--  -->
-                <a class="anchor" href="register?type=buyer" onclick="">I Buy from Offline Stores</a>
-            </div>
-            
-        </div>
-
-        <div onclick = "window.location='register?type=transport';">
-            <div style="text-align:center;"
-                class="categoryImage">
-               <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/deliver_volunteer40.png" style="width:300px;height:260px;"> 
-               <a class="anchor" href="register?type=transport">I want to Deliver Products</a>
-            </div>            
-        </div>
-
-        <div onclick = "window.location='register?type=services';">
-            <div style="text-align:center;"
-                class="categoryImage">
-                <!-- <img src="https://i.ibb.co/3p1h3Kr/bookstobangle.jpg"> <br/> -->
-                <img src="https://storage.googleapis.com/vicinity-solutions.appspot.com/static/images/misc/sewing_machine.png" style="width:300px;height:260px; " />
-                <!--  -->
-                <a class="anchor" href="register?type=services">I provide services</a>
-            </div>
-            
-        </div>             
-          
-        </div> {% endcomment %}
 
     {% endblock %}
 </body>

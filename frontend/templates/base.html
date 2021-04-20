@@ -19,13 +19,15 @@
 
   <div class="page-header">
 
-    <div class="hamburger">
-      <a onclick="openNav()">
-        <div class="hb"></div>
-        <div class="hb"></div>
-        <div class="hb"></div>
-      </a>
-    </div>
+   
+          
+      <div class="hamburger">
+          <a onclick="openNav()">
+                <div class="hb"></div>
+                <div class="hb"></div>
+                <div class="hb"></div>
+          </a>
+    </div>    
 
    
     <input type="hidden" id="isLocationEdited" value="0">
@@ -33,27 +35,18 @@
     <input type="hidden" id="currentEvent" value="">
     <input type="hidden" id="" value="">
     
-    <div class="ui menu stackable grid" style="margin-left: 52px;">
-      <div class="item">
-        
-    <div class="ui category search">
-      
-      <div class="ui small icon input">            
-        <i id="detectLocation" class="crosshairs icon link" onclick="FetchCitynPin(event)"></i>       
-        <input id="locationCity" class="prompt " type="text" style="width: 200px;" value="Lucknow, Charbagh" placeholder="">    
-        <input id="locationPin" class="prompt " type="text" style="width: 130px;" value="208012" placeholder="">     
-        
-           
-      </div>     
-      <!-- <span id="" class="ui black basic label">Pincode</span>     -->
-      <!-- <div class="ui small icon input">
-        
-        
-      </div> -->
-    </div>
+    <div class="ui menu stackable grid" style="margin-left: 52px;"> 
+      <div class="item">      
+          <div class="ui category search">      
+                <div class="ui small icon input">            
+                      <i id="detectLocation" class="crosshairs icon link" onclick="FetchCitynPin(event)"></i>       
+                      <input id="locationCity" class="prompt " type="text" style="width:auto;" value="Lucknow, Charbagh" placeholder="">    
+                      <input id="locationPin" class="prompt " type="text" style="width:auto;" value="208012" placeholder="">          
+                </div>          
+          </div>      
       </div>
 
-      <div class="right item">
+      <div class="item">
     <div class="ui category search">
       <div class="ui large icon input">
         <input class="prompt searchInput" type="text" placeholder="Search Shops,Stores and Products..." onchange="SearchShopsProducts()">
@@ -86,7 +79,7 @@
     <a href="/SellerDashboard">Seller Dashboard</a>
     {% endif %}
     {% comment %} <a href="/api/logout">Logout</a> {% endcomment %}
-    <a href="#">Help/Contact us</a>
+    <a href="/contact-us">Help/Contact us</a>
   </div>   
     {% block content %}
 
