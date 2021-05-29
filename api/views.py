@@ -24,7 +24,6 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
 from django.core.mail import send_mail
-
 from .utils import otp_generator
 import sys
 import random

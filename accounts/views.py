@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate
-from django.contrib.auth
+
 
 # Create your views here.
 

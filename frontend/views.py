@@ -48,7 +48,36 @@ def Home(request):
         context = {'loggedin' : False}
     
     print(request.session)
+    myProgram()
     return render(request,'frontend/Home.html', context)
+
+def myProgram():
+    # list = [1,10,100,1000,10000,100000,1000000]
+    # for i in list:
+    #     dup = i
+    #     count = 0
+    #     while dup>1:
+    #         dup = dup/10
+    #         count+=1
+    #     if count%2 == 0:
+    #             print(i)
+    #x = int(input('Please inout an integer'))
+    #print(x)
+    rows = 5
+    max_col = 5
+    for i in range(rows):
+        count = i*2 + 1
+        for x in range(count):
+                print('*', end=' ')
+        print(' ')
+    pass
+    x = [4,7,8,46,5]
+    for i in range(len(x)):
+        check = i+1
+    while check < len(x):
+        if x[i] > x[check]:
+            x[i] = x[check]
+        check += 1
 
 
 def Login(request):
