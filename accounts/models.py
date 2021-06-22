@@ -235,8 +235,8 @@ class PhoneOTP(models.Model):
     phone = models.CharField(validators=[phone_regex], max_length=13, unique=True, blank=True, null=True)
     otp = models.CharField(max_length = 9, blank = True, null = True)
     count = models.IntegerField(default = 0, help_text = 'Number of otp sent')
-    logged      = models.BooleanField(default = False, help_text = 'If otp verification got successful')
-    forgot      = models.BooleanField(default = False, help_text = 'only true for forgot password')
+    logged  = models.BooleanField(default = False, help_text = 'If otp verification got successful')
+    forgot  = models.BooleanField(default = False, help_text = 'only true for forgot password')
     forgot_logged = models.BooleanField(default = False, help_text = 'Only true if validdate otp forgot get successful')
     
     def __str__(self):

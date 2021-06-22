@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <link rel="stylesheet" type="text/css" href="{%static 'css/App.css'%}">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        {% block content %}
+         {% include "ModalBasic.html" %} 
+        <div style="font-family:Noto Sans;">
+        <div style="display: flex;flex-wrap: wrap;justify-content: space-evenly;">
+          <div style="padding:10px 10px 10px 10px;display: flex;flex-direction: column;justify-content: space-evenly;">
+            <div class="item_container">
+              <img style="width:190px ;height: 200px;"   src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/buyer_mobile_store.png" />
+              <div style="align-self: center;">
+                <h4 style="align-self: flex-start;">अपना ऑनलाइन स्टोर तथा कैटेलॉग तैयार करें</h4>
+                    <p>
+                        <ul style="align-self: center;">
+                          <li>अपने लोकप्रिय उत्पादों को ऑनलाइन ले जाएं</li>
+                        <li>अपनी शॉप में उत्पादों की उपलब्धता अपने ग्राहकों से साझा करें </li>
+                        <li>अपने उत्पाद बेचें ऑनलाइन बिना किसी शुल्क या कमीशन के </li>
+                        </ul>
+                  </p>
+       </div>             
+      </div>      
+
+      <div class="item_container">              
+        <div style="align-self: center;">
+          <h4>अपनी दूकान में ग्राहकों को आमंत्रित करें और नए ग्राहक जोड़ें</h4>
+          <p>
+          <ul style="align-self: center;">
+            <li>अपने मौजूदा ग्राहकों को मैसेज करें</li>
+          <li>उनको एक नया शॉपिंग अनुभव प्रदान करें </li>
+          
+          </ul>
+        </p>
+         </div>  
+        <img class="right_element" style="width: 290px;height: 185px;" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/Online_Shoping_13s.jpg" />        
+      </div>
+      
+    </div>
+        <!-- <div style="display: flex;flex-wrap: wrap;"> -->
+    <div style="padding:10px 20px 10px 10px;display: flex;flex-direction: column;justify-content: space-evenly;">
+      <!-- <div class="item_container">
+        <img style="width: 100px;"   src="{%static 'images/features-icon-1.png' %}" />
+        <p class="" style="align-self: center;"> अपने लोकप्रिय उत्पादों को ऑनलाइन ले जाएं 
+        </p>
+      </div> -->
+      
+      <div class="item_container"> 
+        
+        <div style="align-self: center;">
+          <h4>अपना ऑनलाइन स्टोर तथा कैटेलॉग तैयार करें </h4>
+          <p>
+          <ul style="align-self: center;">
+            <li>स्थानीय आवश्यकताएं पूरी करने हेतु ग्राहक आपको खोज पाएंगे</li>
+            <li>अपनी ऑनलाइन उपस्थिति बढ़ाएं जिससे कि आप स्थानीय आवश्यकताएं पूरी कर पाएं </li>          
+          </ul>
+        </p>
+         </div> 
+        <img style="width: 290px;height: 185px;"  src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/online_shopping_concept_1is.png" />
+      </div>
+      
+      <div class="item_container"> 
+        <img class="right_element" style="width: 290px;height: 185px;" src="https://storage.googleapis.com/vcnity-solutions.appspot.com/static/images/website/social_distancing_1ps.jpg" />        
+        
+        <div style="align-self: center;">
+          <h4>अपनी दूकान में आ रही भीड़ को बेहतर ढंग से नियंत्रित करें </h4>
+          <p>
+          <ul style="align-self: center;">
+            
+          <li>नए बदलावों को अपनाएं, सोशल  डिस्टेंसिंग का पालन कराएं</li>
+          <li>अपने ग्राहकों और स्वयं को सुरक्षित रखें</li>
+          </ul>
+        </p>
+         </div> 
+      </div>
+      
+      
+    </div>          
+    </div>
+    <h2 class="">ऑनलाइन स्टोर बनाने के मौजूदा विकल्प </h2>
+    <div>
+    
+    <div class="horizontalFlex" style="align-items: center;">
+      <div>
+      <div class="ui success message " style="height: 100%;">
+        <h4 class="margin-left:10px;">विकल्प - 1</h4>
+        <h3>vcnity.online पर अपना ऑनलाइन स्टोर बनाएं</h3>
+          <ul style="">
+            <li class="">अपनी दुकान कि डिटेल्स जैसे कि पता, मोबाइल नंबर, जीएसटी आदि दर्ज करें </li>
+            <li class="">अपनी दुकान का विवरण जैसे कि पता, मोबाइल नंबर, जीएसटी आदि दर्ज करें </li>
+            <li class="">अपने उत्पादों का विवरण करें और उसके चित्र साझा करें </li>
+            <li class="">अपनी पहले से बनी वेबसाइट का विवरण दें और अपनी वेबसाइट पे ट्रैफिक बढ़ाएँ</li>
+          </ul>
+          <br/>
+          <button class="ui blue button submitBtn" onclick="window.location = '/SignUp'" id="">यह विकल्प चुनें</button>
+          
+        </div>
+        
+      </div>
+       
+        <div style="display: flex;flex-direction: column;align-items: center;">
+          <!-- <h4>ऑनलाइन स्टोर बनाने के मौजूदा विकल्प</h4> -->
+          <div class="verticalFlex">
+          <!-- <div class="verticalLine" style="height:150px;"></div> -->
+          <h3 style="justify-self: flex-start;color:rgb(1, 106, 179) ;">अथवा</h3>
+          <!-- <div class="verticalLine" style="height:150px;"></div> -->
+        </div>
+        </div>
+    
+        <div class="ui success message" style="height: 100%;">
+          <h4 class="margin-left:10px;">विकल्प - 2</h4>
+          <h3>अपनी स्वतंत्र वेबसाइट बनवाएं और उसको vcnity.online के माध्यम से प्रकाशित करवाएं </h3>
+
+          <ul>
+            <li class="">vcnity.online पर उत्पाद खोज रहे ग्राहक आपकी वेबसाइट पे जाके वस्तु ढून्ढ पाएंगे </li>
+            <li class="">आपके ग्राहक आपके वेबसाइट से खरीद पाएंगे और सीधे आपके बैंक खाते में भुगतान कर पाएंगे </li>
+          </ul>
+          <button class="ui blue button submitBtn" id="modalBtn">यह विकल्प चुनें</button>
+        </div>
+    </div>
+  </div>
+  </div>
+  <!-- <div class="modal">
+    <div class="modal_content">
+      <span class="close">&times;</span>
+      <p>Some text in the Modal..</p>
+
+    </div>
+  </div> -->
+        <script>
+           // Get the modal
+   var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+   var btn = document.getElementById("modalBtn");
+
+// Get the <span> element that closes the modal
+   var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  let content = document.createElement('div')
+  let matter = `
+  <h3>अपने ई-कॉमर्स व्यापार को सरल और सफल बनाएँ</h3>
+    
+    <div>
+    <div style="align-self: center;">
+        <h4>vcnity.online के माध्यम से अपनी नयी वेबसाइट बनवाने के लिए यह विकल्प चुनें </h4>
+        <br/>
+    </div>
+    <div style="" class="ui form">
+      <div class="field">
+            <label class="" >Your Name</label>
+            <input class="ui input focus" />
+      </div>
+      <div class="field">
+            <label class="" >Mobile number</label>
+            <input class="ui input focus" />
+      </div>
+      
+      <div class="field">
+            <label class="" >Email</label>
+            <input class="ui input focus" />
+      </div>  
+   
+      <br/>
+      <button class="submitBtn successBtn" onclick=""> आगे बढ़ें </button>                      
+    </div>
+
+</div>
+  `
+  // <div style="align-self: center;">
+  //      <h3>अथवा</h3>      
+  //    </div>
+  //   <div style="align-self: center;">
+  //       <p>अपनी पहले से बनी वेबसाइट को दर्ज करें </p>
+  //       <button class="submitBtn successBtn"> आगे बढ़ें </button>
+  //   </div>
+  document.querySelector('#add_content').innerHTML = matter
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+        </script>
+
+    </body>
+    {% endblock %}
+</html>   

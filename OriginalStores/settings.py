@@ -94,7 +94,7 @@ CORS_ORIGIN_WHITELIST = [
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 # if os.getenv('GAE_APPLICATION', None):
-if os.getenv('development', None):
+if os.getenv('env', None):
     # Running on production App Engine, so connect to Google Cloud SQL using
     # the unix socket at /cloudsql/<your-cloudsql-connection string>
     DATABASES = {
@@ -110,13 +110,21 @@ if os.getenv('development', None):
     #     'HOST': '/cloudsql/vicinity-solutions:asia-south1:vicinity-instance', 
     #     'PORT': '5432',
     # }
+    # 'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'HOST': 'ec2-34-203-155-237.compute-1.amazonaws.com',
+    #         'PORT': '5432', 
+    #         'NAME': 'd452dugs2bth6t',
+    #         'USER': 'sefpclnhqedars',
+    #         'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
+    #     }
     'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'HOST': 'ec2-34-203-155-237.compute-1.amazonaws.com',
-            'PORT': '5432', 
-            'NAME': 'd452dugs2bth6t',
-            'USER': 'sefpclnhqedars',
-            'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+            'NAME': 'vcnityonline_test',
+            'USER': 'postgres',
+            'PASSWORD': 'aviral',
         }
 
 }
@@ -138,14 +146,22 @@ else:
     #     }
     # }
       DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'HOST': 'ec2-34-203-155-237.compute-1.amazonaws.com',
+    #         'PORT': '5432', 
+    #         'NAME': 'd452dugs2bth6t',
+    #         'USER': 'sefpclnhqedars',
+    #         'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
+    #   }      
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'HOST': 'ec2-34-203-155-237.compute-1.amazonaws.com',
-            'PORT': '5432', 
-            'NAME': 'd452dugs2bth6t',
-            'USER': 'sefpclnhqedars',
-            'PASSWORD': '9612b43a8d72f0d9d8fa307ed5a2cc39e71b2bf11e2740f9cca8d66331f476ec',
-      }      
+                'ENGINE': 'django.db.backends.postgresql',
+                'HOST': '127.0.0.1',
+                'PORT': '5432',
+                'NAME': 'vcnityonline_test',
+                'USER': 'postgres',
+                'PASSWORD': 'aviral',
+            }
     }
 
 
@@ -264,7 +280,7 @@ REST_FRAMEWORK = {
     # ],
     # 'USER_DETAILS_SERIALIZER': 'userapp.serializer.UserDetailsSerializer'
      'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
-}   
+}
 
 from datetime import timedelta
 
@@ -277,6 +293,7 @@ AUTHENTICATION_BACKENDS = (
     'accounts.backends.PhoneBackend', # our custom authentication backend
     'django.contrib.auth.backends.ModelBackend', # fallback to default authentication backend if first fails 
     )
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

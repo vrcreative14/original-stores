@@ -27,6 +27,11 @@
     </div>
   </div>
 </div>
+
+<div class="dropdown">
+  <a class="dropbtn" onclick="window.location = '/online-store'">My Online Store</a>
+</div>
+
 <div class="dropdown">
   <a class="dropbtn" onclick="window.location = '/blogs'">Blogs</a>
 </div>
@@ -36,10 +41,13 @@
 </div>
 {% else %}
   <div class="dropdown">
-  <a onclick="GoToPage('/login')" class="dropbtn">Login / Signup </a>
+  <a  onclick="GoToPage('/login')" class="dropbtn">Login / Signup </a>
   <div class="dropdown-content">
 
   </div>
+</div>
+<div class="dropdown">
+  <a class="dropbtn" onclick="window.location = '/online-store'">My Online Store</a>
 </div>
 <div class="dropdown">
   <a class="dropbtn" onclick="window.location = '/blogs'">Blogs</a>
@@ -47,6 +55,7 @@
 <div class="dropdown">
   <a class="dropbtn" onclick="window.location = '/contact-us'">Contact/Help</a>
 </div>
+
 {% endif %}
 </div>
 </body>

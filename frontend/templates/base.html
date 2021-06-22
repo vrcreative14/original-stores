@@ -15,12 +15,18 @@
   
   <link href='https://fonts.googleapis.com/css?family=Barlow' rel='stylesheet'>
   <link href='https://fonts.googleapis.com/css?family=Belgrano' rel='stylesheet'>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300&display=swap" rel="stylesheet"> 
   
 
-  <div class="page-header">
+  <div class="" style="background-image: linear-gradient(to bottom right, rgb(146, 167, 224 , 1), rgb(94, 118, 182,0.9));position: relative;right: 10px;display:flex;justify-content: flex-end;">
+    <select onchange="ChangeLanguage();">
+      <option>Hindi</option>
+      <option>English</option>
+   </select>
+   </div>
 
-   
-          
+  <div class="page-header">
       <div class="hamburger">
           <a onclick="openNav()">
                 <div class="hb"></div>
@@ -56,8 +62,10 @@
     </div>
      </div>
   </div>
+ 
   <div>
   <input id="messageText" type="hidden" value="" />
+  
    {% include 'HeaderMenu.html'%}
    </div>
   </div>
@@ -82,17 +90,12 @@
     <a href="/contact-us">Help/Contact us</a>
   </div>   
     {% block content %}
-
+    
    
-  {% endblock %}
+    {% endblock %}
   
   
   <!--footer code starts  -->
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
   <br/>
   <br/>
   <br/>
@@ -121,6 +124,9 @@
             <a>
               Change Location
             </a>
+          </li>
+          <li>
+            <a href="https://www.freepik.com/vectors/flat">Flat vector created by freepik - www.freepik.com</a>
           </li>
           </ul>                      
         </div>

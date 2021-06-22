@@ -47,11 +47,71 @@ def Home(request):
     except Exception as e:
         context = {'loggedin' : False}
     
-    print(request.session)
-    myProgram()
+    # print(request.session)
+    # A = ["pim","pom"]
+    # B = ["999999999", "777888999"]
+    # P = "88999"
+    # S = "1222 --   956565"
+    
     return render(request,'frontend/Home.html', context)
 
-def myProgram():
+def solution(S):
+    # write your code in Python 3.6
+    result = ""
+    count = 0
+    j = S
+    for i in range(len(S)):
+        if S[i] == " ":
+           j =  S.replace(S[i],"")
+        
+    for i in range(0,len(S) - 1,3):
+        count = count + 1
+        check = S[i:i+3]
+        if i == 0:
+            result = result + check
+        
+        else:
+            if count % 2 == 0:
+                result = result + check
+            else:
+                result = result + "-" + check
+
+    print(result)
+# def solution(A, B, P):
+#         # write your code in Python 3.6
+#         count = len(P)
+#         result = []
+#         for i in range(len(B)-1):
+#             for j in range(0,9,count):
+#                     if j+count >= len(B[i])-1:
+#                         continue
+#                     check = B[i][j:j+count]
+#                     if check == P:
+#                         result.append(A[i])
+
+#         if len(result) > 1 :
+#             result.sort()
+#         elif len(result) == 0:
+#             return "NO CONTACT"
+#         return result[0]  
+
+# def myProgram():
+#     list = [7,6,1,3,5]
+#     store = []
+    # for i in range(len(a)-1):
+    #     diff = 0        
+    #     diff = a[i] - a[i+1]
+    #     if diff > 0:
+    #         temp = a[i]
+
+    #     if diff > 1 :
+    #         store.append(diff)
+    #     elif diff < -1:
+    #         store.append(-diff)    
+    
+    
+
+    # print(list)
     # list = [1,10,100,1000,10000,100000,1000000]
     # for i in list:
     #     dup = i
@@ -62,22 +122,22 @@ def myProgram():
     #     if count%2 == 0:
     #             print(i)
     #x = int(input('Please inout an integer'))
-    #print(x)
-    rows = 5
-    max_col = 5
-    for i in range(rows):
-        count = i*2 + 1
-        for x in range(count):
-                print('*', end=' ')
-        print(' ')
-    pass
-    x = [4,7,8,46,5]
-    for i in range(len(x)):
-        check = i+1
-    while check < len(x):
-        if x[i] > x[check]:
-            x[i] = x[check]
-        check += 1
+    # #print(x)
+    # rows = 5
+    # max_col = 5
+    # for i in range(rows):
+    #     count = i*2 + 1
+    #     for x in range(count):
+    #             print('*', end=' ')
+    #     print(' ')
+    # pass
+    # x = [4,7,8,46,5]
+    # for i in range(len(x)):
+    #     check = i+1
+    # while check < len(x):
+    #     if x[i] > x[check]:
+    #         x[i] = x[check]
+    #     check += 1
 
 
 def Login(request):
@@ -261,7 +321,6 @@ def AddProducts(request):
     return render(request,'frontend/AddProducts.html', context)
 
 
-
 @login_required(login_url='/login')
 def AddBlogPost(request):
     categories = ProductCategory.objects.all()    
@@ -353,4 +412,8 @@ def Volunteer(request):
 
 def contact_us(request):    
     return render(request, 'frontend/ContactUs.html')
+
+def online_store(request):    
+    return render(request, 'frontend/OnlineStore.html')
 #signature = get_signature()
+

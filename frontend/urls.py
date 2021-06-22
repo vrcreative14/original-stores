@@ -20,4 +20,5 @@ urlpatterns = [
     path('blogs/detail/', views.BlogsDetailed, name="blogs"),    
     path('blogs/add/', views.AddBlogPost, name="addblogs"),    
     path('contact-us', views.contact_us, name="contact-us"),    
+    path('online-store', views.online_store, name="online-store"),    
 ]

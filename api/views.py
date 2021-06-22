@@ -1241,10 +1241,8 @@ def send_otp_mobile(request):
             return Response({
                     'status':True,
                     'detail':'Email with OTP has been sent to the registered mobile number'
-                })
-            
-
-            
+                })            
+                            
     else:
             return Response({              
                   'detail':'This Mobile number is not registered.New users can signup from here <a href="/SignUp">Signup</a>',
