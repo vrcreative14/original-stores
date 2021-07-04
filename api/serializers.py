@@ -1,5 +1,6 @@
+from django.db.models import fields
 from rest_framework import serializers
-from accounts.models import User
+from accounts.models import ContactForm, User
 from rest_framework.authtoken.models import Token
 from accounts.models import Seller
 from django.contrib.auth import authenticate
@@ -86,9 +87,6 @@ class StoreSerializer(serializers.ModelSerializer):
         return store
 
         
-       
-
-
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
@@ -104,8 +102,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)        
         return user
-
-
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField()   
@@ -209,13 +205,13 @@ class Product_Serializer(serializers.ModelSerializer):
    
 
 class Garment_Serializer(serializers.ModelSerializer):    
-    store = StoreSerializer(read_only=True ,many = True)
+    store = StoreSerializer(read_only=True,many = True)
     class Meta:
         model = Article
         fields = ['name','image','img_path','brand_name','price','category','store']
 
 class GarmentDetailsSerializer(serializers.ModelSerializer):    
-    store = StoreSerializer(read_only=True ,many = True)
+    store = StoreSerializer(read_only=True,many = True)
     class Meta:
         model = GarmentDetails
         fields = ['garment','pockets_qty','description','neck_design','design_pattern','sizes_available']
@@ -239,3 +235,9 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['ref_code', 'user', 'payment_status', 'items', 'destination']
 
+class SubmitContactSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return super().create(validated_data)
+    class Meta:
+        model = ContactForm
+        fields = ['full_name','phone','email','message']

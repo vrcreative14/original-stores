@@ -1,6 +1,8 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.contrib.auth import update_session_auth_hash
 from rest_framework import viewsets, permissions
+from rest_framework import response
 from rest_framework.decorators import api_view
 from accounts.models import User, UserOTP, PhoneOTP
 from .serializers import *
@@ -43,7 +45,8 @@ from django.shortcuts import redirect
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
-
+import pytz
+utc = pytz.UTC
 # Create your views here.
 
 #link = f'https://2factor.in/API/R1/?module=TRANS_SMS&apikey=d422a24f-24aa-11eb-83d4-0200cd936042&to={phone}&from='
@@ -1049,8 +1052,7 @@ def GetProducts(request):
         # Temp_data.update({'price' : product.price})
         # Temp_data.update({'category' : 'Men'})
         # Temp_data.update({'store' : product.store})          
-
-    
+  
     serializer = Garment_Serializer(data = Temp_data)
     if serializer.is_valid():
         return Response(serializer.data)
@@ -1119,6 +1121,8 @@ def send_otp_mail(request):
     subject = 'OTP for account recovery from vcnity.online'
     detail =  '' 
     count = 0
+    now = datetime.now()
+    current_time = now.strftime('%H:%M:%S')
     if len(usr) > 0:
         detail ='Your OTP for account password change is ' + str(otp)+'. Enter this OTP at vcnity.online to change your password.'
         old = UserOTP.objects.filter(user = usr[0])
@@ -1126,16 +1130,17 @@ def send_otp_mail(request):
            # old = old.first()
             count = old.first().count
             if old.first().count > 7:
-                    return Response({
-                        'detail':'Maximum number of attempts exhausted.Please try changing password after 24 hours. Contact customer care for more help',
-                        'status': False
-                    })
+                    
+                    diff = utc.localize(now) - old.first().time_stamp
+                    if diff.days < 24:
+                        return Response({
+                            'detail':'Maximum number of attempts exhausted.Please try changing password after 24 hours. Contact customer care for more help',
+                            'status': False
+                        })
+                    else:
+                        updateOTP(old, otp)
             else:   
-                    count = old.first().count
-                    old_otp_obj = old.first()
-                    old_otp_obj.otp = otp
-                    old_otp_obj.count = count + 1
-                    old_otp_obj.save(force_update=True)
+                    updateOTP(old, otp)
                     #old.first().count = count + 1
                     #old.first().otp = otp
                     # old.first().save(force_update=True)
@@ -1171,6 +1176,13 @@ def send_otp_mail(request):
                         'status':False,
                         'detail':'The entered Email id is not registered with the User account'
                     })
+
+def updateOTP(old, otp):
+    count = old.first().count
+    old_otp_obj = old.first()
+    old_otp_obj.otp = otp
+    old_otp_obj.count = count + 1
+    old_otp_obj.save(force_update=True)
 
 @api_view(['POST'])
 def send_otp_mobile(request):
@@ -1333,4 +1345,24 @@ def send_email_registered(subject,detail,email):
 class ChangePasswordView(PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('login')
+    pass
+
+@api_view(['POST'])
+def SubmitContact(request):
+    name = request.data.get('name', '')
+    phone = request.data.get('mobile', '')
+    email = request.data.get('email', '')
+    serializer = SubmitContactSerializer(data = request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({
+            'status':True,
+            'detail':'Your details have been saved.<br/> Our team will will contact you shortly.'
+        })
+    else:
+        
+        return Response({
+            'status':False,
+            'detail':'The request for this email or mobile number has already been submitted.'
+        }, status.HTTP_400_BAD_REQUEST)
     pass

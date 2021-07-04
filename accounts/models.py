@@ -92,11 +92,9 @@ class User (AbstractBaseUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
-
     
     def __str__(self):
         return self.name
-
 
     def get_full_name(self):
         return self.name
@@ -106,7 +104,6 @@ class User (AbstractBaseUser):
 
     def has_perm(self, perm, obj=None):
         return True
-
 
     def has_module_perms(self, app_label):
         return True
@@ -128,7 +125,6 @@ class User (AbstractBaseUser):
     @property
     def is_active(self):
         return self.active
-
 
     def save(self, *args, **kwargs):
              # Empty strings are not unique, but we can save multiple NULLs
@@ -165,10 +161,7 @@ class Seller(models.Model):
     seller_email = models.EmailField(max_length=255, blank=True, null=True)
     seller_phone = models.CharField(validators=[phone_regex], max_length=13, blank=True, null=True)
     secondary_email = models.EmailField(max_length=255, blank=True, null=True)
-    secondary_phone = models.CharField(validators=[phone_regex], max_length=13, blank=True, null=True)
-    #email = models.EmailField()    
-    #login_password = models.CharField(max_length=50)
-    #organization = models.ForeignKey(Organization, on_delete=models.CASCADE, default=5)
+    secondary_phone = models.CharField(validators=[phone_regex], max_length=13, blank=True, null=True)    
     joining_date = models.DateField(auto_now_add=True)
     is_business_registered = models.BooleanField(default=False)
     business_name = models.CharField(max_length=50, blank=True)
@@ -177,9 +170,6 @@ class Seller(models.Model):
     def __str__(self):
         return self.first_name
     
-    # def __str__(self):
-    #     return "{0} {1}".format(self.user.first_name,self.user.last_name)
-    # extend extra data
 
 
 
@@ -190,8 +180,7 @@ class SellerDetails(models.Model):
     contact_no_secondary = models.CharField(max_length=13, blank=True)    
     state = models.CharField(max_length=30)
     city = models.CharField(max_length=50)
-    primary_pincode = models.CharField(max_length=6, blank=True)
-    #last_login = models.DateTimeField()
+    primary_pincode = models.CharField(max_length=6, blank=True)    
 
 
     def __str__(self) :
@@ -241,3 +230,14 @@ class PhoneOTP(models.Model):
     
     def __str__(self):
             return 'OTP code:' + str(self.otp) + "sent to" + str(self.phone)
+
+
+class ContactForm(models.Model):    
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,14}$', message="Phone number must be entered in the format: '+99999999")
+    full_name = models.CharField(max_length=100)
+    phone = models.CharField(validators=[phone_regex], max_length=13, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
+    message = models.CharField(max_length=1000, blank=True)
+
+    def __str__(self):
+        return self.email

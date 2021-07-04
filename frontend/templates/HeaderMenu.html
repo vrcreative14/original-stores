@@ -10,7 +10,6 @@
 
 <div style="display:flex;margin-left:40px;">
 
-
 {% if user.is_authenticated %}
 <div>
 <div class="dropdown">
@@ -35,9 +34,10 @@
 <div class="dropdown">
   <a class="dropbtn" onclick="window.location = '/blogs'">Blogs</a>
 </div>
-<div class="dropdown">
-  <a class="dropbtn" onclick="window.location = '/contact-us'">Contact/Help</a>
-</div>
+
+  <div class="dropdown">
+    <a class="dropbtn" onclick="window.location = '/contact-us'">Contact/Help</a>
+  </div>
 </div>
 {% else %}
   <div class="dropdown">

@@ -120,10 +120,7 @@ function Logout(redirectTo) {
 }
 
 function validateMobileno(enteredMobile) {
-  debugger;
-
-  // if (enteredMobile == undefined || enteredMobile == '')
-  //   showMessage('mobileno',true)
+  debugger;  
   var regex = /^\d{10}$/;
   if (regex.test(String(enteredMobile).toLowerCase())) {
     //showMessage('mobileno', false)
@@ -386,7 +383,6 @@ const ShowResult = (data, redirectTo) => {
         );
         break;
       case "Product Details have been saved successfully":
-        //DisplayMessage('', data.detail, data.status)
         document.getElementById("messageText").value = data.detail;
         window.open("/SellerDashboard", "_self");
         break;
@@ -483,11 +479,6 @@ const postLogout = (url, jsonBody, tkl) => {
         let redirectTo = JSON.parse(jsonBody)["redirect"];
         // if (redirectTo != undefined) {
         ShowResult(data, redirectTo);
-
-        //ShowResult(data)
-
-        // debugger
-        // ShowResult(data, redirectTo);
       }
     })
     .catch((error) => console.log(error));
@@ -617,12 +608,6 @@ function AddProduct(url, formData, tkl) {
   var headers = new Headers();
   headers.append("Cookie", `csrftoken =${csrftoken}`);
   headers.append("X-Requested-With", "XMLHttpRequest");
-
-  // var formdata = new FormData();
-  // formdata.append("product_name", "Sweater");
-  // formdata.append("image", fileInput.files[0], "/D:/Images/Shop/1410028_outerknown_Fisherman_sweater_HEA_f_pdp_c_1400x1400.jpg");
-  // formdata.append("brand_name", ".Raymonds\n\n499\n\n\n \"Duke\"");
-  // formdata.append("product_price", "899");
   let requestOptions = "";
 
   if (url == "api/product/add/") {
@@ -713,3 +698,88 @@ function sendOTPMobile() {
 const ChangeLanguage = () => {
   debugger;
 } 
+
+function SubmitContactForm(){
+  debugger
+  
+  url = "api/submit-contact/"
+  let name = document.querySelector('input[name="contact_name"]').value;
+  let mobile = document.querySelector('input[name="contact_mobile"]').value;
+  let email = document.querySelector('input[name="contact_email"]').value;
+  count = 0
+  if (name == ""){
+    document.querySelector('#enterName').style.display = 'block'    
+    count++
+  }
+  else
+  document.querySelector('#enterName').style.display = 'none'    
+  if (!validateMobileno(mobile)) {
+    document.querySelector('#enterMobile').style.display = 'block'    
+    count++
+  }
+  else{
+    document.querySelector('#enterMobile').style.display = 'none'    
+  }
+  if (!validateEmail(email)){
+    document.querySelector('#enterEmail').style.display = 'block'
+    count++
+    
+  }
+  else
+  document.querySelector('#enterEmail').style.display = 'none'    
+  
+  if (count > 1)  return
+  jsonBody = JSON.stringify({
+    "full_name":name,
+    "phone":mobile,
+    "email":email,
+    "message":"Contact me for my online store opening."
+  });
+
+  postJSON(url,jsonBody)
+  // 
+  // fetch(url, {
+  //   method: "POST",
+  //   headers: {
+  //     Accept: "application/json, text/plain, */*",
+  //     "Content-Type": "application/json",
+  //     "Accept-Encoding": "gzip,deflate,br",
+  //     "X-CSRFToken": csrftoken,      
+  //   },
+  // })
+  //   .then((response) => {
+  //     if (!response.ok) {
+  //       console.log(response);
+  //       if (response.status == 200) {
+  //         window.open("/", "_self");
+  //         DisplayMessage(
+  //           "Thank you for submitting details.",
+  //           "Our representive will call you shortly.",
+  //           true
+  //         );
+  //       }
+  //       response.text().then((text) => {
+  //         DisplayMessage(
+  //           "",
+  //           "Some Error Occurred. Please try again after some time.",
+  //           false
+  //         );
+  //       });
+  //     } else {
+  //       return response.json();
+  //       DisplayMessage(
+  //         "Error Occured",
+  //         "Please try again after some time",
+  //         false
+  //       );
+  //     }
+  //   })
+  //   .then((data) => {
+  //     if (jsonBody != undefined) {
+  //       let redirectTo = JSON.parse(jsonBody)["redirect"];
+  //       ShowResult(data, redirectTo);        
+  //     }
+  //   })
+  //   .catch((error) => console.log(error));
+};
+

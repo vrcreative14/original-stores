@@ -165,8 +165,6 @@ else:
     }
 
 
-
-
 # if False and DEBUG: 
 #         # Running in development, but want to access the Google Cloud SQL instance in production.
 #         DATABASES = {

@@ -24,6 +24,7 @@
         <![endif]-->
         {% block content %}
          {% include "ModalBasic.html" %} 
+         
         <div style="font-family:Noto Sans;">
         <div style="display: flex;flex-wrap: wrap;justify-content: space-evenly;">
           <div style="padding:10px 10px 10px 10px;display: flex;flex-direction: column;justify-content: space-evenly;">
@@ -168,22 +169,30 @@ btn.onclick = function() {
         <br/>
     </div>
     <div style="" class="ui form">
-      <div class="field">
-            <label class="" >Your Name</label>
-            <input class="ui input focus" />
+      <div class="inline field">
+            <label class="" >Your Full Name</label>
+            <span id="enterName" class="ui left pointing red basic inline label" style="display:none;">Enter your Full Name</span>             
+            
       </div>
-      <div class="field">
+      <input class="ui input focus" name="contact_name"/>
+      <br/>
+      <div class="inline field">
             <label class="" >Mobile number</label>
-            <input class="ui input focus" />
-      </div>
-      
-      <div class="field">
+            <span id="enterMobile" class="ui left pointing red basic inline label" style="display:none;">Enter valid Mobile number</span>             
+            
+      </div>      
+      <input class="ui input focus" name="contact_mobile" />
+      <br/>
+      <div class="inline field">
             <label class="" >Email</label>
-            <input class="ui input focus" />
+             <span id="enterEmail" class="ui left pointing red basic inline label" style="display:none;">Enter valid Email</span>             
+            
       </div>  
+      <input class="ui input focus" name="contact_email"/>  
    
       <br/>
-      <button class="submitBtn successBtn" onclick=""> आगे बढ़ें </button>                      
+      <divclass="field"></div>
+      <button class="submitBtn successBtn" onclick="SubmitContactForm()"> आगे बढ़ें </button>                      
     </div>
 
 </div>
@@ -210,6 +219,8 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
+
+
 
         </script>
 

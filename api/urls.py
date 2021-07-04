@@ -38,6 +38,7 @@ urlpatterns = [
     path('checkotp/account', views.check_otp),
     path('change/credential', views.ChangePassword),
     path('password/', auth_views.PasswordChangeView.as_view(template_name = 'frontend/ChangePassword.html')),
+    path('submit-contact/', views.SubmitContact)
     #path('checkout/cashfree',views.CheckoutCashFree) 
    #path('products/list/',views.GarmentViewSet, name='get-products')
    # path("api/auth/register",RegisterAPI.as_views()),

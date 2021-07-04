@@ -21,7 +21,7 @@
 
   <div class="" style="background-image: linear-gradient(to bottom right, rgb(146, 167, 224 , 1), rgb(94, 118, 182,0.9));position: relative;right: 10px;display:flex;justify-content: flex-end;">
     <select onchange="ChangeLanguage();">
-      <option>Hindi</option>
+      <option>Spanish</option>
       <option>English</option>
    </select>
    </div>
@@ -37,8 +37,8 @@
 
    
     <input type="hidden" id="isLocationEdited" value="0">
-    <input type="hidden" id="saveLocation" value="">
-    <input type="hidden" id="currentEvent" value="">
+    
+    
     <input type="hidden" id="" value="">
     
     <div class="ui stackable menu" style="margin-left: 52px;"> 
@@ -82,9 +82,9 @@
     {% else %}
     {% endif %}
     {% if request.session.seller is None %}
-     <a href="/vikreta">Join as a Seller</a>
+     <a href="/vikreta">Join Groups</a>
     {% else %}    
-    <a href="/SellerDashboard">Seller Dashboard</a>
+    <a href="/SellerDashboard">Dashboard</a>
     {% endif %}
     {% comment %} <a href="/api/logout">Logout</a> {% endcomment %}
     <a href="/contact-us">Help/Contact us</a>
@@ -96,12 +96,9 @@
   
   
   <!--footer code starts  -->
+  
   <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
+  
   <footer style="position: initial;bottom: 0;width: 100%;height: 35%;background-color: black;">   
       <div style="display: flex;">
         <div>

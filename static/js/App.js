@@ -6,8 +6,7 @@ function openNav() {
 function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
-//fetchStores();
-//getLocation();
+
 function fetchStores() {
   var wrapper = document.getElementById("storeListDiv");
   //wrapper.innerHTML=''
@@ -236,5 +235,5 @@ function GoToPage(url, val) {
 }
 
 const saveMessage = () => {
-  
+  fet
 }
