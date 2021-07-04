@@ -37,7 +37,8 @@
 
    
     <input type="hidden" id="isLocationEdited" value="0">
-    
+    <input type="hidden" id="saveLocation" value="">
+    <input type="hidden" id="currentEvent" value="">
     
     <input type="hidden" id="" value="">
     
@@ -82,9 +83,9 @@
     {% else %}
     {% endif %}
     {% if request.session.seller is None %}
-     <a href="/vikreta">Join Groups</a>
+     <a href="/vikreta">Join as a Seller</a>
     {% else %}    
-    <a href="/SellerDashboard">Dashboard</a>
+    <a href="/SellerDashboard">Seller Dashboard</a>
     {% endif %}
     {% comment %} <a href="/api/logout">Logout</a> {% endcomment %}
     <a href="/contact-us">Help/Contact us</a>
