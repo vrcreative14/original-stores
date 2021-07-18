@@ -302,5 +302,5 @@ EMAIL_HOST_PASSWORD = 'Vcnity@2021'
 EMAIL_USE_TLS = True
 #EMAIL_USE_SSL = True
 
-ALLOWED_HOSTS = [ '127.0.0.1','vcnityonline.herokuapp.com','www.vcnity.online', 'vcnity.online', "vicinity-solutions.et.r.appspot.com","vikreta.vcnity.online"]
+ALLOWED_HOSTS = [ '127.0.0.1','originalstores.herokuapp.com', "vicinity-solutions.et.r.appspot.com","vikreta.vcnity.online"]
                     
