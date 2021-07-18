@@ -156,11 +156,11 @@ else:
     #   }      
         'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'HOST': '127.0.0.1',
+                'HOST': 'ec2-35-174-122-153.compute-1.amazonaws.com',
                 'PORT': '5432',
-                'NAME': 'vcnityonline_test',
-                'USER': 'postgres',
-                'PASSWORD': 'aviral',
+                'NAME': 'd3trnvra8kf5j5',
+                'USER': 'fovcrclmeiunmg',
+                'PASSWORD': 'b6159e1fda1cb4ed4dacbbacd13dd63addc2bf8afca15085d9e33eb6236b55db',
             }
     }
 

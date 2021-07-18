@@ -21,17 +21,7 @@ from blogpost.models import BlogPost
 #from .forms import SellerForm
 #from api.models import Product
 # Create your views here.
-appId = '59627866e07fd8257a056c53972695'
-orderId = 'order00001'
-orderAmount = '10'
-orderCurrency = 'INR'
-orderNote = 'test'
-customerName = 'Kartik'
-secretKey = 'aecfa278fed6dae860fd93ca39fee75fac1213e0'
-customerPhone = '7565897280'
-customerEmail = 'mkartik231@gmail.com'
-returnUrl = 'http://127.0.0.1:8000/buy/'
-notifyUrl = 'http://127.0.0.1:8000/'
+
 def Home(request):
     try:
         #name = request.session['user_name']
@@ -380,7 +370,17 @@ def get_default_subcategory(category):
         return switcher.get(category,"Invalid")
 
 def get_signature():
-
+        appId = '59627866e07fd8257a056c53972695'
+        orderId = 'order00001'
+        orderAmount = '100'
+        orderCurrency = 'INR'
+        orderNote = 'test'
+        customerName = 'Kartik'
+        secretKey = 'aecfa278fed6dae860fd93ca39fee75fac1213e0'
+        customerPhone = '7565897280'
+        customerEmail = 'mkartik231@gmail.com'
+        returnUrl = '/buy'
+        notifyUrl = '/'
         postData = {
         "appId" : appId,
         "orderId" : orderId,
@@ -399,9 +399,9 @@ def get_signature():
         for key in sortedKeys:
             signatureData += key+postData[key];
 
-        message = bytes(signatureData, encoding = 'utf8')
+        message = bytes(signatureData, encoding = 'utf-8')
         #get secret key from your config
-        secret = bytes(secretKey, encoding = 'utf8')
+        secret = bytes(secretKey, encoding = 'utf-8')
         signature = base64.b64encode(hmac.new(secret, message,digestmod=hashlib.sha256).digest())
         return signature
 
